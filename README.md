@@ -13,16 +13,18 @@ The Honda communauty is far behind on the other manufacturers when come to Refla
 -Read ECU Rom
 -Write/Flash ECU Rom (In Progress)
 -Checksum Verification (In Progress)
+-Seed/Key ECU Unlock Algorithms -> All ECUS for 0x27,0x01 Request
+-Seed/Key ECU Unlock Algorithms -> ONLY Specified ECUS for 0x27,0x41 Request (see the compatible list below)
 
 # Compatible Cars
 
-| Car Model | Year(s) |
-|------|---------|
-| Honda Civic's (All?) | 2006-2010 |
-| Honda CR-V | 2007-2010 |
-| Honda Ridgeline | 2006-2013 |
-| Honda Freed **In Progress** | 2011-2013 |
-| Acura RDX **In Progress** | 2007-2012 |
+| Car Model | Year(s) | Algorithm Byte | Key1 Bytes | Key2 Bytes
+|------|---------|---------|---------|---------|
+| Honda Civic's (All?) | 2006-2010 | 0x01 | 0xAE,0x0D,0x23,0xFF | 0x40,0x65,0x58,0xB3 |
+| Honda Ridgeline | 2006-2013 | 0x04 | 0x16,0xA4,0xAB,0xB0 | 0xBF,0xE8,0x5A,0x6D |
+| Honda CR-V | 2007-2010 | 0x08 | 0x6D,0x75,0x32,0xAC | 0x9D,0x62,0x3B,0x64 |
+| Acura RDX **(In Progress)** | 2007-2012 | 0x1A | 0x67,0xE9,0x76,0xC1 | 0x78,0x3E,0x17,0x39 |
+| Honda Freed **(In Progress)** | 2011-2013 | 0x20 | 0x95,0x58,0x3E,0x2C | 0xF3,0x96,0xB5,0x6F |
 
 # Compatible ECU's
 
