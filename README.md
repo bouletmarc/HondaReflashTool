@@ -2,6 +2,10 @@
 
 CanBUS J2534 Honda Reflash Tool (Work in Progress)
 
+You can download the Tool and **use at Your Own Risk!**
+
+**The Tool is accessible in the 'bin/debug' folder**
+
 # Description
 
 This is a Work In Progress Honda/Acura Reflash Tool under CanBUS Interface.
