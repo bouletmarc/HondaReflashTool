@@ -6,15 +6,17 @@ CanBUS J2534 Honda Reflash Tool (Work in Progress)
 
 This is a Work In Progress Honda/Acura Reflash Tool under CanBUS Interface.
 
-The Honda communauty is far behind on the other manufacturers when come to Reflash and Tuning capabilities for vehicules working under CanBUS. Reflash tools that are guenine and works are getting very costly and the vehicules to work with the tools are getting older everydays which is not resonable. I hope this tool will help others developers to pick up on the developement just like me and make reflash capability for Honda/Acura a lot easier for all of us. Please 'Fork' and then provide a 'Pull Requests' to this github repo to make a request to apply your changes done to the tool.
+The Honda communauty is far behind on the other manufacturers when come to Reflash and Tuning capabilities for vehicules working under CanBUS. Reflash tools that are guenine and works are getting very costly and the vehicules to work with the tools are getting older everydays which is not resonable.
+
+I hope this tool will help others developers to pick up on the developement just like me and make reflash capability for Honda/Acura a lot easier for all of us. Please 'Fork' and then provide a 'Pull Requests' to this github repo to make a request to apply your changes done to the tool.
 
 # Tool Features
 
 -Read ECU Rom
 
--Write/Flash ECU Rom (In Progress)
+-Write/Flash ECU Rom **(In Progress)**
 
--Checksum Verification (In Progress)
+-Checksum Verification **(In Progress)**
 
 -Seed/Key ECU Unlock Algorithms -> All ECUS for 0x27,0x01 Request
 
@@ -29,6 +31,8 @@ The Honda communauty is far behind on the other manufacturers when come to Refla
 | Honda CR-V | 2007-2010 | 0x08 | 0x6D, 0x75, 0x32, 0xAC | 0x9D, 0x62, 0x3B, 0x64 |
 | Acura RDX **(In Progress)** | 2007-2012 | 0x1A | 0x67, 0xE9, 0x76, 0xC1 | 0x78, 0x3E, 0x17, 0x39 |
 | Honda Freed **(In Progress)** | 2011-2013 | 0x20 | 0x95, 0x58, 0x3E, 0x2C | 0xF3, 0x96, 0xB5, 0x6F |
+
+**Notes: Keys Bytes can be found directly in the ecu ROM.bin by searching for them!
 
 # Compatible ECU's
 
