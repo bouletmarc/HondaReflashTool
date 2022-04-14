@@ -17,6 +17,7 @@ The Honda communauty is far behind on the other manufacturers when come to Refla
 # Compatible Cars
 
 | Car Model | Year(s) |
+|------|---------|
 | Honda Civic's (All?) | 2006-2010 |
 | Honda CR-V | 2007-2010 |
 | Honda Ridgeline | 2006-2013 |
