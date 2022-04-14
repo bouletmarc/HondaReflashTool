@@ -18,7 +18,7 @@ I hope this tool will help others developers to pick up on the developement just
 
 -Read ECU Rom
 
--Write/Flash ECU Rom **(In Progress)**
+-Write/Flash ECU Rom
 
 -Checksum Verification **(In Progress)**
 
