@@ -16,6 +16,10 @@ using SAE.J2534;
 
 public class GForm_Main : DarkForm
 {
+    bool ECU_Unlocked = false;
+    private DarkButton darkButton_Unlock01;
+    byte Unlocking_Mode = 0x41;
+
     public GForm_Main()
     {
         //Console.WriteLine(379890608U.ToString("X8"));
@@ -88,6 +92,13 @@ public class GForm_Main : DarkForm
 
     private void darkButton1_Click(object sender, EventArgs e)
     {
+        ECU_Unlocked = false;
+
+        this.darkButton_DownloadROM.Enabled = false;
+        this.darkButton_Unlock41.Enabled = false;
+        this.darkButton_Unlock01.Enabled = false;
+        this.darkButton_5.Enabled = false;
+
         using (API api = APIFactory.GetAPI(GForm_Main.string_0))
         {
             try
@@ -176,8 +187,6 @@ public class GForm_Main : DarkForm
                                         {
                                             this.method_1("Vehicle is in recovery mode?" + Environment.NewLine);
                                             DarkMessageBox.Show(this, "Failed to retrieve vin number, assuming recovery mode, read disabled", "RECOVERY MODE", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
-                                            //this.darkButton_1.Enabled = false;
                                         }
                                         else if (num2 != 2)
                                         {
@@ -185,8 +194,8 @@ public class GForm_Main : DarkForm
                                         }
                                         else
                                         {
-                                            this.darkButton_1.Enabled = true;
-                                            this.darkButton2.Enabled = true;
+                                            this.darkButton_Unlock41.Enabled = true;
+                                            this.darkButton_Unlock01.Enabled = true;
                                         }
                                         break;
                                     }
@@ -269,6 +278,10 @@ public class GForm_Main : DarkForm
         this.method_4(e.ProgressPercentage);
     }
 
+    private void method_7_Nothing(object sender, RunWorkerCompletedEventArgs e)
+    {
+
+    }
 
     private void method_7(object sender, RunWorkerCompletedEventArgs e)
     {
@@ -291,17 +304,64 @@ public class GForm_Main : DarkForm
         }
         File.WriteAllBytes(saveFileDialog.FileName, byte_12);
         DarkMessageBox.Show(this, "Successfully Saved File!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-        this.darkButton_1.Enabled = true;
-        this.darkButton2.Enabled = true;
+        this.darkButton_DownloadROM.Enabled = false;
+        this.darkButton_Unlock41.Enabled = false;
+        this.darkButton_Unlock01.Enabled = false;
+        this.darkButton_5.Enabled = false;
     }
 
     private void darkButton2_Click(object sender, EventArgs e)
     {
+        if (GForm_Main.string_0.Length == 0)
+        {
+            GForm_J2534Select gform = new GForm_J2534Select();
+            if (gform.ShowDialog() != DialogResult.OK)
+            {
+                this.darkTextBox_0.Text = "Couldn't open device selection form";
+                return;
+            }
+            GForm_Main.string_0 = gform.APIInfo_0.Filename;
+            gform.Dispose();
+        }
 
+        this.Unlocking_Mode = 0x41;
+
+        this.backgroundWorker_1 = new BackgroundWorker();
+        this.backgroundWorker_1.WorkerReportsProgress = true;
+        this.backgroundWorker_1.DoWork += this.method_UnlockECU;
+        this.backgroundWorker_1.ProgressChanged += this.method_6;
+        this.backgroundWorker_1.RunWorkerCompleted += this.method_7_Nothing;
+        this.backgroundWorker_1.RunWorkerAsync();
     }
 
-    public void method_9(object sender, DoWorkEventArgs e)
+    private void darkButton_Unlock01_Click(object sender, EventArgs e)
     {
+        if (GForm_Main.string_0.Length == 0)
+        {
+            GForm_J2534Select gform = new GForm_J2534Select();
+            if (gform.ShowDialog() != DialogResult.OK)
+            {
+                this.darkTextBox_0.Text = "Couldn't open device selection form";
+                return;
+            }
+            GForm_Main.string_0 = gform.APIInfo_0.Filename;
+            gform.Dispose();
+        }
+
+        this.Unlocking_Mode = 0x01;
+
+        this.backgroundWorker_1 = new BackgroundWorker();
+        this.backgroundWorker_1.WorkerReportsProgress = true;
+        this.backgroundWorker_1.DoWork += this.method_UnlockECU;
+        this.backgroundWorker_1.ProgressChanged += this.method_6;
+        this.backgroundWorker_1.RunWorkerCompleted += this.method_7_Nothing;
+        this.backgroundWorker_1.RunWorkerAsync();
+    }
+
+    public void method_UnlockECU(object sender, DoWorkEventArgs e)
+    {
+        ECU_Unlocked = false;
+
         using (API api = APIFactory.GetAPI(GForm_Main.string_0))
         {
             using (Device device = api.GetDevice(""))
@@ -353,8 +413,7 @@ public class GForm_Main : DarkForm
                         39,     //0x27
                         65      //0x41     Not supposed to be 05?? -> could be 0x01 0x03 0x05 0x07 or 0x41
                     };
-                    //byte SeedSendByte = 0x01;
-                    byte SeedSendByte = 0x41;
+                    byte SeedSendByte = this.Unlocking_Mode;
                     array3[2] = GForm_Main.byte_3;
                     array3[5] = SeedSendByte;
                     SAE.J2534.Message message2 = new SAE.J2534.Message(array3, TxFlag.CAN_29BIT_ID | TxFlag.ISO15765_FRAME_PAD);
@@ -366,17 +425,17 @@ public class GForm_Main : DarkForm
                     channel.SetConfig(config);
                     device.SetProgrammingVoltage(Pin.PIN_12, 5000);
                     channel.SendMessage(message);
-                    this.backgroundWorker_0.ReportProgress(0, "TX Bytes:" + GForm_Main.smethod_1(message.Data) + Environment.NewLine);
+                    this.backgroundWorker_1.ReportProgress(0, "TX Bytes:" + GForm_Main.smethod_1(message.Data) + Environment.NewLine);
 
-                    this.method_1("Send:" +GForm_Main.smethod_1(message.Data) + Environment.NewLine);
+                    this.method_1("Send:" + GForm_Main.smethod_1(message.Data) + Environment.NewLine);
                     GetMessageResults messages = channel.GetMessages(3, 1000);
                     if (messages.Result.IsOK())
                     {
                         this.method_1("Diag Mode Set" + Environment.NewLine);
-                        this.backgroundWorker_0.ReportProgress(0, "Diag Mode Set" + Environment.NewLine);
+                        this.backgroundWorker_1.ReportProgress(0, "Diag Mode Set" + Environment.NewLine);
                         foreach (SAE.J2534.Message message3 in messages.Messages)
                         {
-                            this.backgroundWorker_0.ReportProgress(0, "RX Bytes:" + GForm_Main.smethod_1(message3.Data) + Environment.NewLine);
+                            this.backgroundWorker_1.ReportProgress(0, "RX Bytes:" + GForm_Main.smethod_1(message3.Data) + Environment.NewLine);
                             this.method_1("Recv:" + GForm_Main.smethod_1(message3.Data) + Environment.NewLine);
                         }
                     }
@@ -386,8 +445,8 @@ public class GForm_Main : DarkForm
                     }
                     channel.SendMessage(message2);
                     this.method_1("Requesting Seed" + Environment.NewLine);
-                    this.backgroundWorker_0.ReportProgress(0, "Requesting Seed");
-                    this.backgroundWorker_0.ReportProgress(0, "TX Bytes:" + GForm_Main.smethod_1(message2.Data));
+                    this.backgroundWorker_1.ReportProgress(0, "Requesting Seed");
+                    this.backgroundWorker_1.ReportProgress(0, "TX Bytes:" + GForm_Main.smethod_1(message2.Data));
                     this.method_1("Send:" + GForm_Main.smethod_1(message2.Data) + Environment.NewLine);
                     byte[] byte_ = new byte[]
                     {
@@ -424,11 +483,11 @@ public class GForm_Main : DarkForm
                                         }
 
                                         this.method_1("Security Request - Seed Bytes:" + GForm_Main.smethod_1(array6) + Environment.NewLine);
-                                        this.backgroundWorker_0.ReportProgress(0, "Security Request - Seed Bytes:" + GForm_Main.smethod_1(array6));
+                                        this.backgroundWorker_1.ReportProgress(0, "Security Request - Seed Bytes:" + GForm_Main.smethod_1(array6));
                                         if (!TwoBytesMode)
                                         {
                                             this.method_1("Security Request - Algorithm:" + b.ToString("X2") + Environment.NewLine);
-                                            this.backgroundWorker_0.ReportProgress(0, "Security Request - Algorithm:" + b.ToString("X2"));
+                                            this.backgroundWorker_1.ReportProgress(0, "Security Request - Algorithm:" + b.ToString("X2"));
                                         }
                                         break;
                                     }
@@ -436,7 +495,7 @@ public class GForm_Main : DarkForm
                                     index++;
                                 }
                             }
-                            this.backgroundWorker_0.ReportProgress(0, "RX Bytes:" + GForm_Main.smethod_1(message4.Data) + Environment.NewLine);
+                            this.backgroundWorker_1.ReportProgress(0, "RX Bytes:" + GForm_Main.smethod_1(message4.Data) + Environment.NewLine);
                         }
                     }
                     else
@@ -446,7 +505,7 @@ public class GForm_Main : DarkForm
                     if (array6[0] != 0)
                     {
                         uint value = 0;
-                        if (!TwoBytesMode) 
+                        if (!TwoBytesMode)
                         {
                             value = Class_Cypher.GetKey41(BitConverter.ToUInt32(array6, 0), b);
                         }
@@ -456,7 +515,7 @@ public class GForm_Main : DarkForm
                         }
                         byte[] bytes = BitConverter.GetBytes(value);
 
-                        this.backgroundWorker_0.ReportProgress(0, "Security Request - Key Bytes from app:"  + GForm_Main.smethod_1(bytes));
+                        this.backgroundWorker_1.ReportProgress(0, "Security Request - Key Bytes from app:" + GForm_Main.smethod_1(bytes));
                         this.method_1("Security Request - Key to Send:" + GForm_Main.smethod_1(bytes) + Environment.NewLine);
 
                         byte[] bytes2 = BitConverter.GetBytes(value);
@@ -471,7 +530,7 @@ public class GForm_Main : DarkForm
                             66      //0x42
                         };
                         array7[2] = GForm_Main.byte_3;
-                        array7[5] = (byte) (SeedSendByte + 1);  //####################
+                        array7[5] = (byte)(SeedSendByte + 1);  //####################
                         byte[] array8 = array7;
                         if (!TwoBytesMode) Array.Resize<byte>(ref array8, array8.Length + 5);
                         if (TwoBytesMode) Array.Resize<byte>(ref array8, array8.Length + 2);
@@ -490,8 +549,8 @@ public class GForm_Main : DarkForm
                         };
                         byte_2[1] = (byte)(SeedSendByte + 1);  //####################
                         SAE.J2534.Message message5 = new SAE.J2534.Message(array8, TxFlag.CAN_29BIT_ID | TxFlag.ISO15765_FRAME_PAD);
-                        this.backgroundWorker_0.ReportProgress(0, "TX Bytes:" +GForm_Main.smethod_1(message5.Data));
-                        this.method_1("Send:" +GForm_Main.smethod_1(message5.Data) + Environment.NewLine);
+                        this.backgroundWorker_1.ReportProgress(0, "TX Bytes:" + GForm_Main.smethod_1(message5.Data));
+                        this.method_1("Send:" + GForm_Main.smethod_1(message5.Data) + Environment.NewLine);
                         channel.SendMessage(message5);
                         bool flag = false;
                         messages = channel.GetMessages(3);
@@ -507,7 +566,7 @@ public class GForm_Main : DarkForm
                                     {
                                         this.byte_6[k] = message6.Data[k + num2 + 2];   //0x27, 0x35
                                     }
-                                    string str = "Response:" ;
+                                    string str = "Response:";
                                     Class_ODB.Mode mode = (Class_ODB.Mode)this.byte_6[0];
                                     string str2 = mode.ToString();
                                     Class_ODB.NegativeResponse negativeResponse = (Class_ODB.NegativeResponse)this.byte_6[1];
@@ -515,14 +574,17 @@ public class GForm_Main : DarkForm
                                 }
                                 if (num > 0)
                                 {
-                                    this.backgroundWorker_0.ReportProgress(0, "Security Authorized: ECU Unlocked" + Environment.NewLine);
+                                    this.backgroundWorker_1.ReportProgress(0, "Security Authorized: ECU Unlocked" + Environment.NewLine);
                                     this.method_1("Security Authorized: ECU Unlocked" + Environment.NewLine);
                                     flag = true;
+                                    ECU_Unlocked = true;
+                                    this.darkButton_DownloadROM.Enabled = true;
+                                    this.darkButton_5.Enabled = true;
                                 }
                                 else
                                 {
-                                    this.method_1("Recv:" +GForm_Main.smethod_1(message6.Data) + Environment.NewLine);
-                                    this.backgroundWorker_0.ReportProgress(0, "RX Bytes:" +GForm_Main.smethod_1(message6.Data) + Environment.NewLine);
+                                    this.method_1("Recv:" + GForm_Main.smethod_1(message6.Data) + Environment.NewLine);
+                                    this.backgroundWorker_1.ReportProgress(0, "RX Bytes:" + GForm_Main.smethod_1(message6.Data) + Environment.NewLine);
                                 }
                             }
                         }
@@ -540,7 +602,7 @@ public class GForm_Main : DarkForm
                             //##################################################################################
                             if (TwoBytesMode)
                             {
-                                byte[] arrayProgrammingCommand = new byte[]
+                                /*byte[] arrayProgrammingCommand = new byte[]
                                 {
                                     24,             //0x18
                                     218,            //0xDA
@@ -565,7 +627,8 @@ public class GForm_Main : DarkForm
                                 else
                                 {
                                     this.method_1("Result NOT OK(#1)!!" + Environment.NewLine);
-                                }
+                                }*/
+
                                 //#################################
                                 /*UInt16 testval = 0xF101;
                                 byte[] BytesVal = BitConverter.GetBytes(testval);
@@ -600,16 +663,6 @@ public class GForm_Main : DarkForm
                                     this.method_1("Result NOT OK(#1)!!" + Environment.NewLine);
                                 }*/
                             }
-                            //##################################################################################
-                            //##################################################################################
-
-                            Stopwatch stopwatch = new Stopwatch();
-                            stopwatch.Start();
-                            this.byte_7 = this.method_10(channel, this.backgroundWorker_0);
-                            stopwatch.Stop();
-                            TimeSpan timeSpan = TimeSpan.FromMilliseconds((double)stopwatch.ElapsedMilliseconds);
-                            this.backgroundWorker_0.ReportProgress(0, "Successfully read "+ this.byte_7.Length + "bytes of flash memory in " + timeSpan.Minutes + ":"+ timeSpan.Seconds);
-                            device.SetProgrammingVoltage(Pin.PIN_12, -1);
                         }
                     }
                     else
@@ -617,6 +670,74 @@ public class GForm_Main : DarkForm
                         this.method_1("Result NOT OK(#4)!!" + Environment.NewLine);
                     }
                 }
+            }
+        }
+    }
+
+    public void method_ReadROM(object sender, DoWorkEventArgs e)
+    {
+        using (API api = APIFactory.GetAPI(GForm_Main.string_0))
+        {
+            try
+            {
+                using (Device device = api.GetDevice(""))
+                {
+                    using (Channel channel = device.GetChannel(Protocol.ISO15765, Baud.CAN, ConnectFlag.CAN_29BIT_ID, false))
+                    {
+                        MessageFilter messageFilter = new MessageFilter();
+                        messageFilter.FilterType = Filter.FLOW_CONTROL_FILTER;
+                        messageFilter.Mask = new byte[]
+                        {
+                        byte.MaxValue,
+                        byte.MaxValue,
+                        byte.MaxValue,
+                        byte.MaxValue
+                        };
+                        messageFilter.Pattern = new byte[]
+                        {
+                        24,     //0x18
+                        218,    //0xDA
+                        241,    //0xF1
+                        GForm_Main.byte_3       //0x00
+                        };
+                        messageFilter.FlowControl = new byte[]
+                        {
+                        24,     //0x18
+                        218,    //0xDA
+                        GForm_Main.byte_3,      //0x00  -> 0x10|0x11
+                        241     //0xF1
+                        };
+                        MessageFilter filter = messageFilter;
+                        channel.StartMsgFilter(filter);
+                        SConfig[] config = new SConfig[]
+                        {
+                        new SConfig(Parameter.LOOP_BACK, 1),
+                        new SConfig(Parameter.DATA_RATE, 500000)
+                        };
+                        channel.SetConfig(config);
+
+                        device.SetProgrammingVoltage(Pin.PIN_12, 5000);
+
+                        if (!ECU_Unlocked)
+                        {
+                            MessageBox.Show("ECU is NOT Unlocked!");
+                        }
+                        else
+                        {
+                            Stopwatch stopwatch = new Stopwatch();
+                            stopwatch.Start();
+                            this.byte_7 = this.method_10(channel, this.backgroundWorker_1);
+                            stopwatch.Stop();
+                            TimeSpan timeSpan = TimeSpan.FromMilliseconds((double)stopwatch.ElapsedMilliseconds);
+                            this.backgroundWorker_1.ReportProgress(0, "Successfully read " + this.byte_7.Length + "bytes of flash memory in " + timeSpan.Minutes + ":" + timeSpan.Seconds);
+                            device.SetProgrammingVoltage(Pin.PIN_12, -1);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                DarkMessageBox.Show(this, ex.Message);
             }
         }
     }
@@ -810,12 +931,9 @@ public class GForm_Main : DarkForm
 
     private void method_13(object sender, EventArgs e)
     {
-        //this.darkButton_2.Enabled = false;
         if (GForm_Main.string_0.Length == 0)
         {
             GForm_J2534Select gform = new GForm_J2534Select();
-            this.darkButton_1.Enabled = true;
-            this.darkButton2.Enabled = true;
             if (gform.ShowDialog() != DialogResult.OK)
             {
                 this.darkTextBox_0.Text = "Couldn't open device selection form";
@@ -824,11 +942,9 @@ public class GForm_Main : DarkForm
             GForm_Main.string_0 = gform.APIInfo_0.Filename;
             gform.Dispose();
         }
-        this.darkButton_1.Enabled = false;
-        this.darkButton2.Enabled = false;
         this.backgroundWorker_0 = new BackgroundWorker();
         this.backgroundWorker_0.WorkerReportsProgress = true;
-        this.backgroundWorker_0.DoWork += this.method_9;
+        this.backgroundWorker_0.DoWork += this.method_ReadROM;
         this.backgroundWorker_0.ProgressChanged += this.method_6;
         this.backgroundWorker_0.RunWorkerCompleted += this.method_7;
         this.backgroundWorker_0.RunWorkerAsync();
@@ -873,7 +989,7 @@ public class GForm_Main : DarkForm
                     channel.SetConfig(config);
                     Stopwatch stopwatch = new Stopwatch();
                     stopwatch.Start();
-                    this.byte_7 = this.method_15(channel, this.backgroundWorker_0);
+                    this.byte_7 = this.method_15(channel, this.backgroundWorker_1);
                     stopwatch.Stop();
                     TimeSpan.FromMilliseconds((double)stopwatch.ElapsedMilliseconds);
                     DarkTextBox darkTextBox = this.darkTextBox_0;
@@ -904,8 +1020,6 @@ public class GForm_Main : DarkForm
         if (GForm_Main.string_0 == string.Empty)
         {
             GForm_J2534Select gform = new GForm_J2534Select();
-            this.darkButton_1.Enabled = true;
-            this.darkButton2.Enabled = true;
             if (gform.ShowDialog() != DialogResult.OK)
             {
                 this.darkTextBox_0.Text = "Couldn't open device selection form";
@@ -947,11 +1061,244 @@ public class GForm_Main : DarkForm
         }
     }
 
+    public int Check_Checksum(byte[] byte_1)
+    {
+        byte b = 0;
+        for (int i = 0; i < byte_1.Length; i++)
+        {
+            if (i != 33792) //0x8400
+            {
+                b -= byte_1[i];
+            }
+        }
+        return (int)b;
+    }
+
 
     private void method_17(object sender, EventArgs e)
     {
+        using (OpenFileDialog dialog = new OpenFileDialog())
+        {
+            dialog.Filter = "All files (*.*)|*.*";
+            //dialog.Filter = "All files (*.*)|*.*|calibration files (*.khts)|*.khts";
+            dialog.FilterIndex = 1;
+            dialog.RestoreDirectory = true;
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                string string_Filename = dialog.FileName;
+                if (Path.GetExtension(string_Filename).ToUpper() != ".KHTS")
+                {
+                    byte_ToWrite = File.ReadAllBytes(string_Filename);
+                }
+                else
+                {
+                    /*Class39_0.smethod_17(string_Filename);
+                    int num2 = Check_Checksum(Class39_0.byte_0);
+                    if ((Class39_0.byte_0[0x8400] != num2) && (MessageBox.Show("Checksum is incorrect do you want to fix it?", "Flash Tool", MessageBoxButtons.YesNo) == DialogResult.Yes))
+                    {
+                        Class39_0.byte_0[0x8400] = (byte)num2;
+                    }
+                    Buffer.BlockCopy(Class39_0.byte_0, 0x8000, FileBytes, 0, 0xf8000);*/
+                }
+                if (MessageBox.Show("Are you sure you want to write this file to ECU?", "Flash Tool", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    this.backgroundWorker_0 = new BackgroundWorker();
+                    this.backgroundWorker_0.WorkerReportsProgress = true;
+                    this.backgroundWorker_0.DoWork += new DoWorkEventHandler(this.backgroundWorker_0_DoWork_1);
+                    this.backgroundWorker_0.ProgressChanged += new ProgressChangedEventHandler(this.method_18);
+                    this.backgroundWorker_0.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.method_19);
+                    this.backgroundWorker_0.RunWorkerAsync();
+                }
+            }
+        }
     }
 
+    private unsafe void backgroundWorker_0_DoWork_1(object sender, DoWorkEventArgs e)
+    {
+        using (API api = APIFactory.GetAPI(GForm_Main.string_0))
+        {
+            try
+            {
+                using (Device device = api.GetDevice(""))
+                {
+                    using (Channel channel = device.GetChannel(Protocol.ISO15765, Baud.CAN, ConnectFlag.CAN_29BIT_ID, false))
+                    {
+                        MessageFilter messageFilter = new MessageFilter();
+                        messageFilter.FilterType = Filter.FLOW_CONTROL_FILTER;
+                        messageFilter.Mask = new byte[]
+                        {
+                        byte.MaxValue,
+                        byte.MaxValue,
+                        byte.MaxValue,
+                        byte.MaxValue
+                        };
+                        messageFilter.Pattern = new byte[]
+                        {
+                        24,     //0x18
+                        218,    //0xDA
+                        241,    //0xF1
+                        GForm_Main.byte_3       //0x00
+                        };
+                        messageFilter.FlowControl = new byte[]
+                        {
+                        24,     //0x18
+                        218,    //0xDA
+                        GForm_Main.byte_3,      //0x00  -> 0x10|0x11
+                        241     //0xF1
+                        };
+                        MessageFilter filter = messageFilter;
+                        channel.StartMsgFilter(filter);
+                        SConfig[] config = new SConfig[]
+                        {
+                        new SConfig(Parameter.LOOP_BACK, 1),
+                        new SConfig(Parameter.DATA_RATE, 500000)
+                        };
+                        channel.SetConfig(config);
+
+                        device.SetProgrammingVoltage(Pin.PIN_12, 5000);
+
+                        if (!ECU_Unlocked)
+                        {
+                            MessageBox.Show("ECU is NOT Unlocked!");
+                        }
+                        else
+                        {
+                            Stopwatch stopwatch = new Stopwatch();
+                            stopwatch.Start();
+                            this.WriteROMtoECU(channel, byte_ToWrite, this.backgroundWorker_0);
+                            stopwatch.Stop();
+
+                            TimeSpan timeSpan = TimeSpan.FromMilliseconds((double)stopwatch.ElapsedMilliseconds);
+                            this.backgroundWorker_0.ReportProgress(0, "Successfully read " + this.byte_7.Length + "bytes of flash memory in " + timeSpan.Minutes + ":" + timeSpan.Seconds);
+                            device.SetProgrammingVoltage(Pin.PIN_12, -1);   //Set 0V on Pin12
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                DarkMessageBox.Show(this, ex.Message);
+            }
+        }
+    }
+
+    public void WriteROMtoECU(Channel channel_0, byte[] byte_5, BackgroundWorker backgroundWorker_X = null)
+    {
+        if (byte_5.Length < 1015808)
+        {
+            return;
+        }
+        byte b = 1;
+        int num = 256;
+        for (int i = 0; i < 1015808; i += num)
+        {
+            this.method_14(channel_0, byte_5, i, b, num, -1);
+            if (b == 255)
+            {
+                b = 0;
+            }
+            else
+            {
+                b += 1;
+            }
+            if (backgroundWorker_X != null)
+            {
+                backgroundWorker_X.ReportProgress((int)((float)i / 1015808f * 100f));
+            }
+        }
+        this.method_13(channel_0);
+    }
+
+    public void method_13(Channel channel_0)
+    {
+        SAE.J2534.Message message = new SAE.J2534.Message(new byte[]
+        {
+            24,     //0x18
+            218,    //0xDA
+            GForm_Main.byte_3,
+            241,    //0xF1
+            0x37    //0x37
+        }, TxFlag.CAN_29BIT_ID | TxFlag.ISO15765_FRAME_PAD);
+
+        channel_0.SendMessage(message);
+
+        bool flag = false;
+        byte[] buffer2 = new byte[] { GForm_Main.byte_3, 0x77 };
+        while (!flag)
+        {
+            GetMessageResults results2 = channel_0.GetMessages(3);
+            int num3 = -1;
+            if (results2.Result != ResultCode.DEVICE_NOT_CONNECTED)
+            {
+                foreach (SAE.J2534.Message message3 in results2.Messages)
+                {
+                    num3 = GForm_Main.smethod_2(message3.Data, buffer2, 0);
+                    if (num3 > 0)
+                    {
+                        flag = true;
+                        this.backgroundWorker_0.ReportProgress(0, "Transfer Exited" + Environment.NewLine);
+                        break;
+                    }
+                }
+            }
+        }
+
+        SAE.J2534.Message message2 = new SAE.J2534.Message(new byte[]
+        {
+            24,     //0x18
+            218,    //0xDA
+            GForm_Main.byte_3,
+            241,    //0xF1
+            0x31,   //0x31
+            1,      //0x01
+            0xff,   //0xff
+            1       //0x01
+        }, TxFlag.CAN_29BIT_ID | TxFlag.ISO15765_FRAME_PAD);
+
+        channel_0.SendMessage(message2);
+        int num2 = 0;
+        GetMessageResults messages = channel_0.GetMessages(3);
+        if (messages.Result != ResultCode.DEVICE_NOT_CONNECTED)
+        {
+            SAE.J2534.Message[] messageArray2 = messages.Messages;
+            for (int i = 0; i < messageArray2.Length; i++)
+            {
+                num2++;
+            }
+        }
+    }
+
+    public void method_14(Channel channel_0, byte[] byte_5X, int int_23, byte byte_6X, int int_24, int int_25 = -1)
+    {
+        if (int_25 == -1)
+        {
+            int_25 = int_24;
+        }
+
+        byte[] data = new byte[] { 0x18, 0xDA, GForm_Main.byte_3, 0xF1, 0x36, byte_6X };
+        Buffer.BlockCopy(byte_5X, int_23, data, 6, int_25);
+        SAE.J2534.Message message = new SAE.J2534.Message(data, TxFlag.CAN_29BIT_ID | TxFlag.ISO15765_FRAME_PAD);
+        channel_0.SendMessage(message);
+        bool flag = false;
+        byte[] buffer2 = new byte[] { GForm_Main.byte_3, 0x76, byte_6X };
+        while (!flag)
+        {
+            GetMessageResults messages = channel_0.GetMessages(5);
+            int num = -1;
+            if (messages.Result != ResultCode.DEVICE_NOT_CONNECTED)
+            {
+                foreach (SAE.J2534.Message message2 in messages.Messages)
+                {
+                    num = GForm_Main.smethod_2(message2.Data, buffer2, 0);
+                    if (num > 0)
+                    {
+                        flag = true;
+                        return;
+                    }
+                }
+            }
+        }
+    }
 
     private void method_18(object sender, ProgressChangedEventArgs e)
     {
@@ -1012,10 +1359,10 @@ public class GForm_Main : DarkForm
             this.darkTextBox_0 = new DarkUI.Controls.DarkTextBox();
             this.darkButton_3 = new DarkUI.Controls.DarkButton();
             this.darkButton_2 = new DarkUI.Controls.DarkButton();
-            this.darkButton_1 = new DarkUI.Controls.DarkButton();
+            this.darkButton_DownloadROM = new DarkUI.Controls.DarkButton();
             this.darkButton_0 = new DarkUI.Controls.DarkButton();
             this.darkGroupBox_0 = new DarkUI.Controls.DarkGroupBox();
-            this.darkButton2 = new DarkUI.Controls.DarkButton();
+            this.darkButton_Unlock41 = new DarkUI.Controls.DarkButton();
             this.darkButton1 = new DarkUI.Controls.DarkButton();
             this.darkButton_6 = new DarkUI.Controls.DarkButton();
             this.darkButton_5 = new DarkUI.Controls.DarkButton();
@@ -1035,6 +1382,7 @@ public class GForm_Main : DarkForm
             this.darkLabel_7 = new DarkUI.Controls.DarkLabel();
             this.darkLabel_8 = new DarkUI.Controls.DarkLabel();
             this.darkCheckBox_0 = new DarkUI.Controls.DarkCheckBox();
+            this.darkButton_Unlock01 = new DarkUI.Controls.DarkButton();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_0)).BeginInit();
             this.darkGroupBox_0.SuspendLayout();
             this.SuspendLayout();
@@ -1078,22 +1426,22 @@ public class GForm_Main : DarkForm
             this.darkButton_2.Text = "Select Adapter";
             this.darkButton_2.Click += new System.EventHandler(this.method_3);
             // 
-            // darkButton_1
+            // darkButton_DownloadROM
             // 
-            this.darkButton_1.Checked = false;
-            this.darkButton_1.Enabled = false;
-            this.darkButton_1.Location = new System.Drawing.Point(6, 184);
-            this.darkButton_1.Name = "darkButton_1";
-            this.darkButton_1.Size = new System.Drawing.Size(192, 23);
-            this.darkButton_1.TabIndex = 49;
-            this.darkButton_1.Text = "Download Honda Rom";
-            this.darkButton_1.Click += new System.EventHandler(this.method_13);
+            this.darkButton_DownloadROM.Checked = false;
+            this.darkButton_DownloadROM.Enabled = false;
+            this.darkButton_DownloadROM.Location = new System.Drawing.Point(6, 213);
+            this.darkButton_DownloadROM.Name = "darkButton_DownloadROM";
+            this.darkButton_DownloadROM.Size = new System.Drawing.Size(192, 23);
+            this.darkButton_DownloadROM.TabIndex = 49;
+            this.darkButton_DownloadROM.Text = "Download Rom";
+            this.darkButton_DownloadROM.Click += new System.EventHandler(this.method_13);
             // 
             // darkButton_0
             // 
             this.darkButton_0.Checked = false;
             this.darkButton_0.Enabled = false;
-            this.darkButton_0.Location = new System.Drawing.Point(6, 242);
+            this.darkButton_0.Location = new System.Drawing.Point(6, 271);
             this.darkButton_0.Name = "darkButton_0";
             this.darkButton_0.Size = new System.Drawing.Size(192, 23);
             this.darkButton_0.TabIndex = 50;
@@ -1104,7 +1452,8 @@ public class GForm_Main : DarkForm
             // darkGroupBox_0
             // 
             this.darkGroupBox_0.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
-            this.darkGroupBox_0.Controls.Add(this.darkButton2);
+            this.darkGroupBox_0.Controls.Add(this.darkButton_Unlock01);
+            this.darkGroupBox_0.Controls.Add(this.darkButton_Unlock41);
             this.darkGroupBox_0.Controls.Add(this.darkButton1);
             this.darkGroupBox_0.Controls.Add(this.darkButton_6);
             this.darkGroupBox_0.Controls.Add(this.darkButton_5);
@@ -1112,7 +1461,7 @@ public class GForm_Main : DarkForm
             this.darkGroupBox_0.Controls.Add(this.darkButton_4);
             this.darkGroupBox_0.Controls.Add(this.darkButton_0);
             this.darkGroupBox_0.Controls.Add(this.darkButton_3);
-            this.darkGroupBox_0.Controls.Add(this.darkButton_1);
+            this.darkGroupBox_0.Controls.Add(this.darkButton_DownloadROM);
             this.darkGroupBox_0.Controls.Add(this.darkButton_2);
             this.darkGroupBox_0.Location = new System.Drawing.Point(11, 90);
             this.darkGroupBox_0.Name = "darkGroupBox_0";
@@ -1121,17 +1470,16 @@ public class GForm_Main : DarkForm
             this.darkGroupBox_0.TabStop = false;
             this.darkGroupBox_0.Text = "J2534 Controls";
             // 
-            // darkButton2
+            // darkButton_Unlock41
             // 
-            this.darkButton2.Checked = false;
-            this.darkButton2.Enabled = false;
-            this.darkButton2.Location = new System.Drawing.Point(6, 155);
-            this.darkButton2.Name = "darkButton2";
-            this.darkButton2.Size = new System.Drawing.Size(192, 23);
-            this.darkButton2.TabIndex = 57;
-            this.darkButton2.Text = "UNLOCK ECU";
-            this.darkButton2.Visible = false;
-            this.darkButton2.Click += new System.EventHandler(this.darkButton2_Click);
+            this.darkButton_Unlock41.Checked = false;
+            this.darkButton_Unlock41.Enabled = false;
+            this.darkButton_Unlock41.Location = new System.Drawing.Point(6, 184);
+            this.darkButton_Unlock41.Name = "darkButton_Unlock41";
+            this.darkButton_Unlock41.Size = new System.Drawing.Size(192, 23);
+            this.darkButton_Unlock41.TabIndex = 57;
+            this.darkButton_Unlock41.Text = "UNLOCK ECU (0x27,0x41)";
+            this.darkButton_Unlock41.Click += new System.EventHandler(this.darkButton2_Click);
             // 
             // darkButton1
             // 
@@ -1158,12 +1506,11 @@ public class GForm_Main : DarkForm
             // 
             this.darkButton_5.Checked = false;
             this.darkButton_5.Enabled = false;
-            this.darkButton_5.Location = new System.Drawing.Point(6, 213);
+            this.darkButton_5.Location = new System.Drawing.Point(6, 242);
             this.darkButton_5.Name = "darkButton_5";
             this.darkButton_5.Size = new System.Drawing.Size(192, 23);
             this.darkButton_5.TabIndex = 54;
             this.darkButton_5.Text = "Flash Rom";
-            this.darkButton_5.Visible = false;
             this.darkButton_5.Click += new System.EventHandler(this.method_17);
             // 
             // darkLabel_6
@@ -1180,7 +1527,7 @@ public class GForm_Main : DarkForm
             // 
             this.darkButton_4.Checked = false;
             this.darkButton_4.Enabled = false;
-            this.darkButton_4.Location = new System.Drawing.Point(6, 271);
+            this.darkButton_4.Location = new System.Drawing.Point(6, 300);
             this.darkButton_4.Name = "darkButton_4";
             this.darkButton_4.Size = new System.Drawing.Size(192, 23);
             this.darkButton_4.TabIndex = 51;
@@ -1319,6 +1666,17 @@ public class GForm_Main : DarkForm
             this.darkCheckBox_0.Text = "Large Write";
             this.darkCheckBox_0.Visible = false;
             // 
+            // darkButton_Unlock01
+            // 
+            this.darkButton_Unlock01.Checked = false;
+            this.darkButton_Unlock01.Enabled = false;
+            this.darkButton_Unlock01.Location = new System.Drawing.Point(6, 155);
+            this.darkButton_Unlock01.Name = "darkButton_Unlock01";
+            this.darkButton_Unlock01.Size = new System.Drawing.Size(192, 23);
+            this.darkButton_Unlock01.TabIndex = 58;
+            this.darkButton_Unlock01.Text = "UNLOCK ECU (0x27,0x01)";
+            this.darkButton_Unlock01.Click += new System.EventHandler(this.darkButton_Unlock01_Click);
+            // 
             // GForm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1414,6 +1772,8 @@ public class GForm_Main : DarkForm
 
     public static byte byte_3 = 16;
 
+    public static byte[] byte_ToWrite = new byte[] { };
+
 
     public static byte[] byte_4 = new byte[2097152];
 
@@ -1467,6 +1827,8 @@ public class GForm_Main : DarkForm
 
     private BackgroundWorker backgroundWorker_0;
 
+    private BackgroundWorker backgroundWorker_1;
+
 
     private DateTime dateTime_0;
 
@@ -1483,7 +1845,7 @@ public class GForm_Main : DarkForm
     private DarkButton darkButton_0;
 
 
-    private DarkButton darkButton_1;
+    private DarkButton darkButton_DownloadROM;
 
 
     private DarkButton darkButton_2;
@@ -1548,7 +1910,7 @@ public class GForm_Main : DarkForm
 
     private DarkLabel darkLabel_8;
     private DarkButton darkButton1;
-    private DarkButton darkButton2;
+    private DarkButton darkButton_Unlock41;
     private DarkCheckBox darkCheckBox_0;
 
 
