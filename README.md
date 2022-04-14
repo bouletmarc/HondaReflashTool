@@ -10,7 +10,7 @@ The Honda communauty is far behind on the other manufacturers when come to Refla
 
 # Tool Features
 
---Read ECU Rom
+;Read ECU Rom
 --Write/Flash ECU Rom (In Progress)
 --Checksum Verification (In Progress)
 --Seed/Key ECU Unlock Algorithms -> All ECUS for 0x27,0x01 Request
