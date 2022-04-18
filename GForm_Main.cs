@@ -225,6 +225,7 @@ public class GForm_Main : DarkForm
     {
         this.darkProgressBar_0.Value = int_0;
         this.darkLabel_7.Text = "Reading: " + int_0.ToString() + "%";
+        Application.DoEvents();
     }
 
 
@@ -232,6 +233,7 @@ public class GForm_Main : DarkForm
     {
         this.darkProgressBar_0.Value = int_0;
         this.darkLabel_7.Text = "Writing: " + int_0.ToString() + "%";
+        Application.DoEvents();
     }
 
 
@@ -1136,6 +1138,7 @@ public class GForm_Main : DarkForm
                         else
                         {
                             device.SetProgrammingVoltage(Pin.PIN_12, 5000);
+                            Stopwatch stopwatch = new Stopwatch();
 
                             //Send WRITE_DATA_BY_IDENTIFIER for firmware (.rwd) writing mode
                             if (!WritingBinaryMode) 
@@ -1223,15 +1226,61 @@ public class GForm_Main : DarkForm
                                 Received = SendJ2534Message(channel, arraySend1);
                                 if (Received != null)
                                 {
-                                    this.method_1("Request download done" + Environment.NewLine);
-                                    //block_size = ;
+                                    this.method_1("Request download started" + Environment.NewLine);
+                                    stopwatch.Start();
+
+                                    var block_size = (Received[Received.Length - 2] + Received[Received.Length - 1]);  //Get the two last bytes
+                                    var chunk_size = block_size - 2;
+                                    var cnt = 0;
+                                    for (int i = 0; i < Class_RWD._firmware_encrypted.Length; i += chunk_size)
+                                    {
+                                        cnt += 1;
+                                        byte[] chunk = Class_RWD.Slice(Class_RWD._firmware_encrypted, i, i + chunk_size);
+                                        //console.log(`${ cnt}: 0x${ i.toString(16)} -0x${ (i + chunk_size).toString(16)}`);
+                                        //await this.client.transfer_data(cnt & 0xFF, chunk);
+                                        // bitwise | converts float to int
+                                        //postMessage({ command: 'flash-progress', result: (i / this.rwd.firmware.data.byteLength * 100) | 0 })
+
+                                        byte bsct = (byte) (cnt & 0xFF);
+                                        arraySend1 = new byte[]
+                                        {
+                                            0x36,   //0x36  -> TRANSFER_DATA
+                                            bsct    //0x00  -> block_sequence_count
+                                        };
+
+                                        //Add the rest of the messages bytes to the final array
+                                        byte[] arrayCommandFinal = new byte[arraySend1.Length + chunk.Length];
+                                        int MessageIndex = 0;
+                                        for (int i2 = 0; i2 < arraySend1.Length; i2++)
+                                        {
+                                            arrayCommandFinal[MessageIndex] = arraySend1[i2];
+                                            MessageIndex++;
+                                        }
+                                        for (int i2 = 0; i2 < chunk.Length; i2++)
+                                        {
+                                            arrayCommandFinal[MessageIndex] = chunk[i2];
+                                            MessageIndex++;
+                                        }
+
+                                        Received = SendJ2534Message(channel, arrayCommandFinal);
+                                        //int Percent = (i / Class_RWD._firmware_encrypted.Length * 100);
+                                        int Percent = ((i * 100) / Class_RWD._firmware_encrypted.Length);
+                                        this.method_5(Percent);
+                                        /*if (Received != null)
+                                        {
+                                            this.method_1("WRITE CHUNK CORRECT!" + Environment.NewLine);
+                                        }*/
+                                    }
+                                    stopwatch.Stop();
                                 }
                             }
 
-                            Stopwatch stopwatch = new Stopwatch();
-                            stopwatch.Start();
-                            this.WriteROMtoECU(channel, byte_ToWrite, this.backgroundWorker_0);
-                            stopwatch.Stop();
+                            if (WritingBinaryMode)
+                            {
+                                stopwatch.Start();
+                                this.WriteROMtoECU(channel, byte_ToWrite, this.backgroundWorker_0);
+                                stopwatch.Stop();
+                            }
 
                             if (!WritingBinaryMode)
                             {
@@ -1410,7 +1459,6 @@ public class GForm_Main : DarkForm
     private void InitializeComponent()
     {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GForm_Main));
-            this.pictureBox_0 = new System.Windows.Forms.PictureBox();
             this.darkTextBox_0 = new DarkUI.Controls.DarkTextBox();
             this.darkButton_3 = new DarkUI.Controls.DarkButton();
             this.darkButton_2 = new DarkUI.Controls.DarkButton();
@@ -1423,7 +1471,6 @@ public class GForm_Main : DarkForm
             this.darkButton1 = new DarkUI.Controls.DarkButton();
             this.darkButton_6 = new DarkUI.Controls.DarkButton();
             this.darkButton_5 = new DarkUI.Controls.DarkButton();
-            this.darkLabel_6 = new DarkUI.Controls.DarkLabel();
             this.darkButton_4 = new DarkUI.Controls.DarkButton();
             this.darkLabel_0 = new DarkUI.Controls.DarkLabel();
             this.darkLabel_1 = new DarkUI.Controls.DarkLabel();
@@ -1438,28 +1485,17 @@ public class GForm_Main : DarkForm
             this.darkProgressBar_0 = new DarkUI.Controls.DarkProgressBar();
             this.darkLabel_7 = new DarkUI.Controls.DarkLabel();
             this.darkLabel_8 = new DarkUI.Controls.DarkLabel();
-            this.darkCheckBox_0 = new DarkUI.Controls.DarkCheckBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.darkButton3 = new DarkUI.Controls.DarkButton();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_0)).BeginInit();
             this.darkGroupBox_0.SuspendLayout();
             this.SuspendLayout();
             // 
-            // pictureBox_0
-            // 
-            this.pictureBox_0.Location = new System.Drawing.Point(11, 337);
-            this.pictureBox_0.Name = "pictureBox_0";
-            this.pictureBox_0.Size = new System.Drawing.Size(204, 169);
-            this.pictureBox_0.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox_0.TabIndex = 52;
-            this.pictureBox_0.TabStop = false;
-            // 
             // darkTextBox_0
             // 
-            this.darkTextBox_0.Location = new System.Drawing.Point(218, 90);
+            this.darkTextBox_0.Location = new System.Drawing.Point(218, 63);
             this.darkTextBox_0.Multiline = true;
             this.darkTextBox_0.Name = "darkTextBox_0";
-            this.darkTextBox_0.Size = new System.Drawing.Size(461, 416);
+            this.darkTextBox_0.Size = new System.Drawing.Size(461, 443);
             this.darkTextBox_0.TabIndex = 55;
             this.darkTextBox_0.Text = "Honda CANBUS Tools";
             // 
@@ -1477,7 +1513,7 @@ public class GForm_Main : DarkForm
             // 
             this.darkButton_2.Checked = false;
             this.darkButton_2.Enabled = false;
-            this.darkButton_2.Location = new System.Drawing.Point(6, 97);
+            this.darkButton_2.Location = new System.Drawing.Point(6, 77);
             this.darkButton_2.Name = "darkButton_2";
             this.darkButton_2.Size = new System.Drawing.Size(192, 23);
             this.darkButton_2.TabIndex = 48;
@@ -1488,7 +1524,7 @@ public class GForm_Main : DarkForm
             // 
             this.darkButton_DownloadROM.Checked = false;
             this.darkButton_DownloadROM.Enabled = false;
-            this.darkButton_DownloadROM.Location = new System.Drawing.Point(6, 213);
+            this.darkButton_DownloadROM.Location = new System.Drawing.Point(6, 193);
             this.darkButton_DownloadROM.Name = "darkButton_DownloadROM";
             this.darkButton_DownloadROM.Size = new System.Drawing.Size(192, 23);
             this.darkButton_DownloadROM.TabIndex = 49;
@@ -1499,7 +1535,7 @@ public class GForm_Main : DarkForm
             // 
             this.darkButton_0.Checked = false;
             this.darkButton_0.Enabled = false;
-            this.darkButton_0.Location = new System.Drawing.Point(6, 300);
+            this.darkButton_0.Location = new System.Drawing.Point(6, 309);
             this.darkButton_0.Name = "darkButton_0";
             this.darkButton_0.Size = new System.Drawing.Size(192, 23);
             this.darkButton_0.TabIndex = 50;
@@ -1513,19 +1549,22 @@ public class GForm_Main : DarkForm
             this.darkGroupBox_0.Controls.Add(this.darkButton3);
             this.darkGroupBox_0.Controls.Add(this.darkButton2);
             this.darkGroupBox_0.Controls.Add(this.darkButton_Unlock01);
+            this.darkGroupBox_0.Controls.Add(this.darkTextBox_4);
             this.darkGroupBox_0.Controls.Add(this.darkButton_Unlock41);
+            this.darkGroupBox_0.Controls.Add(this.darkTextBox_3);
             this.darkGroupBox_0.Controls.Add(this.darkButton1);
             this.darkGroupBox_0.Controls.Add(this.darkButton_6);
             this.darkGroupBox_0.Controls.Add(this.darkButton_5);
-            this.darkGroupBox_0.Controls.Add(this.darkLabel_6);
+            this.darkGroupBox_0.Controls.Add(this.darkLabel_3);
             this.darkGroupBox_0.Controls.Add(this.darkButton_4);
             this.darkGroupBox_0.Controls.Add(this.darkButton_0);
             this.darkGroupBox_0.Controls.Add(this.darkButton_3);
+            this.darkGroupBox_0.Controls.Add(this.darkLabel_2);
             this.darkGroupBox_0.Controls.Add(this.darkButton_DownloadROM);
             this.darkGroupBox_0.Controls.Add(this.darkButton_2);
-            this.darkGroupBox_0.Location = new System.Drawing.Point(11, 90);
+            this.darkGroupBox_0.Location = new System.Drawing.Point(7, 6);
             this.darkGroupBox_0.Name = "darkGroupBox_0";
-            this.darkGroupBox_0.Size = new System.Drawing.Size(204, 416);
+            this.darkGroupBox_0.Size = new System.Drawing.Size(204, 500);
             this.darkGroupBox_0.TabIndex = 56;
             this.darkGroupBox_0.TabStop = false;
             this.darkGroupBox_0.Text = "J2534 Controls";
@@ -1533,7 +1572,7 @@ public class GForm_Main : DarkForm
             // darkButton2
             // 
             this.darkButton2.Checked = false;
-            this.darkButton2.Location = new System.Drawing.Point(6, 358);
+            this.darkButton2.Location = new System.Drawing.Point(6, 280);
             this.darkButton2.Name = "darkButton2";
             this.darkButton2.Size = new System.Drawing.Size(192, 23);
             this.darkButton2.TabIndex = 59;
@@ -1544,7 +1583,7 @@ public class GForm_Main : DarkForm
             // 
             this.darkButton_Unlock01.Checked = false;
             this.darkButton_Unlock01.Enabled = false;
-            this.darkButton_Unlock01.Location = new System.Drawing.Point(6, 155);
+            this.darkButton_Unlock01.Location = new System.Drawing.Point(6, 135);
             this.darkButton_Unlock01.Name = "darkButton_Unlock01";
             this.darkButton_Unlock01.Size = new System.Drawing.Size(192, 23);
             this.darkButton_Unlock01.TabIndex = 58;
@@ -1555,7 +1594,7 @@ public class GForm_Main : DarkForm
             // 
             this.darkButton_Unlock41.Checked = false;
             this.darkButton_Unlock41.Enabled = false;
-            this.darkButton_Unlock41.Location = new System.Drawing.Point(6, 184);
+            this.darkButton_Unlock41.Location = new System.Drawing.Point(6, 164);
             this.darkButton_Unlock41.Name = "darkButton_Unlock41";
             this.darkButton_Unlock41.Size = new System.Drawing.Size(192, 23);
             this.darkButton_Unlock41.TabIndex = 57;
@@ -1566,7 +1605,7 @@ public class GForm_Main : DarkForm
             // 
             this.darkButton1.Checked = false;
             this.darkButton1.Enabled = false;
-            this.darkButton1.Location = new System.Drawing.Point(6, 126);
+            this.darkButton1.Location = new System.Drawing.Point(6, 106);
             this.darkButton1.Name = "darkButton1";
             this.darkButton1.Size = new System.Drawing.Size(192, 23);
             this.darkButton1.TabIndex = 56;
@@ -1576,7 +1615,7 @@ public class GForm_Main : DarkForm
             // darkButton_6
             // 
             this.darkButton_6.Checked = false;
-            this.darkButton_6.Location = new System.Drawing.Point(6, 68);
+            this.darkButton_6.Location = new System.Drawing.Point(6, 48);
             this.darkButton_6.Name = "darkButton_6";
             this.darkButton_6.Size = new System.Drawing.Size(192, 23);
             this.darkButton_6.TabIndex = 55;
@@ -1587,28 +1626,18 @@ public class GForm_Main : DarkForm
             // 
             this.darkButton_5.Checked = false;
             this.darkButton_5.Enabled = false;
-            this.darkButton_5.Location = new System.Drawing.Point(6, 242);
+            this.darkButton_5.Location = new System.Drawing.Point(6, 222);
             this.darkButton_5.Name = "darkButton_5";
             this.darkButton_5.Size = new System.Drawing.Size(192, 23);
             this.darkButton_5.TabIndex = 54;
             this.darkButton_5.Text = "Flash Rom (.bin)";
             this.darkButton_5.Click += new System.EventHandler(this.method_17);
             // 
-            // darkLabel_6
-            // 
-            this.darkLabel_6.AutoSize = true;
-            this.darkLabel_6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.darkLabel_6.Location = new System.Drawing.Point(32, 52);
-            this.darkLabel_6.Name = "darkLabel_6";
-            this.darkLabel_6.Size = new System.Drawing.Size(133, 13);
-            this.darkLabel_6.TabIndex = 53;
-            this.darkLabel_6.Text = "Read Size(Select Platform)";
-            // 
             // darkButton_4
             // 
             this.darkButton_4.Checked = false;
             this.darkButton_4.Enabled = false;
-            this.darkButton_4.Location = new System.Drawing.Point(6, 329);
+            this.darkButton_4.Location = new System.Drawing.Point(6, 338);
             this.darkButton_4.Name = "darkButton_4";
             this.darkButton_4.Size = new System.Drawing.Size(192, 23);
             this.darkButton_4.TabIndex = 51;
@@ -1620,7 +1649,7 @@ public class GForm_Main : DarkForm
             // 
             this.darkLabel_0.AutoSize = true;
             this.darkLabel_0.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.darkLabel_0.Location = new System.Drawing.Point(8, 13);
+            this.darkLabel_0.Location = new System.Drawing.Point(228, 14);
             this.darkLabel_0.Name = "darkLabel_0";
             this.darkLabel_0.Size = new System.Drawing.Size(62, 13);
             this.darkLabel_0.TabIndex = 57;
@@ -1630,7 +1659,7 @@ public class GForm_Main : DarkForm
             // 
             this.darkLabel_1.AutoSize = true;
             this.darkLabel_1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.darkLabel_1.Location = new System.Drawing.Point(8, 41);
+            this.darkLabel_1.Location = new System.Drawing.Point(228, 40);
             this.darkLabel_1.Name = "darkLabel_1";
             this.darkLabel_1.Size = new System.Drawing.Size(70, 13);
             this.darkLabel_1.TabIndex = 58;
@@ -1640,22 +1669,22 @@ public class GForm_Main : DarkForm
             // 
             this.darkLabel_2.AutoSize = true;
             this.darkLabel_2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.darkLabel_2.Location = new System.Drawing.Point(109, 67);
+            this.darkLabel_2.Location = new System.Drawing.Point(7, 453);
             this.darkLabel_2.Name = "darkLabel_2";
-            this.darkLabel_2.Size = new System.Drawing.Size(202, 13);
+            this.darkLabel_2.Size = new System.Drawing.Size(73, 13);
             this.darkLabel_2.TabIndex = 59;
-            this.darkLabel_2.Text = "Read address (in hex with preceeding 0x)";
+            this.darkLabel_2.Text = "Read address";
             this.darkLabel_2.Visible = false;
             // 
             // darkLabel_3
             // 
             this.darkLabel_3.AutoSize = true;
             this.darkLabel_3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.darkLabel_3.Location = new System.Drawing.Point(457, 67);
+            this.darkLabel_3.Location = new System.Drawing.Point(24, 476);
             this.darkLabel_3.Name = "darkLabel_3";
-            this.darkLabel_3.Size = new System.Drawing.Size(116, 13);
+            this.darkLabel_3.Size = new System.Drawing.Size(56, 13);
             this.darkLabel_3.TabIndex = 60;
-            this.darkLabel_3.Text = "Read Size (Also in hex)";
+            this.darkLabel_3.Text = "Read Size";
             this.darkLabel_3.Visible = false;
             // 
             // darkLabel_4
@@ -1681,33 +1710,33 @@ public class GForm_Main : DarkForm
             // 
             // darkTextBox_1
             // 
-            this.darkTextBox_1.Location = new System.Drawing.Point(83, 11);
+            this.darkTextBox_1.Location = new System.Drawing.Point(304, 11);
             this.darkTextBox_1.Name = "darkTextBox_1";
             this.darkTextBox_1.ReadOnly = true;
-            this.darkTextBox_1.Size = new System.Drawing.Size(596, 20);
+            this.darkTextBox_1.Size = new System.Drawing.Size(375, 20);
             this.darkTextBox_1.TabIndex = 63;
             // 
             // darkTextBox_2
             // 
-            this.darkTextBox_2.Location = new System.Drawing.Point(83, 39);
+            this.darkTextBox_2.Location = new System.Drawing.Point(304, 37);
             this.darkTextBox_2.Name = "darkTextBox_2";
             this.darkTextBox_2.ReadOnly = true;
-            this.darkTextBox_2.Size = new System.Drawing.Size(596, 20);
+            this.darkTextBox_2.Size = new System.Drawing.Size(375, 20);
             this.darkTextBox_2.TabIndex = 64;
             // 
             // darkTextBox_3
             // 
-            this.darkTextBox_3.Location = new System.Drawing.Point(351, 64);
+            this.darkTextBox_3.Location = new System.Drawing.Point(85, 450);
             this.darkTextBox_3.Name = "darkTextBox_3";
-            this.darkTextBox_3.Size = new System.Drawing.Size(100, 20);
+            this.darkTextBox_3.Size = new System.Drawing.Size(113, 20);
             this.darkTextBox_3.TabIndex = 65;
             this.darkTextBox_3.Visible = false;
             // 
             // darkTextBox_4
             // 
-            this.darkTextBox_4.Location = new System.Drawing.Point(579, 65);
+            this.darkTextBox_4.Location = new System.Drawing.Point(85, 474);
             this.darkTextBox_4.Name = "darkTextBox_4";
-            this.darkTextBox_4.Size = new System.Drawing.Size(100, 20);
+            this.darkTextBox_4.Size = new System.Drawing.Size(113, 20);
             this.darkTextBox_4.TabIndex = 66;
             this.darkTextBox_4.Visible = false;
             // 
@@ -1737,16 +1766,6 @@ public class GForm_Main : DarkForm
             this.darkLabel_8.Size = new System.Drawing.Size(0, 13);
             this.darkLabel_8.TabIndex = 69;
             // 
-            // darkCheckBox_0
-            // 
-            this.darkCheckBox_0.AutoSize = true;
-            this.darkCheckBox_0.Location = new System.Drawing.Point(11, 66);
-            this.darkCheckBox_0.Name = "darkCheckBox_0";
-            this.darkCheckBox_0.Size = new System.Drawing.Size(81, 17);
-            this.darkCheckBox_0.TabIndex = 70;
-            this.darkCheckBox_0.Text = "Large Write";
-            this.darkCheckBox_0.Visible = false;
-            // 
             // openFileDialog1
             // 
             this.openFileDialog1.DefaultExt = "*.gz";
@@ -1757,7 +1776,7 @@ public class GForm_Main : DarkForm
             // 
             this.darkButton3.Checked = false;
             this.darkButton3.Enabled = false;
-            this.darkButton3.Location = new System.Drawing.Point(6, 271);
+            this.darkButton3.Location = new System.Drawing.Point(6, 251);
             this.darkButton3.Name = "darkButton3";
             this.darkButton3.Size = new System.Drawing.Size(192, 23);
             this.darkButton3.TabIndex = 60;
@@ -1769,28 +1788,21 @@ public class GForm_Main : DarkForm
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(694, 571);
-            this.Controls.Add(this.darkCheckBox_0);
             this.Controls.Add(this.darkLabel_8);
             this.Controls.Add(this.darkLabel_7);
             this.Controls.Add(this.darkProgressBar_0);
-            this.Controls.Add(this.darkTextBox_4);
-            this.Controls.Add(this.darkTextBox_3);
             this.Controls.Add(this.darkTextBox_2);
             this.Controls.Add(this.darkTextBox_1);
             this.Controls.Add(this.darkLabel_5);
             this.Controls.Add(this.darkLabel_4);
-            this.Controls.Add(this.darkLabel_3);
-            this.Controls.Add(this.darkLabel_2);
             this.Controls.Add(this.darkLabel_1);
             this.Controls.Add(this.darkLabel_0);
             this.Controls.Add(this.darkGroupBox_0);
             this.Controls.Add(this.darkTextBox_0);
-            this.Controls.Add(this.pictureBox_0);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(710, 573);
             this.Name = "GForm_Main";
             this.Text = "Honda CANBUS Tools";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_0)).EndInit();
             this.darkGroupBox_0.ResumeLayout(false);
             this.darkGroupBox_0.PerformLayout();
             this.ResumeLayout(false);
@@ -1926,8 +1938,6 @@ public class GForm_Main : DarkForm
     private IContainer icontainer_0;
 
 
-    private PictureBox pictureBox_0;
-
 
     private DarkButton darkButton_0;
 
@@ -1980,8 +1990,6 @@ public class GForm_Main : DarkForm
     private DarkButton darkButton_4;
 
 
-    private DarkLabel darkLabel_6;
-
 
     private DarkButton darkButton_5;
 
@@ -1998,7 +2006,6 @@ public class GForm_Main : DarkForm
     private DarkLabel darkLabel_8;
     private DarkButton darkButton1;
     private DarkButton darkButton_Unlock41;
-    private DarkCheckBox darkCheckBox_0;
 
 
 

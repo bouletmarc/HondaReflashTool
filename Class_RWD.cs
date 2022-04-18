@@ -13,7 +13,7 @@ static class Class_RWD
     private static string part_number_prefix = "";
     private static List<byte[]> firmware_candidates = new List<byte[]>();
     public static byte[] _keys = new byte[] { };
-    private static byte[] _firmware_encrypted = new byte[] { };
+    public static byte[] _firmware_encrypted = new byte[] { };
     public static UInt32 start = 0U;
     public static UInt32 size = 0U;
 
