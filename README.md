@@ -16,15 +16,13 @@ I hope this tool will help others developers to pick up on the developement just
 
 # Tool Features
 
--Read ECU Rom
-
--Write/Flash ECU Rom
-
--Checksum Verification **(In Progress)**
-
--Seed/Key ECU Unlock Algorithms -> All ECUS for 0x27,0x01 Request
-
--Seed/Key ECU Unlock Algorithms -> ONLY Specified ECUS for 0x27,0x41 Request (see the compatible list below)
+| Done? | Name | 
+|------|---------|
+| :white_check_mark: | Read ECU Rom |
+| :white_check_mark: | Write/Flash ECU Rom |
+| :white_check_mark: | Checksum Verification **(In Progress)** |
+| :white_check_mark: | Seed/Key ECU Unlock Algorithms -> All ECUS for 0x27,0x01 Request |
+| :white_check_mark: | Seed/Key ECU Unlock Algorithms -> ONLY Specified ECUS for 0x27,0x41 Request (see the compatible list below) |
 
 # Compatible Cars
 
