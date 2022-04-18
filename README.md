@@ -14,6 +14,10 @@ The Honda communauty is far behind on the other manufacturers when come to Refla
 
 I hope this tool will help others developers to pick up on the developement just like me and make reflash capability for Honda/Acura a lot easier for all of us.
 
+# Tool Capability and Information
+
+You cannot perform all the works to the ecu if using the Unlock button (0x27,0x01). When using this button you cannot read the ECU rom and cannot write binary file (.bin) to the ECU however this unlock method can be used to write a firmware file update (.rwd|.gz) to the ECU.
+
 # Tool Features
 
 | Done? | Feature Description | 
