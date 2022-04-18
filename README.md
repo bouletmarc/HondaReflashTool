@@ -38,9 +38,15 @@ You can freely 'Fork' this repository to your github account, this will create a
 
 To apply any changes and updates to the project, uploads the changes you have done to the duplicated project inside your reposities and then provide a 'Pull Requests' to this github repo to make the request to apply your changes done to the tool but inside my repository.
 
-# Compatible Cars
+# Compatible Cars (using unlock 0x27,0x01 button)
 
-| Car Model | Year(s) | Algorithm Byte | Key1 Bytes | Key2 Bytes
+| Car Manufacturer | Year(s) | Models |
+|------|---------|---------|
+| Honda & Acura | 2007+ | All Models?? |
+
+# Compatible Cars (using unlock 0x27,0x41 button)
+
+| Car Model | Year(s) | Algorithm Byte | Key1 Bytes | Key2 Bytes |
 |------|---------|---------|---------|---------|
 | Honda Civic's (All?) | 2006-2010 | 0x01 | 0xAE, 0x0D, 0x23, 0xFF | 0x40, 0x65, 0x58, 0xB3 |
 | Honda Ridgeline | 2006-2013 | 0x04 | 0x16, 0xA4, 0xAB, 0xB0 | 0xBF, 0xE8, 0x5A, 0x6D |
@@ -50,7 +56,7 @@ To apply any changes and updates to the project, uploads the changes you have do
 
 **Notes: Keys Bytes can be found directly in the ecu ROM.bin by searching for them!
 
-# Compatible ECU's
+# Compatible ECU's (using unlock 0x27,0x41 button)
 
 | ECU Code | Car Model/Year(s) |
 |------|---------|
