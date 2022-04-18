@@ -12,7 +12,7 @@ This is a Work In Progress Honda/Acura Reflash Tool under CanBUS Interface.
 
 The Honda communauty is far behind on the other manufacturers when come to Reflash and Tuning capabilities for vehicules working under CanBUS. Reflash tools that are guenine and works are getting very costly and the vehicules to work with the tools are getting older everydays which is not resonable.
 
-I hope this tool will help others developers to pick up on the developement just like me and make reflash capability for Honda/Acura a lot easier for all of us. Please 'Fork' and then provide a 'Pull Requests' to this github repo to make a request to apply your changes done to the tool.
+I hope this tool will help others developers to pick up on the developement just like me and make reflash capability for Honda/Acura a lot easier for all of us.
 
 # Tool Features
 
@@ -27,6 +27,12 @@ I hope this tool will help others developers to pick up on the developement just
 | :exclamation: | Seed/Key ECU Unlock Algorithms(0x27,0x41) -> ONLY Specified ECUS (see compatible list below) |
 | :white_check_mark: | RWD firmware file X-RAY/Decryptor to binary file (.bin) |
 | :white_large_square: | Binary file (.bin) to RWD firmware file builder |
+
+# Want to contribute your work to this project?
+
+You can freely 'Fork' this repository to your github account, this will create a duplicated copy of the project inside your github account repositories!
+
+To apply any changes and updates to the project, uploads the changes you have done to the duplicated project inside your reposities and then provide a 'Pull Requests' to this github repo to make the request to apply your changes done to the tool but inside my repository.
 
 # Compatible Cars
 
