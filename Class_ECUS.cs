@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 internal class Class_ECUS
 {
-    internal Class_ECUS(string string_4, string string_5, byte byte_1, string string_6, int int_4, int int_6)
+    internal Class_ECUS(string string_4, string string_5, byte byte_1, string string_6, int int_4, int int_6, string TrannyType)
     {
         this.RomSize_String = string_4;
         this.ECU_Byte = byte_1;
@@ -12,6 +12,7 @@ internal class Class_ECUS
         this.ReadingSize = int_4 - 1;
         this.FirmwareSize = int_6;
         this.RomSize = int_4;
+        this.TransmissionType = TrannyType;
     }
 
     public string RomSize_String { get; set; }
@@ -21,5 +22,6 @@ internal class Class_ECUS
     public int ReadingSize { get; set; }
     public int FirmwareSize { get; set; }
     public int RomSize { get; set; }
+    public string TransmissionType { get; set; }
 }
 

@@ -18,7 +18,13 @@ public class GForm_Main : DarkForm
 {
     bool ECU_Unlocked = false;
     private DarkButton darkButton_Unlock01;
+    private DarkButton darkButton2;
+    private OpenFileDialog openFileDialog1;
     byte Unlocking_Mode = 0x41;
+    bool WritingBinaryMode = true;  //if false we are in writing firmware mode
+    private DarkButton darkButton3;
+    GForm_Main GForm_Main_0;
+    UInt16 block_size = 0;
 
     public GForm_Main()
     {
@@ -31,6 +37,10 @@ public class GForm_Main : DarkForm
         this.darkTextBox_0.Text = this.darkTextBox_0.Text + Environment.NewLine;
         this.darkTextBox_0.Text = this.darkTextBox_0.Text + Environment.NewLine;
         this.darkTextBox_0.Text = this.darkTextBox_0.Text + Environment.NewLine;
+
+        GForm_Main_0 = this;
+
+        Class_RWD.Load(ref GForm_Main_0);
     }
 
 
@@ -49,10 +59,16 @@ public class GForm_Main : DarkForm
         //Console.Write(string_3);
     }
 
-
-    private void method_1(string string_3)
+    public void method_Log(string string_3)
     {
-        Console.Write(string_3);
+        this.darkTextBox_0.Text += string_3;
+        //Console.Write(string_3);
+    }
+
+
+    public void method_1(string string_3)
+    {
+        Console.WriteLine(string_3);
         GForm_Main.Class5 @class = new GForm_Main.Class5();
         @class.gform0_0 = this;
         @class.string_0 = string_3;
@@ -105,9 +121,10 @@ public class GForm_Main : DarkForm
             {
                 using (Device device = api.GetDevice(""))
                 {
-                using (Channel channel = device.GetChannel(Protocol.ISO15765, Baud.CAN, ConnectFlag.CAN_29BIT_ID, false))
-                {
-                        MessageFilter messageFilter = new MessageFilter();
+                    using (Channel channel = device.GetChannel(Protocol.ISO15765, Baud.CAN, ConnectFlag.CAN_29BIT_ID, false))
+                    {
+                        LoadJ2534Channel(channel);
+                        /*MessageFilter messageFilter = new MessageFilter();
                         messageFilter.FilterType = Filter.FLOW_CONTROL_FILTER;
                         messageFilter.Mask = new byte[]
                         {
@@ -132,119 +149,66 @@ public class GForm_Main : DarkForm
                         };
                         MessageFilter filter = messageFilter;
                         channel.StartMsgFilter(filter);
-
-
-                        byte[] array2 = new byte[]
-                        {
-                                24,     //0x18
-                                218,    //0xDA
-                                0,      //0x00  -> 0x10|0x11
-                                241,    //0xF1
-                                34,     //0x22  -> Read Data by ID (F181)
-                                241,    //0xF1
-                                129     //0x81
-                        };
-                        array2[2] = GForm_Main.byte_3;
-                        SAE.J2534.Message message = new SAE.J2534.Message(array2, TxFlag.CAN_29BIT_ID | TxFlag.ISO15765_FRAME_PAD);
-                        byte[] array3 = new byte[]
-                        {
-                                24,     //0x18
-                                218,    //0xDA
-                                0,      //0x00  -> 0x10|0x11
-                                241,    //0xF1
-                                34,     //0x22  -> Read Data by ID (F190)
-                                241,    //0xF1
-                                144     //0x90
-                        };
-                        array3[2] = GForm_Main.byte_3;
-                        SAE.J2534.Message message2 = new SAE.J2534.Message(array3, TxFlag.CAN_29BIT_ID | TxFlag.ISO15765_FRAME_PAD);
                         SConfig[] config = new SConfig[]
                         {
                                 new SConfig(Parameter.LOOP_BACK, 1),
                                 new SConfig(Parameter.DATA_RATE, 500000)
                         };
-                        channel.SetConfig(config);
-                        int i = 0;
-                        int num = 0;
-                        int num2 = 0;
-                        this.method_1(Environment.NewLine);
-                        this.method_1("Send:" + GForm_Main.smethod_1(message2.Data) + Environment.NewLine);
-                        channel.SendMessage(message2);
+                        channel.SetConfig(config);*/
 
                         //#############################################################
-                        while (true)
+                        //#############################################################
+                        int num2 = 0;
+                        byte[] arraySend1 = new byte[]
                         {
-                            if (num >= 5)
-                            {
-                                num = 0;
-                                channel.SendMessage(message);
-                                this.method_1("Send:" + GForm_Main.smethod_1(message.Data) + Environment.NewLine);
-                                while (true)
-                                {
-                                    if (num >= 5)
-                                    {
-                                        if (num2 == 1)
-                                        {
-                                            this.method_1("Vehicle is in recovery mode?" + Environment.NewLine);
-                                            DarkMessageBox.Show(this, "Failed to retrieve vin number, assuming recovery mode, read disabled", "RECOVERY MODE", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                                        }
-                                        else if (num2 != 2)
-                                        {
-                                            DarkMessageBox.Show(this, "ECU was not detected. \n\rMake sure you have selected the correct platform and the vehicle is on and your device is plugged in.\n\rProvided you have checked these things. Please send a message to the discord group or the page with your vehicle \n\rDomestic Market, Make, Model,Year,Transmission, and Device you are using to Connect.", "Failed to detect Ecu", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                                        }
-                                        else
-                                        {
-                                            this.darkButton_Unlock41.Enabled = true;
-                                            this.darkButton_Unlock01.Enabled = true;
-                                        }
-                                        break;
-                                    }
+                                34,     //0x22  -> Read Data by ID (F190)
+                                241,    //0xF1
+                                144     //0x90
+                        };
+                        byte[] Received = SendJ2534Message(channel, arraySend1);
 
-                                    GetMessageResults messages = channel.GetMessages(1, 0x3e8);
-                                    if (messages.Result.IsOK())
-                                    {
-                                        foreach (SAE.J2534.Message message4 in messages.Messages)
-                                        {
-                                            this.method_1("Recv:" + GForm_Main.smethod_1(message4.Data) + Environment.NewLine);
-
-                                            int num6 = GForm_Main.smethod_0(message4.Data, byte_0);
-                                            if (num6 != -1)
-                                            {
-                                                byte[] bytes = new byte[0x10];
-                                                Array.Copy(message4.Data, 7, bytes, 0, 0x10);//error here
-                                                this.darkTextBox_2.Text = Encoding.ASCII.GetString(bytes);   //Display CAL_ID Number
-                                                this.method_1("ID:" + Encoding.ASCII.GetString(bytes) + Environment.NewLine);
-                                                this.method_1("Vehicle is Online" + Environment.NewLine);
-                                                num2 = 2;
-                                                num = 5;
-                                            }
-                                        }
-                                    }
-                                    num++;
-                                }
-                                break;
-                            }
-
-                            GetMessageResults results = channel.GetMessage();
-                            if (results.Result.IsOK())
-                            {
-                                foreach (SAE.J2534.Message message3 in results.Messages)
-                                {
-                                    this.method_1("Recv:" + GForm_Main.smethod_1(message3.Data) + Environment.NewLine);
-
-                                    int num4 = GForm_Main.smethod_0(message3.Data, byte_1);
-                                    if (num4 != -1)
-                                    {
-                                        byte[] bytes = new byte[0x10];
-                                        Array.Copy(message3.Data, 8, bytes, 0, 0x10);
-                                        this.darkTextBox_1.Text = Encoding.ASCII.GetString(bytes);  //Display VIN number
-                                        this.method_1("VIN:" + Encoding.ASCII.GetString(bytes) + Environment.NewLine);
-                                        num2 = 1;
-                                        num = 5;
-                                    }
-                                }
-                            }
-                            num++;
+                        int num4 = GForm_Main.smethod_0(Received, byte_1);
+                        if (num4 != -1)
+                        {
+                            byte[] bytes = new byte[0x10];
+                            Array.Copy(Received, 8, bytes, 0, 0x10);
+                            this.darkTextBox_1.Text = Encoding.ASCII.GetString(bytes);  //Display VIN number
+                            this.method_1("VIN:" + Encoding.ASCII.GetString(bytes) + Environment.NewLine);
+                            num2 = 1;
+                        }
+                        //#############################################################
+                        //#############################################################
+                        arraySend1 = new byte[]
+                        {
+                                34,     //0x22  -> Read Data by ID (F181)
+                                241,    //0xF1
+                                129     //0x81
+                        };
+                        Received = SendJ2534Message(channel, arraySend1);
+                        int num6 = GForm_Main.smethod_0(Received, byte_0);
+                        if (num6 != -1)
+                        {
+                            byte[] bytes = new byte[0x10];
+                            Array.Copy(Received, 7, bytes, 0, 0x10);
+                            this.darkTextBox_2.Text = Encoding.ASCII.GetString(bytes);   //Display CAL_ID Number
+                            this.method_1("ID:" + Encoding.ASCII.GetString(bytes) + Environment.NewLine);
+                            this.method_1("Vehicle is Online" + Environment.NewLine);
+                            num2 = 2;
+                        }
+                        //#############################################################
+                        if (num2 == 1)
+                        {
+                            this.method_1("Vehicle is in recovery mode?" + Environment.NewLine);
+                            DarkMessageBox.Show(this, "Failed to retrieve vin number, assuming recovery mode, read disabled", "RECOVERY MODE", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        }
+                        else if (num2 != 2)
+                        {
+                            DarkMessageBox.Show(this, "ECU was not detected.\n\rMake sure you have selected the correct platform and the vehicle is on and your device is plugged in.\n\rProvided you have checked these things. Please send a message to the discord group or the page with your vehicle \n\rDomestic Market, Make, Model,Year,Transmission, and Device you are using to Connect.", "Failed to detect Ecu", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        }
+                        else
+                        {
+                            this.darkButton_Unlock41.Enabled = true;
+                            this.darkButton_Unlock01.Enabled = true;
                         }
                     }
                 }
@@ -368,7 +332,8 @@ public class GForm_Main : DarkForm
             {
                 using (Channel channel = device.GetChannel(Protocol.ISO15765, Baud.CAN, ConnectFlag.CAN_29BIT_ID, false))
                 {
-                    MessageFilter messageFilter = new MessageFilter();
+                    LoadJ2534Channel(channel);
+                    /*MessageFilter messageFilter = new MessageFilter();
                     messageFilter.FilterType = Filter.FLOW_CONTROL_FILTER;
                     messageFilter.Mask = new byte[]
                     {
@@ -393,153 +358,101 @@ public class GForm_Main : DarkForm
                     };
                     MessageFilter filter = messageFilter;
                     channel.StartMsgFilter(filter);
-                    byte[] array2 = new byte[]
-                    {
-                        24,     //0x18
-                        218,    //0xDA
-                        0,      //0x00  -> 0x10|0x11
-                        241,    //0xF1
-                        16,     //0x10
-                        3       //0x03      Not supposed to be 02 or FB?? ##########################################
-                    };
-                    array2[2] = GForm_Main.byte_3;
-                    SAE.J2534.Message message = new SAE.J2534.Message(array2, TxFlag.CAN_29BIT_ID | TxFlag.ISO15765_FRAME_PAD);
-                    byte[] array3 = new byte[]
-                    {
-                        24,     //0x18
-                        218,    //0xDA
-                        0,      //0x00  -> 0x10|0x11
-                        241,    //0xF1
-                        39,     //0x27
-                        65      //0x41     Not supposed to be 05?? -> could be 0x01 0x03 0x05 0x07 or 0x41
-                    };
-                    byte SeedSendByte = this.Unlocking_Mode;
-                    array3[2] = GForm_Main.byte_3;
-                    array3[5] = SeedSendByte;
-                    SAE.J2534.Message message2 = new SAE.J2534.Message(array3, TxFlag.CAN_29BIT_ID | TxFlag.ISO15765_FRAME_PAD);
                     SConfig[] config = new SConfig[]
                     {
                         new SConfig(Parameter.LOOP_BACK, 1),
                         new SConfig(Parameter.DATA_RATE, 500000)
                     };
-                    channel.SetConfig(config);
-                    device.SetProgrammingVoltage(Pin.PIN_12, 5000);
-                    channel.SendMessage(message);
-                    this.backgroundWorker_1.ReportProgress(0, "TX Bytes:" + GForm_Main.smethod_1(message.Data) + Environment.NewLine);
+                    channel.SetConfig(config);*/
 
-                    this.method_1("Send:" + GForm_Main.smethod_1(message.Data) + Environment.NewLine);
-                    GetMessageResults messages = channel.GetMessages(3, 1000);
-                    if (messages.Result.IsOK())
+                    device.SetProgrammingVoltage(Pin.PIN_12, 5000);
+
+                    byte[] arraySend1 = new byte[]
+                    {
+                        16,     //0x10
+                        3       //0x03      Not supposed to be 02 or FB?? ##########################################
+                    };
+                    byte[] Received = SendJ2534Message(channel, arraySend1);
+                    if (Received != null)
                     {
                         this.method_1("Diag Mode Set" + Environment.NewLine);
-                        this.backgroundWorker_1.ReportProgress(0, "Diag Mode Set" + Environment.NewLine);
-                        foreach (SAE.J2534.Message message3 in messages.Messages)
-                        {
-                            this.backgroundWorker_1.ReportProgress(0, "RX Bytes:" + GForm_Main.smethod_1(message3.Data) + Environment.NewLine);
-                            this.method_1("Recv:" + GForm_Main.smethod_1(message3.Data) + Environment.NewLine);
-                        }
                     }
-                    else
+                    //################################################################
+                    arraySend1 = new byte[]
                     {
-                        this.method_1("Result NOT OK(#1)!!" + Environment.NewLine);
-                    }
-                    channel.SendMessage(message2);
+                        39,     //0x27
+                        65      //0x41     Not supposed to be 05?? -> could be 0x01 0x03 0x05 0x07 or 0x41
+                    };
+                    byte SeedSendByte = this.Unlocking_Mode;
+                    arraySend1[1] = SeedSendByte;
                     this.method_1("Requesting Seed" + Environment.NewLine);
-                    this.backgroundWorker_1.ReportProgress(0, "Requesting Seed");
-                    this.backgroundWorker_1.ReportProgress(0, "TX Bytes:" + GForm_Main.smethod_1(message2.Data));
-                    this.method_1("Send:" + GForm_Main.smethod_1(message2.Data) + Environment.NewLine);
+                    Received = SendJ2534Message(channel, arraySend1);
+
                     byte[] byte_ = new byte[]
                     {
                         103,    //0x67
                         65      //0x41
                     };
-                    byte_[1] = SeedSendByte;    //########################
+                    byte_[1] = SeedSendByte;
                     byte[] array6 = new byte[4];
                     bool TwoBytesMode = false;
                     byte b = 1;
-                    messages = channel.GetMessages(3, 1000);
-                    if (messages.Result.IsOK())
-                    {
-                        foreach (SAE.J2534.Message message4 in messages.Messages)
-                        {
-                            this.method_1("Recv:" + GForm_Main.smethod_1(message4.Data) + Environment.NewLine);
-                            int num = GForm_Main.smethod_2(message4.Data, byte_, 0);
-                            if (num > 0)
-                            {
-                                if (message4.Data.Length < 10)
-                                {
-                                    array6 = new byte[2];
-                                    TwoBytesMode = true;
-                                }
-                                int index = 0;
-                                while (true)
-                                {
-                                    if ((!TwoBytesMode && index >= 4) || (TwoBytesMode && index >= 2))
-                                    {
-                                        if (!TwoBytesMode)
-                                        {
-                                            b = message4.Data[(index + num) + 2];
-                                            Array.Reverse(array6);
-                                        }
 
-                                        this.method_1("Security Request - Seed Bytes:" + GForm_Main.smethod_1(array6) + Environment.NewLine);
-                                        this.backgroundWorker_1.ReportProgress(0, "Security Request - Seed Bytes:" + GForm_Main.smethod_1(array6));
-                                        if (!TwoBytesMode)
-                                        {
-                                            this.method_1("Security Request - Algorithm:" + b.ToString("X2") + Environment.NewLine);
-                                            this.backgroundWorker_1.ReportProgress(0, "Security Request - Algorithm:" + b.ToString("X2"));
-                                        }
-                                        break;
-                                    }
-                                    array6[index] = message4.Data[(index + num) + 2];
-                                    index++;
-                                }
+                    if (Received != null)
+                    {
+                        int num = GForm_Main.smethod_2(Received, byte_, 0);
+                        if (num > 0)
+                        {
+                            if (Received.Length < 10)
+                            {
+                                array6 = new byte[2];
+                                TwoBytesMode = true;
                             }
-                            this.backgroundWorker_1.ReportProgress(0, "RX Bytes:" + GForm_Main.smethod_1(message4.Data) + Environment.NewLine);
+                            int index = 0;
+                            while (true)
+                            {
+                                if ((!TwoBytesMode && index >= 4) || (TwoBytesMode && index >= 2))
+                                {
+                                    if (!TwoBytesMode)
+                                    {
+                                        b = Received[(index + num) + 2];
+                                        Array.Reverse(array6);
+                                    }
+
+                                    this.method_1("Security Request - Seed Bytes:" + GForm_Main.smethod_1(array6) + Environment.NewLine);
+                                    if (!TwoBytesMode) this.method_1("Security Request - Algorithm:" + b.ToString("X2") + Environment.NewLine);
+                                    break;
+                                }
+                                array6[index] = Received[(index + num) + 2];
+                                index++;
+                            }
                         }
                     }
-                    else
-                    {
-                        this.method_1("Result NOT OK(#2)!!" + Environment.NewLine);
-                    }
+
                     if (array6[0] != 0)
                     {
                         uint value = 0;
-                        if (!TwoBytesMode)
-                        {
-                            value = Class_Cypher.GetKey41(BitConverter.ToUInt32(array6, 0), b);
-                        }
-                        else
-                        {
-                            value = Class_Cypher.GetKey01(array6, darkTextBox_2.Text);
-                        }
-                        byte[] bytes = BitConverter.GetBytes(value);
+                        if (!TwoBytesMode) value = Class_Cypher.GetKey41(BitConverter.ToUInt32(array6, 0), b);
+                        else value = Class_Cypher.GetKey01(array6, darkTextBox_2.Text);
 
-                        this.backgroundWorker_1.ReportProgress(0, "Security Request - Key Bytes from app:" + GForm_Main.smethod_1(bytes));
+                        byte[] bytes = BitConverter.GetBytes(value);
                         this.method_1("Security Request - Key to Send:" + GForm_Main.smethod_1(bytes) + Environment.NewLine);
 
-                        byte[] bytes2 = BitConverter.GetBytes(value);
-
-                        byte[] array7 = new byte[]
+                        arraySend1 = new byte[]
                         {
-                            24,     //0x18
-                            218,    //0xDA
-                            0,      //0x00  -> 0x10|0x11
-                            241,    //0xF1
                             39,     //0x27
                             66      //0x42
                         };
-                        array7[2] = GForm_Main.byte_3;
-                        array7[5] = (byte)(SeedSendByte + 1);  //####################
-                        byte[] array8 = array7;
+                        arraySend1[1] = (byte)(SeedSendByte + 1);
+                        byte[] array8 = arraySend1;
                         if (!TwoBytesMode) Array.Resize<byte>(ref array8, array8.Length + 5);
                         if (TwoBytesMode) Array.Resize<byte>(ref array8, array8.Length + 2);
-                        array8[6] = bytes2[0];  //SecurityKey Byte1
-                        array8[7] = bytes2[1];  //SecurityKey Byte2
+                        array8[6] = bytes[0];  //SecurityKey Byte1
+                        array8[7] = bytes[1];  //SecurityKey Byte2
                         if (!TwoBytesMode)
                         {
-                            array8[8] = bytes2[2];  //SecurityKey Byte3
-                            array8[9] = bytes2[3];  //SecurityKey Byte4
+                            array8[8] = bytes[2];  //SecurityKey Byte3
+                            array8[9] = bytes[3];  //SecurityKey Byte4
                             array8[10] = b;         //Algorithm Byte
                         }
                         byte[] byte_2 = new byte[]
@@ -547,131 +460,102 @@ public class GForm_Main : DarkForm
                             103,    //0x67
                             66      //0x42
                         };
-                        byte_2[1] = (byte)(SeedSendByte + 1);  //####################
-                        SAE.J2534.Message message5 = new SAE.J2534.Message(array8, TxFlag.CAN_29BIT_ID | TxFlag.ISO15765_FRAME_PAD);
-                        this.backgroundWorker_1.ReportProgress(0, "TX Bytes:" + GForm_Main.smethod_1(message5.Data));
-                        this.method_1("Send:" + GForm_Main.smethod_1(message5.Data) + Environment.NewLine);
-                        channel.SendMessage(message5);
-                        bool flag = false;
-                        messages = channel.GetMessages(3);
-                        if (messages.Result.IsOK())
+                        byte_2[1] = (byte)(SeedSendByte + 1);
+
+                        Received = SendJ2534Message(channel, array8);
+
+                        if (Received != null)
                         {
-                            foreach (SAE.J2534.Message message6 in messages.Messages)
+                            int num = GForm_Main.smethod_2(Received, byte_2, 0);       //looking for 0x67, 0x42
+                            if (num > 0)
                             {
-                                int num = GForm_Main.smethod_2(message6.Data, byte_2, 0);       //looking for 0x67, 0x42
-                                int num2 = GForm_Main.smethod_2(message6.Data, this.byte_5, 0); //looking for 0x11, 0x7F
-                                if (num2 > 0)
-                                {
-                                    for (int k = 0; k < 2; k++)
-                                    {
-                                        this.byte_6[k] = message6.Data[k + num2 + 2];   //0x27, 0x35
-                                    }
-                                    string str = "Response:";
-                                    Class_ODB.Mode mode = (Class_ODB.Mode)this.byte_6[0];
-                                    string str2 = mode.ToString();
-                                    Class_ODB.NegativeResponse negativeResponse = (Class_ODB.NegativeResponse)this.byte_6[1];
-                                    this.method_1(str + "|" + str2 + "|" + negativeResponse.ToString() + Environment.NewLine);
-                                }
-                                if (num > 0)
-                                {
-                                    this.backgroundWorker_1.ReportProgress(0, "Security Authorized: ECU Unlocked" + Environment.NewLine);
-                                    this.method_1("Security Authorized: ECU Unlocked" + Environment.NewLine);
-                                    flag = true;
-                                    ECU_Unlocked = true;
-                                    this.darkButton_DownloadROM.Enabled = true;
-                                    this.darkButton_5.Enabled = true;
-                                }
-                                else
-                                {
-                                    this.method_1("Recv:" + GForm_Main.smethod_1(message6.Data) + Environment.NewLine);
-                                    this.backgroundWorker_1.ReportProgress(0, "RX Bytes:" + GForm_Main.smethod_1(message6.Data) + Environment.NewLine);
-                                }
+                                this.method_1("Security Authorized: ECU Unlocked" + Environment.NewLine);
+                                ECU_Unlocked = true;
+                                this.darkButton_DownloadROM.Enabled = true;
+                                this.darkButton_5.Enabled = true;
                             }
-                        }
-                        else
-                        {
-                            this.method_1("Result NOT OK(#3)!!" + Environment.NewLine);
-                        }
-                        if (!flag)
-                        {
-                            MessageBox.Show("Failed to Unlock ECU, Check Log");
-                        }
-                        else
-                        {
-                            //##################################################################################
-                            //##################################################################################
-                            if (TwoBytesMode)
+                            else
                             {
-                                /*byte[] arrayProgrammingCommand = new byte[]
-                                {
-                                    24,             //0x18
-                                    218,            //0xDA
-                                    GForm_Main.byte_3,  //0x00  -> 0x10|0x11
-                                    241,            //0xF1
-                                    16,             //0x10
-                                    2               //0x02
-                                };
-                                SAE.J2534.Message messageProgramming = new SAE.J2534.Message(arrayProgrammingCommand, TxFlag.CAN_29BIT_ID | TxFlag.ISO15765_FRAME_PAD);
-                                channel.SendMessage(messageProgramming);
-                                this.method_1("Send:" + GForm_Main.smethod_1(messageProgramming.Data) + Environment.NewLine);
-
-                                GetMessageResults messagesProgramming = channel.GetMessages(3, 1000);
-                                if (messagesProgramming.Result.IsOK())
-                                {
-                                    this.method_1("Programming Mode Set" + Environment.NewLine);
-                                    foreach (SAE.J2534.Message message3 in messagesProgramming.Messages)
-                                    {
-                                        this.method_1("Recv:" + GForm_Main.smethod_1(message3.Data) + Environment.NewLine);
-                                    }
-                                }
-                                else
-                                {
-                                    this.method_1("Result NOT OK(#1)!!" + Environment.NewLine);
-                                }*/
-
-                                //#################################
-                                /*UInt16 testval = 0xF101;
-                                byte[] BytesVal = BitConverter.GetBytes(testval);
-                                UInt16 Val16 = ToUInt16BE(BytesVal);
-                                BytesVal = BitConverter.GetBytes(Val16);*/
-
-                                /*byte[] arrayReadDataIDCommand = new byte[]
-                                {
-                                    24,             //0x18
-                                    218,            //0xDA
-                                    GForm0.byte_3,  //0x00  -> 0x10|0x11
-                                    241,            //0xF1
-                                    0x22,           //0x22  -> Read Data by ID (F101)
-                                    0xF1,   //BytesVal[0],    //0xXX
-                                    0x01    //BytesVal[1],    //0xXX
-                                };
-                                SAE.J2534.Message messageReadID = new SAE.J2534.Message(arrayReadDataIDCommand, TxFlag.CAN_29BIT_ID | TxFlag.ISO15765_FRAME_PAD);
-                                channel.SendMessage(messageReadID);
-                                this.method_1("Send:" + GForm0.smethod_1(messageReadID.Data) + Environment.NewLine);
-
-                                GetMessageResults messagesReadID = channel.GetMessages(3, 1000);
-                                if (messagesReadID.Result.IsOK())
-                                {
-                                    this.method_1("read_data_by_identifier Set" + Environment.NewLine);
-                                    foreach (SAE.J2534.Message message3 in messagesReadID.Messages)
-                                    {
-                                        this.method_1("Recv:" + GForm0.smethod_1(message3.Data) + Environment.NewLine);
-                                    }
-                                }
-                                else
-                                {
-                                    this.method_1("Result NOT OK(#1)!!" + Environment.NewLine);
-                                }*/
+                                this.method_1("Recv:" + GForm_Main.smethod_1(Received) + Environment.NewLine);
+                                ECU_Unlocked = false;
+                                this.darkButton_DownloadROM.Enabled = false;
+                                this.darkButton_5.Enabled = false;
+                                MessageBox.Show("Failed to Unlock ECU, Check Log");
                             }
                         }
                     }
                     else
                     {
-                        this.method_1("Result NOT OK(#4)!!" + Environment.NewLine);
+                        this.method_1("Result NOT OK!!" + Environment.NewLine);
                     }
                 }
             }
         }
+    }
+
+    public byte[] SendJ2534Message(Channel channel, byte[] MessageBytes)
+    {
+        byte[] arrayCommand = new byte[]
+        {
+            24,                 //0x18
+            218,                //0xDA
+            GForm_Main.byte_3,  //0x00  -> 0x10|0x11
+            241                 //0xF1
+        };
+
+        //Add the rest of the messages bytes to the final array
+        byte[] arrayCommandFinal = new byte[arrayCommand.Length + MessageBytes.Length];
+        int MessageIndex = 0;
+        for (int i = 0; i < arrayCommand.Length; i++)
+        {
+            arrayCommandFinal[MessageIndex] = arrayCommand[i];
+            MessageIndex++;
+        }
+        for (int i = 0; i < MessageBytes.Length; i++)
+        {
+            arrayCommandFinal[MessageIndex] = MessageBytes[i];
+            MessageIndex++;
+        }
+
+        //Send message
+        SAE.J2534.Message messageCommands = new SAE.J2534.Message(arrayCommand, TxFlag.CAN_29BIT_ID | TxFlag.ISO15765_FRAME_PAD);
+        channel.SendMessage(messageCommands);
+        this.method_1("Send:" + GForm_Main.smethod_1(messageCommands.Data) + Environment.NewLine);
+
+        //Receive message
+        GetMessageResults messagesReceived = channel.GetMessages(3, 1000);
+        if (messagesReceived.Result.IsOK())
+        {
+            //this.method_1("Programming Mode Set!" + Environment.NewLine);
+            int IndexReceived = 1;
+            foreach (SAE.J2534.Message message3 in messagesReceived.Messages)
+            {
+                //Gather Negative Responce
+                int num2 = GForm_Main.smethod_2(message3.Data, this.byte_5, 0); //looking for 0x11, 0x7F
+                if (num2 > 0)
+                {
+                    for (int k = 0; k < 2; k++)
+                    {
+                        this.byte_6[k] = message3.Data[k + num2 + 2];   //0x27, 0x35
+                    }
+                    Class_ODB.Mode mode = (Class_ODB.Mode)this.byte_6[0];
+                    string str2 = mode.ToString();
+                    Class_ODB.NegativeResponse negativeResponse = (Class_ODB.NegativeResponse)this.byte_6[1];
+                    this.method_1("BAD Response: " + str2 + "|" + negativeResponse.ToString() + Environment.NewLine);
+                }
+                if (IndexReceived >= 3)
+                {
+                    this.method_1("Recv:" + GForm_Main.smethod_1(message3.Data) + Environment.NewLine);
+                    return message3.Data;   //after 3messages received, return the last messages bytes
+                }
+                IndexReceived++;
+            }
+        }
+        else
+        {
+            this.method_1("Result NOT OK!!" + Environment.NewLine);
+        }
+        return null;
     }
 
     public void method_ReadROM(object sender, DoWorkEventArgs e)
@@ -684,37 +568,38 @@ public class GForm_Main : DarkForm
                 {
                     using (Channel channel = device.GetChannel(Protocol.ISO15765, Baud.CAN, ConnectFlag.CAN_29BIT_ID, false))
                     {
-                        MessageFilter messageFilter = new MessageFilter();
+                        LoadJ2534Channel(channel);
+                        /*MessageFilter messageFilter = new MessageFilter();
                         messageFilter.FilterType = Filter.FLOW_CONTROL_FILTER;
                         messageFilter.Mask = new byte[]
                         {
-                        byte.MaxValue,
-                        byte.MaxValue,
-                        byte.MaxValue,
-                        byte.MaxValue
+                            byte.MaxValue,
+                            byte.MaxValue,
+                            byte.MaxValue,
+                            byte.MaxValue
                         };
                         messageFilter.Pattern = new byte[]
                         {
-                        24,     //0x18
-                        218,    //0xDA
-                        241,    //0xF1
-                        GForm_Main.byte_3       //0x00
+                            24,     //0x18
+                            218,    //0xDA
+                            241,    //0xF1
+                            GForm_Main.byte_3       //0x00
                         };
                         messageFilter.FlowControl = new byte[]
                         {
-                        24,     //0x18
-                        218,    //0xDA
-                        GForm_Main.byte_3,      //0x00  -> 0x10|0x11
-                        241     //0xF1
+                            24,     //0x18
+                            218,    //0xDA
+                            GForm_Main.byte_3,      //0x00  -> 0x10|0x11
+                            241     //0xF1
                         };
                         MessageFilter filter = messageFilter;
                         channel.StartMsgFilter(filter);
                         SConfig[] config = new SConfig[]
                         {
-                        new SConfig(Parameter.LOOP_BACK, 1),
-                        new SConfig(Parameter.DATA_RATE, 500000)
+                            new SConfig(Parameter.LOOP_BACK, 1),
+                            new SConfig(Parameter.DATA_RATE, 500000)
                         };
-                        channel.SetConfig(config);
+                        channel.SetConfig(config);*/
 
                         device.SetProgrammingVoltage(Pin.PIN_12, 5000);
 
@@ -889,12 +774,9 @@ public class GForm_Main : DarkForm
     public void method_12(uint uint_0, uint uint_1, out byte[] byte_12, Channel channel_0)
     {
         byte_12 = new byte[1];
-        SAE.J2534.Message message = new SAE.J2534.Message(new byte[]
+
+        byte[] arraySend1 = new byte[]
         {
-            24,     //0x18
-            218,    //0xDA
-            GForm_Main.byte_3,
-            241,    //0xF1
             35,     //0x23 -> Read_data_by_address
             20,     //0x14
             (byte)((uint_0 >> 0x18) & 0xff),
@@ -902,28 +784,24 @@ public class GForm_Main : DarkForm
             (byte)((uint_0 >> 8) & 0xff),
             (byte)(uint_0 & 0xff),
             4
-        }, TxFlag.CAN_29BIT_ID | TxFlag.ISO15765_FRAME_PAD);
-
-        channel_0.SendMessage(message);
-        this.method_1("Send:" + GForm_Main.smethod_1(message.Data) + Environment.NewLine);
-        GetMessageResults messages = channel_0.GetMessages(3);
+        };
         byte[] byte_13 = new byte[]
         {
             GForm_Main.byte_3,
             99
         };
-        if (messages.Result != ResultCode.DEVICE_NOT_CONNECTED)
+
+        byte[] Received = SendJ2534Message(channel_0, arraySend1);
+        if (Received != null)
         {
-            foreach (SAE.J2534.Message message2 in messages.Messages)
+        //if (messages.Result != ResultCode.DEVICE_NOT_CONNECTED)
+        //{
+            int num = GForm_Main.smethod_2(Received, byte_13, 0);
+            if (num > 0)
             {
-                this.method_1("Recv:" + GForm_Main.smethod_1(message2.Data) + Environment.NewLine);
-                int num = GForm_Main.smethod_2(message2.Data, byte_13, 0);
-                if (num > 0)
-                {
-                    num += 2;
-                    Array.Resize<byte>(ref byte_12, message2.Data.Length - num);
-                    Array.Copy(message2.Data, num, byte_12, 0, message2.Data.Length - num);
-                }
+                num += 2;
+                Array.Resize<byte>(ref byte_12, Received.Length - num);
+                Array.Copy(Received, num, byte_12, 0, Received.Length - num);
             }
         }
     }
@@ -1074,32 +952,47 @@ public class GForm_Main : DarkForm
         return (int)b;
     }
 
+    public int GetChecksum(byte[] byte_1)
+    {
+        byte b = 0;
+        for (int i = 0; i < byte_1.Length; i++)
+        {
+            if (i != 33792) //0x8400
+            {
+                b -= byte_1[i];
+            }
+        }
+        return (int)b;
+    }
+
 
     private void method_17(object sender, EventArgs e)
     {
         using (OpenFileDialog dialog = new OpenFileDialog())
         {
-            dialog.Filter = "All files (*.*)|*.*";
-            //dialog.Filter = "All files (*.*)|*.*|calibration files (*.khts)|*.khts";
+            dialog.Filter = "Honda Binary ROM File|*.bin";
             dialog.FilterIndex = 1;
             dialog.RestoreDirectory = true;
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 string string_Filename = dialog.FileName;
-                if (Path.GetExtension(string_Filename).ToUpper() != ".KHTS")
+                byte_ToWrite = File.ReadAllBytes(string_Filename);
+                WritingBinaryMode = true;
+
+                //###############################
+                //Get Checksum and Fix it
+                int num = (int) byte_ToWrite[33792];
+                int num2 = this.GetChecksum(byte_ToWrite);
+                if (num != num2)
                 {
-                    byte_ToWrite = File.ReadAllBytes(string_Filename);
-                }
-                else
-                {
-                    /*Class39_0.smethod_17(string_Filename);
-                    int num2 = Check_Checksum(Class39_0.byte_0);
-                    if ((Class39_0.byte_0[0x8400] != num2) && (MessageBox.Show("Checksum is incorrect do you want to fix it?", "Flash Tool", MessageBoxButtons.YesNo) == DialogResult.Yes))
+                    DialogResult dialogResult = MessageBox.Show("Checksum miss match." + Environment.NewLine + "Do you want to correct it?", "Checksum Error.", MessageBoxButtons.YesNo, MessageBoxIcon.Hand);
+                    if (dialogResult == DialogResult.Yes)
                     {
-                        Class39_0.byte_0[0x8400] = (byte)num2;
+                        byte_ToWrite[33792] = (byte)num2;
                     }
-                    Buffer.BlockCopy(Class39_0.byte_0, 0x8000, FileBytes, 0, 0xf8000);*/
                 }
+                //###############################
+
                 if (MessageBox.Show("Are you sure you want to write this file to ECU?", "Flash Tool", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     this.backgroundWorker_0 = new BackgroundWorker();
@@ -1113,6 +1006,86 @@ public class GForm_Main : DarkForm
         }
     }
 
+
+    private void darkButton3_Click(object sender, EventArgs e)
+    {
+        using (OpenFileDialog dialog = new OpenFileDialog())
+        {
+            dialog.Filter = "Honda Compressed Firmware RWD File|*.gz|Honda Firmware RWD File|*.rwd";
+            dialog.FilterIndex = 1;
+            dialog.RestoreDirectory = true;
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                string string_Filename = dialog.FileName;
+                if (Path.GetExtension(string_Filename).ToLower().Contains("gz")) byte_ToWrite = Class_RWD.Decompress(string_Filename);
+                else byte_ToWrite = File.ReadAllBytes(string_Filename);
+                WritingBinaryMode = false;
+
+                //Decrypt firmware file and get needed variable (Decryption byte)
+                Class_RWD.LoadRWD(openFileDialog1.FileName, false);
+
+                //###############################
+                //Get Checksum and Fix it
+                /*int num = (int)byte_ToWrite[33792];
+                int num2 = this.GetChecksum(byte_ToWrite);
+                if (num != num2)
+                {
+                    DialogResult dialogResult = MessageBox.Show("Checksum miss match." + Environment.NewLine + "Do you want to correct it?", "Checksum Error.", MessageBoxButtons.YesNo, MessageBoxIcon.Hand);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        byte_ToWrite[33792] = (byte)num2;
+                    }
+                }*/
+                //###############################
+
+                if (MessageBox.Show("Are you sure you want to write this file to ECU?", "Flash Tool", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    this.backgroundWorker_0 = new BackgroundWorker();
+                    this.backgroundWorker_0.WorkerReportsProgress = true;
+                    this.backgroundWorker_0.DoWork += new DoWorkEventHandler(this.backgroundWorker_0_DoWork_1);
+                    this.backgroundWorker_0.ProgressChanged += new ProgressChangedEventHandler(this.method_18);
+                    this.backgroundWorker_0.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.method_19);
+                    this.backgroundWorker_0.RunWorkerAsync();
+                }
+            }
+        }
+    }
+
+    private void LoadJ2534Channel(Channel channel)
+    {
+        MessageFilter messageFilter = new MessageFilter();
+        messageFilter.FilterType = Filter.FLOW_CONTROL_FILTER;
+        messageFilter.Mask = new byte[]
+        {
+            byte.MaxValue,
+            byte.MaxValue,
+            byte.MaxValue,
+            byte.MaxValue
+        };
+        messageFilter.Pattern = new byte[]
+        {
+            24,     //0x18
+            218,    //0xDA
+            241,    //0xF1
+            GForm_Main.byte_3       //0x00
+        };
+        messageFilter.FlowControl = new byte[]
+        {
+            24,     //0x18
+            218,    //0xDA
+            GForm_Main.byte_3,      //0x00  -> 0x10|0x11
+            241     //0xF1
+        };
+        MessageFilter filter = messageFilter;
+        channel.StartMsgFilter(filter);
+        SConfig[] config = new SConfig[]
+        {
+            new SConfig(Parameter.LOOP_BACK, 1),
+            new SConfig(Parameter.DATA_RATE, 500000)
+        };
+        channel.SetConfig(config);
+    }
+
     private unsafe void backgroundWorker_0_DoWork_1(object sender, DoWorkEventArgs e)
     {
         using (API api = APIFactory.GetAPI(GForm_Main.string_0))
@@ -1123,39 +1096,38 @@ public class GForm_Main : DarkForm
                 {
                     using (Channel channel = device.GetChannel(Protocol.ISO15765, Baud.CAN, ConnectFlag.CAN_29BIT_ID, false))
                     {
-                        MessageFilter messageFilter = new MessageFilter();
+                        LoadJ2534Channel(channel);
+                        /*MessageFilter messageFilter = new MessageFilter();
                         messageFilter.FilterType = Filter.FLOW_CONTROL_FILTER;
                         messageFilter.Mask = new byte[]
                         {
-                        byte.MaxValue,
-                        byte.MaxValue,
-                        byte.MaxValue,
-                        byte.MaxValue
+                            byte.MaxValue,
+                            byte.MaxValue,
+                            byte.MaxValue,
+                            byte.MaxValue
                         };
                         messageFilter.Pattern = new byte[]
                         {
-                        24,     //0x18
-                        218,    //0xDA
-                        241,    //0xF1
-                        GForm_Main.byte_3       //0x00
+                            24,     //0x18
+                            218,    //0xDA
+                            241,    //0xF1
+                            GForm_Main.byte_3       //0x00
                         };
                         messageFilter.FlowControl = new byte[]
                         {
-                        24,     //0x18
-                        218,    //0xDA
-                        GForm_Main.byte_3,      //0x00  -> 0x10|0x11
-                        241     //0xF1
+                            24,     //0x18
+                            218,    //0xDA
+                            GForm_Main.byte_3,      //0x00  -> 0x10|0x11
+                            241     //0xF1
                         };
                         MessageFilter filter = messageFilter;
                         channel.StartMsgFilter(filter);
                         SConfig[] config = new SConfig[]
                         {
-                        new SConfig(Parameter.LOOP_BACK, 1),
-                        new SConfig(Parameter.DATA_RATE, 500000)
+                            new SConfig(Parameter.LOOP_BACK, 1),
+                            new SConfig(Parameter.DATA_RATE, 500000)
                         };
-                        channel.SetConfig(config);
-
-                        device.SetProgrammingVoltage(Pin.PIN_12, 5000);
+                        channel.SetConfig(config);*/
 
                         if (!ECU_Unlocked)
                         {
@@ -1163,13 +1135,112 @@ public class GForm_Main : DarkForm
                         }
                         else
                         {
+                            device.SetProgrammingVoltage(Pin.PIN_12, 5000);
+
+                            //Send WRITE_DATA_BY_IDENTIFIER for firmware (.rwd) writing mode
+                            if (!WritingBinaryMode) 
+                            {
+                                //Set Programming Mode
+                                byte[] arraySend1 = new byte[]
+                                {
+                                    16,             //0x10
+                                    2               //0x02
+                                };
+
+                                byte[] Received = SendJ2534Message(channel, arraySend1);
+                                if (Received != null)
+                                {
+                                    this.method_1("Programming Mode Set!" + Environment.NewLine);
+                                }
+                                //###################
+                                //Erase Memory
+                                //31-01-FF-00
+                                arraySend1 = new byte[]
+                                {
+                                    0x31,   //0x31
+                                    0x01,   //0x01
+                                    0xFF,   //0xFF
+                                    0x00    //0x00
+                                };
+
+                                Received = SendJ2534Message(channel, arraySend1);
+                                if (Received != null)
+                                {
+                                    this.method_1("Memory Erased!" + Environment.NewLine);
+                                }
+                                //###################
+                                //Set WRITE_DATA_BY_IDENTIFIER
+                                arraySend1 = new byte[]
+                                {
+                                    0x2E,               //0x22  -> Write Data by ID (F101)
+                                    0xF1,               //0xF1
+                                    0x01,               //0x01
+                                    Class_RWD._keys[0], //Key1
+                                    Class_RWD._keys[1], //Key2
+                                    Class_RWD._keys[2]  //Key3
+                                };
+
+                                Received = SendJ2534Message(channel, arraySend1);
+                                if (Received != null)
+                                {
+                                    this.method_1("WRITE_DATA_BY_IDENTIFIER Set!" + Environment.NewLine);
+                                }
+                                //###################
+                                //Request Download
+                                byte Addrr = 0x04;
+                                uint memory_address = Class_RWD.start;
+                                uint memory_size = Class_RWD.size;
+                                arraySend1 = new byte[]
+                                {
+                                    0x34,   //0x34
+                                    0x00,   //0x00
+                                    Addrr,  //0x04
+                                    0x00,   //0x00 -> Set later
+                                    0x00,   //0x00 -> Set later
+                                    0x00,   //0x00 -> Set later
+                                    0x00,   //0x00 -> Set later
+                                    0x00,   //0x00 -> Set later
+                                    0x00,   //0x00 -> Set later
+                                    0x00,   //0x00 -> Set later
+                                    0x00    //0x00 -> Set later
+                                };
+                                arraySend1[2] = (byte) ((Addrr << 4) | Addrr);
+                                //if (memory_address >= Math.Pow(2 ^ Addrr * 8)) throw new Exception(string.Format("invalid memory_address: 0x{0}", memory_address.ToString("X4")));
+                                if (memory_address >= Math.Pow(2, Addrr * 8)) throw new Exception(string.Format("invalid memory_address: 0x{0}", memory_address.ToString("X4")));
+                                for (int i = 0; i < Addrr; i++)
+                                {
+                                    uint b = (memory_address >> ((Addrr - i - 1) * 8)) & 0xFF;
+                                    arraySend1[3 + i] = (byte) b;
+                                }
+
+                                if (memory_size >= Math.Pow(2, Addrr * 8)) throw new Exception(string.Format("invalid memory_size: 0x{0}", memory_size.ToString("X4")));
+                                for (int i = 0; i < Addrr; i++)
+                                {
+                                    uint b = (memory_size >> ((Addrr - i - 1) * 8)) & 0xFF;
+                                    arraySend1[3 + Addrr + i] = (byte)b;
+                                }
+
+                                Received = SendJ2534Message(channel, arraySend1);
+                                if (Received != null)
+                                {
+                                    this.method_1("Request download done" + Environment.NewLine);
+                                    //block_size = ;
+                                }
+                            }
+
                             Stopwatch stopwatch = new Stopwatch();
                             stopwatch.Start();
                             this.WriteROMtoECU(channel, byte_ToWrite, this.backgroundWorker_0);
                             stopwatch.Stop();
 
+                            if (!WritingBinaryMode)
+                            {
+                                //Request transfer exit && routine control: check dependencies
+                                this.method_13_Close(channel);
+                            }
+
                             TimeSpan timeSpan = TimeSpan.FromMilliseconds((double)stopwatch.ElapsedMilliseconds);
-                            this.backgroundWorker_0.ReportProgress(0, "Successfully read " + this.byte_7.Length + "bytes of flash memory in " + timeSpan.Minutes + ":" + timeSpan.Seconds);
+                            this.backgroundWorker_0.ReportProgress(0, "Successfully write " + this.byte_7.Length + "bytes of flash memory in " + timeSpan.Minutes + ":" + timeSpan.Seconds);
                             device.SetProgrammingVoltage(Pin.PIN_12, -1);   //Set 0V on Pin12
                         }
                     }
@@ -1184,7 +1255,9 @@ public class GForm_Main : DarkForm
 
     public void WriteROMtoECU(Channel channel_0, byte[] byte_5, BackgroundWorker backgroundWorker_X = null)
     {
-        if (byte_5.Length < 1015808)
+        //Get valid addresses for Firmware writing (get Start address)
+
+        if (byte_5.Length < 1015808 && WritingBinaryMode)
         {
             return;
         }
@@ -1206,64 +1279,37 @@ public class GForm_Main : DarkForm
                 backgroundWorker_X.ReportProgress((int)((float)i / 1015808f * 100f));
             }
         }
-        this.method_13(channel_0);
+        this.method_13_Close(channel_0);
     }
 
-    public void method_13(Channel channel_0)
+    public void method_13_Close(Channel channel_0)
     {
-        SAE.J2534.Message message = new SAE.J2534.Message(new byte[]
+        byte[] arraySend1 = new byte[]
         {
-            24,     //0x18
-            218,    //0xDA
-            GForm_Main.byte_3,
-            241,    //0xF1
             0x37    //0x37
-        }, TxFlag.CAN_29BIT_ID | TxFlag.ISO15765_FRAME_PAD);
-
-        channel_0.SendMessage(message);
-
-        bool flag = false;
+        };
         byte[] buffer2 = new byte[] { GForm_Main.byte_3, 0x77 };
-        while (!flag)
+
+        byte[] Received = SendJ2534Message(channel_0, arraySend1);
+        if (Received != null)
         {
-            GetMessageResults results2 = channel_0.GetMessages(3);
-            int num3 = -1;
-            if (results2.Result != ResultCode.DEVICE_NOT_CONNECTED)
+            int num3 = GForm_Main.smethod_2(Received, buffer2, 0);
+            if (num3 > 0)
             {
-                foreach (SAE.J2534.Message message3 in results2.Messages)
-                {
-                    num3 = GForm_Main.smethod_2(message3.Data, buffer2, 0);
-                    if (num3 > 0)
-                    {
-                        flag = true;
-                        this.backgroundWorker_0.ReportProgress(0, "Transfer Exited" + Environment.NewLine);
-                        break;
-                    }
-                }
+                this.method_1("Transfer Exited" + Environment.NewLine);
             }
-        }
 
-        SAE.J2534.Message message2 = new SAE.J2534.Message(new byte[]
-        {
-            24,     //0x18
-            218,    //0xDA
-            GForm_Main.byte_3,
-            241,    //0xF1
-            0x31,   //0x31
-            1,      //0x01
-            0xff,   //0xff
-            1       //0x01
-        }, TxFlag.CAN_29BIT_ID | TxFlag.ISO15765_FRAME_PAD);
-
-        channel_0.SendMessage(message2);
-        int num2 = 0;
-        GetMessageResults messages = channel_0.GetMessages(3);
-        if (messages.Result != ResultCode.DEVICE_NOT_CONNECTED)
-        {
-            SAE.J2534.Message[] messageArray2 = messages.Messages;
-            for (int i = 0; i < messageArray2.Length; i++)
+            arraySend1 = new byte[]
             {
-                num2++;
+                0x31,   //0x31
+                1,      //0x01
+                0xff,   //0xff
+                1       //0x01
+            };
+            Received = SendJ2534Message(channel_0, arraySend1);
+            if (Received != null)
+            {
+                this.method_1("Routine control check dependencies" + Environment.NewLine);
             }
         }
     }
@@ -1275,7 +1321,16 @@ public class GForm_Main : DarkForm
             int_25 = int_24;
         }
 
-        byte[] data = new byte[] { 0x18, 0xDA, GForm_Main.byte_3, 0xF1, 0x36, byte_6X };
+        //Transfer Data (0x36)
+        byte[] data = new byte[]
+        {
+            0x18,
+            0xDA,
+            GForm_Main.byte_3,
+            0xF1,
+            0x36,
+            byte_6X
+        };
         Buffer.BlockCopy(byte_5X, int_23, data, 6, int_25);
         SAE.J2534.Message message = new SAE.J2534.Message(data, TxFlag.CAN_29BIT_ID | TxFlag.ISO15765_FRAME_PAD);
         channel_0.SendMessage(message);
@@ -1362,6 +1417,8 @@ public class GForm_Main : DarkForm
             this.darkButton_DownloadROM = new DarkUI.Controls.DarkButton();
             this.darkButton_0 = new DarkUI.Controls.DarkButton();
             this.darkGroupBox_0 = new DarkUI.Controls.DarkGroupBox();
+            this.darkButton2 = new DarkUI.Controls.DarkButton();
+            this.darkButton_Unlock01 = new DarkUI.Controls.DarkButton();
             this.darkButton_Unlock41 = new DarkUI.Controls.DarkButton();
             this.darkButton1 = new DarkUI.Controls.DarkButton();
             this.darkButton_6 = new DarkUI.Controls.DarkButton();
@@ -1382,7 +1439,8 @@ public class GForm_Main : DarkForm
             this.darkLabel_7 = new DarkUI.Controls.DarkLabel();
             this.darkLabel_8 = new DarkUI.Controls.DarkLabel();
             this.darkCheckBox_0 = new DarkUI.Controls.DarkCheckBox();
-            this.darkButton_Unlock01 = new DarkUI.Controls.DarkButton();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.darkButton3 = new DarkUI.Controls.DarkButton();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_0)).BeginInit();
             this.darkGroupBox_0.SuspendLayout();
             this.SuspendLayout();
@@ -1441,7 +1499,7 @@ public class GForm_Main : DarkForm
             // 
             this.darkButton_0.Checked = false;
             this.darkButton_0.Enabled = false;
-            this.darkButton_0.Location = new System.Drawing.Point(6, 271);
+            this.darkButton_0.Location = new System.Drawing.Point(6, 300);
             this.darkButton_0.Name = "darkButton_0";
             this.darkButton_0.Size = new System.Drawing.Size(192, 23);
             this.darkButton_0.TabIndex = 50;
@@ -1452,6 +1510,8 @@ public class GForm_Main : DarkForm
             // darkGroupBox_0
             // 
             this.darkGroupBox_0.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.darkGroupBox_0.Controls.Add(this.darkButton3);
+            this.darkGroupBox_0.Controls.Add(this.darkButton2);
             this.darkGroupBox_0.Controls.Add(this.darkButton_Unlock01);
             this.darkGroupBox_0.Controls.Add(this.darkButton_Unlock41);
             this.darkGroupBox_0.Controls.Add(this.darkButton1);
@@ -1469,6 +1529,27 @@ public class GForm_Main : DarkForm
             this.darkGroupBox_0.TabIndex = 56;
             this.darkGroupBox_0.TabStop = false;
             this.darkGroupBox_0.Text = "J2534 Controls";
+            // 
+            // darkButton2
+            // 
+            this.darkButton2.Checked = false;
+            this.darkButton2.Location = new System.Drawing.Point(6, 358);
+            this.darkButton2.Name = "darkButton2";
+            this.darkButton2.Size = new System.Drawing.Size(192, 23);
+            this.darkButton2.TabIndex = 59;
+            this.darkButton2.Text = "Convert .rwd to .bin";
+            this.darkButton2.Click += new System.EventHandler(this.darkButton2_Click_1);
+            // 
+            // darkButton_Unlock01
+            // 
+            this.darkButton_Unlock01.Checked = false;
+            this.darkButton_Unlock01.Enabled = false;
+            this.darkButton_Unlock01.Location = new System.Drawing.Point(6, 155);
+            this.darkButton_Unlock01.Name = "darkButton_Unlock01";
+            this.darkButton_Unlock01.Size = new System.Drawing.Size(192, 23);
+            this.darkButton_Unlock01.TabIndex = 58;
+            this.darkButton_Unlock01.Text = "UNLOCK ECU (0x27,0x01)";
+            this.darkButton_Unlock01.Click += new System.EventHandler(this.darkButton_Unlock01_Click);
             // 
             // darkButton_Unlock41
             // 
@@ -1510,7 +1591,7 @@ public class GForm_Main : DarkForm
             this.darkButton_5.Name = "darkButton_5";
             this.darkButton_5.Size = new System.Drawing.Size(192, 23);
             this.darkButton_5.TabIndex = 54;
-            this.darkButton_5.Text = "Flash Rom";
+            this.darkButton_5.Text = "Flash Rom (.bin)";
             this.darkButton_5.Click += new System.EventHandler(this.method_17);
             // 
             // darkLabel_6
@@ -1527,7 +1608,7 @@ public class GForm_Main : DarkForm
             // 
             this.darkButton_4.Checked = false;
             this.darkButton_4.Enabled = false;
-            this.darkButton_4.Location = new System.Drawing.Point(6, 300);
+            this.darkButton_4.Location = new System.Drawing.Point(6, 329);
             this.darkButton_4.Name = "darkButton_4";
             this.darkButton_4.Size = new System.Drawing.Size(192, 23);
             this.darkButton_4.TabIndex = 51;
@@ -1666,16 +1747,22 @@ public class GForm_Main : DarkForm
             this.darkCheckBox_0.Text = "Large Write";
             this.darkCheckBox_0.Visible = false;
             // 
-            // darkButton_Unlock01
+            // openFileDialog1
             // 
-            this.darkButton_Unlock01.Checked = false;
-            this.darkButton_Unlock01.Enabled = false;
-            this.darkButton_Unlock01.Location = new System.Drawing.Point(6, 155);
-            this.darkButton_Unlock01.Name = "darkButton_Unlock01";
-            this.darkButton_Unlock01.Size = new System.Drawing.Size(192, 23);
-            this.darkButton_Unlock01.TabIndex = 58;
-            this.darkButton_Unlock01.Text = "UNLOCK ECU (0x27,0x01)";
-            this.darkButton_Unlock01.Click += new System.EventHandler(this.darkButton_Unlock01_Click);
+            this.openFileDialog1.DefaultExt = "*.gz";
+            this.openFileDialog1.Filter = "Honda Compressed RWD Firmware|*.gz|Honda RWD Firmware|*.rwd";
+            this.openFileDialog1.Title = "Open Honda RWD Firmware File";
+            // 
+            // darkButton3
+            // 
+            this.darkButton3.Checked = false;
+            this.darkButton3.Enabled = false;
+            this.darkButton3.Location = new System.Drawing.Point(6, 271);
+            this.darkButton3.Name = "darkButton3";
+            this.darkButton3.Size = new System.Drawing.Size(192, 23);
+            this.darkButton3.TabIndex = 60;
+            this.darkButton3.Text = "Flash Firmware (.rwd)";
+            this.darkButton3.Click += new System.EventHandler(this.darkButton3_Click);
             // 
             // GForm_Main
             // 
@@ -2021,5 +2108,14 @@ public class GForm_Main : DarkForm
 
 
         public double double_0;
+    }
+
+    private void darkButton2_Click_1(object sender, EventArgs e)
+    {
+        DialogResult result = openFileDialog1.ShowDialog();
+        if (result == DialogResult.OK)
+        {
+            Class_RWD.LoadRWD(openFileDialog1.FileName, true);
+        }
     }
 }

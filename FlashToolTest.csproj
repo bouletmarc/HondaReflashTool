@@ -61,6 +61,7 @@
     <Compile Include="Class_ODB.cs" />
     <Compile Include="Class_ECUS.cs" />
     <Compile Include="Class_Cypher.cs" />
+    <Compile Include="Class_RWD.cs" />
     <Compile Include="GForm_Main.cs">
       <SubType>Form</SubType>
     </Compile>
