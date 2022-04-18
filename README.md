@@ -16,13 +16,17 @@ I hope this tool will help others developers to pick up on the developement just
 
 # Tool Features
 
-| Done? | Name | 
+| Done? | Feature Description | 
 |------|---------|
-| :white_check_mark: | Read ECU Rom |
-| :white_check_mark: | Write/Flash ECU Rom |
-| :white_check_mark: | Checksum Verification **(In Progress)** |
-| :white_check_mark: | Seed/Key ECU Unlock Algorithms -> All ECUS for 0x27,0x01 Request |
-| :white_check_mark: | Seed/Key ECU Unlock Algorithms -> ONLY Specified ECUS for 0x27,0x41 Request (see the compatible list below) |
+| :white_check_mark: | Read ECU rom |
+| :white_check_mark: | Write/Flash ECU binary (.bin) rom file |
+| :white_large_square: | Write/Flash ECU firmware (.rwd) file |
+| :white_check_mark: | Checksum Verification for 1Mb (.bin) file (SH07058) |
+| :white_large_square: | Checksum Verification for 2Mb (.bin) file (SH72531) |
+| :white_check_mark: | Seed/Key ECU Unlock Algorithms(0x27,0x01) -> All ECUS?? |
+| :exclamation: | Seed/Key ECU Unlock Algorithms(0x27,0x41) -> ONLY Specified ECUS (see compatible list below) |
+| :white_check_mark: | RWD firmware file X-RAY/Decryptor to binary file (.bin) |
+| :white_large_square: | Binary file (.bin) to RWD firmware file builder |
 
 # Compatible Cars
 
