@@ -22,9 +22,9 @@ public class GForm_Main : DarkForm
     private OpenFileDialog openFileDialog1;
     byte Unlocking_Mode = 0x41;
     bool WritingBinaryMode = true;  //if false we are in writing firmware mode
-    private DarkButton darkButton3;
+    private DarkButton darkButton_FlashFW;
     GForm_Main GForm_Main_0;
-    UInt16 block_size = 0;
+    private DarkButton darkButton3;
 
     public GForm_Main()
     {
@@ -113,7 +113,8 @@ public class GForm_Main : DarkForm
         this.darkButton_DownloadROM.Enabled = false;
         this.darkButton_Unlock41.Enabled = false;
         this.darkButton_Unlock01.Enabled = false;
-        this.darkButton_5.Enabled = false;
+        this.darkButton_FlashRom.Enabled = false;
+        this.darkButton_FlashFW.Enabled = false;
 
         using (API api = APIFactory.GetAPI(GForm_Main.string_0))
         {
@@ -236,6 +237,13 @@ public class GForm_Main : DarkForm
         Application.DoEvents();
     }
 
+    public void ResetProgressBar()
+    {
+        this.darkProgressBar_0.Value = 0;
+        this.darkLabel_7.Text = "Status";
+        Application.DoEvents();
+    }
+
 
     private void method_6(object sender, ProgressChangedEventArgs e)
     {
@@ -273,7 +281,8 @@ public class GForm_Main : DarkForm
         this.darkButton_DownloadROM.Enabled = false;
         this.darkButton_Unlock41.Enabled = false;
         this.darkButton_Unlock01.Enabled = false;
-        this.darkButton_5.Enabled = false;
+        this.darkButton_FlashRom.Enabled = false;
+        this.darkButton_FlashFW.Enabled = false;
     }
 
     private void darkButton2_Click(object sender, EventArgs e)
@@ -473,15 +482,26 @@ public class GForm_Main : DarkForm
                             {
                                 this.method_1("Security Authorized: ECU Unlocked" + Environment.NewLine);
                                 ECU_Unlocked = true;
-                                this.darkButton_DownloadROM.Enabled = true;
-                                this.darkButton_5.Enabled = true;
+                                if (!TwoBytesMode)
+                                {
+                                    //Unlock ALL buttons (Read&Writes) for 0x27,0x41 Unlock
+                                    this.darkButton_DownloadROM.Enabled = true;
+                                    this.darkButton_FlashRom.Enabled = true;
+                                    this.darkButton_FlashFW.Enabled = true;
+                                }
+                                else
+                                {
+                                    //Unlock FlashFW button (Write FW ONLY) for 0x27,0x01 Unlock
+                                    this.darkButton_FlashFW.Enabled = true;
+                                }
                             }
                             else
                             {
                                 this.method_1("Recv:" + GForm_Main.smethod_1(Received) + Environment.NewLine);
                                 ECU_Unlocked = false;
                                 this.darkButton_DownloadROM.Enabled = false;
-                                this.darkButton_5.Enabled = false;
+                                this.darkButton_FlashRom.Enabled = false;
+                                this.darkButton_FlashFW.Enabled = false;
                                 MessageBox.Show("Failed to Unlock ECU, Check Log");
                             }
                         }
@@ -1024,7 +1044,7 @@ public class GForm_Main : DarkForm
                 WritingBinaryMode = false;
 
                 //Decrypt firmware file and get needed variable (Decryption byte)
-                Class_RWD.LoadRWD(openFileDialog1.FileName, false);
+                Class_RWD.LoadRWD(openFileDialog1.FileName, false, false);
 
                 //###############################
                 //Get Checksum and Fix it
@@ -1465,28 +1485,29 @@ public class GForm_Main : DarkForm
             this.darkButton_DownloadROM = new DarkUI.Controls.DarkButton();
             this.darkButton_0 = new DarkUI.Controls.DarkButton();
             this.darkGroupBox_0 = new DarkUI.Controls.DarkGroupBox();
+            this.darkButton3 = new DarkUI.Controls.DarkButton();
+            this.darkButton_FlashFW = new DarkUI.Controls.DarkButton();
             this.darkButton2 = new DarkUI.Controls.DarkButton();
             this.darkButton_Unlock01 = new DarkUI.Controls.DarkButton();
+            this.darkTextBox_4 = new DarkUI.Controls.DarkTextBox();
             this.darkButton_Unlock41 = new DarkUI.Controls.DarkButton();
+            this.darkTextBox_3 = new DarkUI.Controls.DarkTextBox();
             this.darkButton1 = new DarkUI.Controls.DarkButton();
             this.darkButton_6 = new DarkUI.Controls.DarkButton();
-            this.darkButton_5 = new DarkUI.Controls.DarkButton();
+            this.darkButton_FlashRom = new DarkUI.Controls.DarkButton();
+            this.darkLabel_3 = new DarkUI.Controls.DarkLabel();
             this.darkButton_4 = new DarkUI.Controls.DarkButton();
+            this.darkLabel_2 = new DarkUI.Controls.DarkLabel();
             this.darkLabel_0 = new DarkUI.Controls.DarkLabel();
             this.darkLabel_1 = new DarkUI.Controls.DarkLabel();
-            this.darkLabel_2 = new DarkUI.Controls.DarkLabel();
-            this.darkLabel_3 = new DarkUI.Controls.DarkLabel();
             this.darkLabel_4 = new DarkUI.Controls.DarkLabel();
             this.darkLabel_5 = new DarkUI.Controls.DarkLabel();
             this.darkTextBox_1 = new DarkUI.Controls.DarkTextBox();
             this.darkTextBox_2 = new DarkUI.Controls.DarkTextBox();
-            this.darkTextBox_3 = new DarkUI.Controls.DarkTextBox();
-            this.darkTextBox_4 = new DarkUI.Controls.DarkTextBox();
             this.darkProgressBar_0 = new DarkUI.Controls.DarkProgressBar();
             this.darkLabel_7 = new DarkUI.Controls.DarkLabel();
             this.darkLabel_8 = new DarkUI.Controls.DarkLabel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.darkButton3 = new DarkUI.Controls.DarkButton();
             this.darkGroupBox_0.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -1535,7 +1556,7 @@ public class GForm_Main : DarkForm
             // 
             this.darkButton_0.Checked = false;
             this.darkButton_0.Enabled = false;
-            this.darkButton_0.Location = new System.Drawing.Point(6, 309);
+            this.darkButton_0.Location = new System.Drawing.Point(6, 338);
             this.darkButton_0.Name = "darkButton_0";
             this.darkButton_0.Size = new System.Drawing.Size(192, 23);
             this.darkButton_0.TabIndex = 50;
@@ -1547,6 +1568,7 @@ public class GForm_Main : DarkForm
             // 
             this.darkGroupBox_0.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.darkGroupBox_0.Controls.Add(this.darkButton3);
+            this.darkGroupBox_0.Controls.Add(this.darkButton_FlashFW);
             this.darkGroupBox_0.Controls.Add(this.darkButton2);
             this.darkGroupBox_0.Controls.Add(this.darkButton_Unlock01);
             this.darkGroupBox_0.Controls.Add(this.darkTextBox_4);
@@ -1554,7 +1576,7 @@ public class GForm_Main : DarkForm
             this.darkGroupBox_0.Controls.Add(this.darkTextBox_3);
             this.darkGroupBox_0.Controls.Add(this.darkButton1);
             this.darkGroupBox_0.Controls.Add(this.darkButton_6);
-            this.darkGroupBox_0.Controls.Add(this.darkButton_5);
+            this.darkGroupBox_0.Controls.Add(this.darkButton_FlashRom);
             this.darkGroupBox_0.Controls.Add(this.darkLabel_3);
             this.darkGroupBox_0.Controls.Add(this.darkButton_4);
             this.darkGroupBox_0.Controls.Add(this.darkButton_0);
@@ -1569,6 +1591,27 @@ public class GForm_Main : DarkForm
             this.darkGroupBox_0.TabStop = false;
             this.darkGroupBox_0.Text = "J2534 Controls";
             // 
+            // darkButton3
+            // 
+            this.darkButton3.Checked = false;
+            this.darkButton3.Location = new System.Drawing.Point(6, 309);
+            this.darkButton3.Name = "darkButton3";
+            this.darkButton3.Size = new System.Drawing.Size(192, 23);
+            this.darkButton3.TabIndex = 67;
+            this.darkButton3.Text = "Convert Firmware .bin to .rwd";
+            this.darkButton3.Click += new System.EventHandler(this.darkButton3_Click_1);
+            // 
+            // darkButton_FlashFW
+            // 
+            this.darkButton_FlashFW.Checked = false;
+            this.darkButton_FlashFW.Enabled = false;
+            this.darkButton_FlashFW.Location = new System.Drawing.Point(6, 251);
+            this.darkButton_FlashFW.Name = "darkButton_FlashFW";
+            this.darkButton_FlashFW.Size = new System.Drawing.Size(192, 23);
+            this.darkButton_FlashFW.TabIndex = 60;
+            this.darkButton_FlashFW.Text = "Flash Firmware (.rwd)";
+            this.darkButton_FlashFW.Click += new System.EventHandler(this.darkButton3_Click);
+            // 
             // darkButton2
             // 
             this.darkButton2.Checked = false;
@@ -1576,7 +1619,7 @@ public class GForm_Main : DarkForm
             this.darkButton2.Name = "darkButton2";
             this.darkButton2.Size = new System.Drawing.Size(192, 23);
             this.darkButton2.TabIndex = 59;
-            this.darkButton2.Text = "Convert .rwd to .bin";
+            this.darkButton2.Text = "Convert Firmware .rwd to .bin";
             this.darkButton2.Click += new System.EventHandler(this.darkButton2_Click_1);
             // 
             // darkButton_Unlock01
@@ -1590,6 +1633,14 @@ public class GForm_Main : DarkForm
             this.darkButton_Unlock01.Text = "UNLOCK ECU (0x27,0x01)";
             this.darkButton_Unlock01.Click += new System.EventHandler(this.darkButton_Unlock01_Click);
             // 
+            // darkTextBox_4
+            // 
+            this.darkTextBox_4.Location = new System.Drawing.Point(85, 474);
+            this.darkTextBox_4.Name = "darkTextBox_4";
+            this.darkTextBox_4.Size = new System.Drawing.Size(113, 20);
+            this.darkTextBox_4.TabIndex = 66;
+            this.darkTextBox_4.Visible = false;
+            // 
             // darkButton_Unlock41
             // 
             this.darkButton_Unlock41.Checked = false;
@@ -1600,6 +1651,14 @@ public class GForm_Main : DarkForm
             this.darkButton_Unlock41.TabIndex = 57;
             this.darkButton_Unlock41.Text = "UNLOCK ECU (0x27,0x41)";
             this.darkButton_Unlock41.Click += new System.EventHandler(this.darkButton2_Click);
+            // 
+            // darkTextBox_3
+            // 
+            this.darkTextBox_3.Location = new System.Drawing.Point(85, 450);
+            this.darkTextBox_3.Name = "darkTextBox_3";
+            this.darkTextBox_3.Size = new System.Drawing.Size(113, 20);
+            this.darkTextBox_3.TabIndex = 65;
+            this.darkTextBox_3.Visible = false;
             // 
             // darkButton1
             // 
@@ -1622,48 +1681,39 @@ public class GForm_Main : DarkForm
             this.darkButton_6.Text = "Select ECU";
             this.darkButton_6.Click += new System.EventHandler(this.method_20);
             // 
-            // darkButton_5
+            // darkButton_FlashRom
             // 
-            this.darkButton_5.Checked = false;
-            this.darkButton_5.Enabled = false;
-            this.darkButton_5.Location = new System.Drawing.Point(6, 222);
-            this.darkButton_5.Name = "darkButton_5";
-            this.darkButton_5.Size = new System.Drawing.Size(192, 23);
-            this.darkButton_5.TabIndex = 54;
-            this.darkButton_5.Text = "Flash Rom (.bin)";
-            this.darkButton_5.Click += new System.EventHandler(this.method_17);
+            this.darkButton_FlashRom.Checked = false;
+            this.darkButton_FlashRom.Enabled = false;
+            this.darkButton_FlashRom.Location = new System.Drawing.Point(6, 222);
+            this.darkButton_FlashRom.Name = "darkButton_FlashRom";
+            this.darkButton_FlashRom.Size = new System.Drawing.Size(192, 23);
+            this.darkButton_FlashRom.TabIndex = 54;
+            this.darkButton_FlashRom.Text = "Flash Rom (.bin)";
+            this.darkButton_FlashRom.Click += new System.EventHandler(this.method_17);
+            // 
+            // darkLabel_3
+            // 
+            this.darkLabel_3.AutoSize = true;
+            this.darkLabel_3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.darkLabel_3.Location = new System.Drawing.Point(24, 476);
+            this.darkLabel_3.Name = "darkLabel_3";
+            this.darkLabel_3.Size = new System.Drawing.Size(56, 13);
+            this.darkLabel_3.TabIndex = 60;
+            this.darkLabel_3.Text = "Read Size";
+            this.darkLabel_3.Visible = false;
             // 
             // darkButton_4
             // 
             this.darkButton_4.Checked = false;
             this.darkButton_4.Enabled = false;
-            this.darkButton_4.Location = new System.Drawing.Point(6, 338);
+            this.darkButton_4.Location = new System.Drawing.Point(6, 367);
             this.darkButton_4.Name = "darkButton_4";
             this.darkButton_4.Size = new System.Drawing.Size(192, 23);
             this.darkButton_4.TabIndex = 51;
             this.darkButton_4.Text = "Sniff All Traffic";
             this.darkButton_4.Visible = false;
             this.darkButton_4.Click += new System.EventHandler(this.method_16);
-            // 
-            // darkLabel_0
-            // 
-            this.darkLabel_0.AutoSize = true;
-            this.darkLabel_0.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.darkLabel_0.Location = new System.Drawing.Point(228, 14);
-            this.darkLabel_0.Name = "darkLabel_0";
-            this.darkLabel_0.Size = new System.Drawing.Size(62, 13);
-            this.darkLabel_0.TabIndex = 57;
-            this.darkLabel_0.Text = "Vin Number";
-            // 
-            // darkLabel_1
-            // 
-            this.darkLabel_1.AutoSize = true;
-            this.darkLabel_1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.darkLabel_1.Location = new System.Drawing.Point(228, 40);
-            this.darkLabel_1.Name = "darkLabel_1";
-            this.darkLabel_1.Size = new System.Drawing.Size(70, 13);
-            this.darkLabel_1.TabIndex = 58;
-            this.darkLabel_1.Text = "Calibration ID";
             // 
             // darkLabel_2
             // 
@@ -1676,16 +1726,25 @@ public class GForm_Main : DarkForm
             this.darkLabel_2.Text = "Read address";
             this.darkLabel_2.Visible = false;
             // 
-            // darkLabel_3
+            // darkLabel_0
             // 
-            this.darkLabel_3.AutoSize = true;
-            this.darkLabel_3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.darkLabel_3.Location = new System.Drawing.Point(24, 476);
-            this.darkLabel_3.Name = "darkLabel_3";
-            this.darkLabel_3.Size = new System.Drawing.Size(56, 13);
-            this.darkLabel_3.TabIndex = 60;
-            this.darkLabel_3.Text = "Read Size";
-            this.darkLabel_3.Visible = false;
+            this.darkLabel_0.AutoSize = true;
+            this.darkLabel_0.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.darkLabel_0.Location = new System.Drawing.Point(218, 14);
+            this.darkLabel_0.Name = "darkLabel_0";
+            this.darkLabel_0.Size = new System.Drawing.Size(62, 13);
+            this.darkLabel_0.TabIndex = 57;
+            this.darkLabel_0.Text = "Vin Number";
+            // 
+            // darkLabel_1
+            // 
+            this.darkLabel_1.AutoSize = true;
+            this.darkLabel_1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.darkLabel_1.Location = new System.Drawing.Point(218, 40);
+            this.darkLabel_1.Name = "darkLabel_1";
+            this.darkLabel_1.Size = new System.Drawing.Size(70, 13);
+            this.darkLabel_1.TabIndex = 58;
+            this.darkLabel_1.Text = "Calibration ID";
             // 
             // darkLabel_4
             // 
@@ -1703,42 +1762,26 @@ public class GForm_Main : DarkForm
             this.darkLabel_5.AutoSize = true;
             this.darkLabel_5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             this.darkLabel_5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.darkLabel_5.Location = new System.Drawing.Point(214, 514);
+            this.darkLabel_5.Location = new System.Drawing.Point(12, 512);
             this.darkLabel_5.Name = "darkLabel_5";
             this.darkLabel_5.Size = new System.Drawing.Size(0, 20);
             this.darkLabel_5.TabIndex = 51;
             // 
             // darkTextBox_1
             // 
-            this.darkTextBox_1.Location = new System.Drawing.Point(304, 11);
+            this.darkTextBox_1.Location = new System.Drawing.Point(294, 11);
             this.darkTextBox_1.Name = "darkTextBox_1";
             this.darkTextBox_1.ReadOnly = true;
-            this.darkTextBox_1.Size = new System.Drawing.Size(375, 20);
+            this.darkTextBox_1.Size = new System.Drawing.Size(385, 20);
             this.darkTextBox_1.TabIndex = 63;
             // 
             // darkTextBox_2
             // 
-            this.darkTextBox_2.Location = new System.Drawing.Point(304, 37);
+            this.darkTextBox_2.Location = new System.Drawing.Point(294, 37);
             this.darkTextBox_2.Name = "darkTextBox_2";
             this.darkTextBox_2.ReadOnly = true;
-            this.darkTextBox_2.Size = new System.Drawing.Size(375, 20);
+            this.darkTextBox_2.Size = new System.Drawing.Size(385, 20);
             this.darkTextBox_2.TabIndex = 64;
-            // 
-            // darkTextBox_3
-            // 
-            this.darkTextBox_3.Location = new System.Drawing.Point(85, 450);
-            this.darkTextBox_3.Name = "darkTextBox_3";
-            this.darkTextBox_3.Size = new System.Drawing.Size(113, 20);
-            this.darkTextBox_3.TabIndex = 65;
-            this.darkTextBox_3.Visible = false;
-            // 
-            // darkTextBox_4
-            // 
-            this.darkTextBox_4.Location = new System.Drawing.Point(85, 474);
-            this.darkTextBox_4.Name = "darkTextBox_4";
-            this.darkTextBox_4.Size = new System.Drawing.Size(113, 20);
-            this.darkTextBox_4.TabIndex = 66;
-            this.darkTextBox_4.Visible = false;
             // 
             // darkProgressBar_0
             // 
@@ -1761,7 +1804,7 @@ public class GForm_Main : DarkForm
             // 
             this.darkLabel_8.AutoSize = true;
             this.darkLabel_8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.darkLabel_8.Location = new System.Drawing.Point(220, 518);
+            this.darkLabel_8.Location = new System.Drawing.Point(228, 516);
             this.darkLabel_8.Name = "darkLabel_8";
             this.darkLabel_8.Size = new System.Drawing.Size(0, 13);
             this.darkLabel_8.TabIndex = 69;
@@ -1769,19 +1812,8 @@ public class GForm_Main : DarkForm
             // openFileDialog1
             // 
             this.openFileDialog1.DefaultExt = "*.gz";
-            this.openFileDialog1.Filter = "Honda Compressed RWD Firmware|*.gz|Honda RWD Firmware|*.rwd";
+            this.openFileDialog1.Filter = "Honda Compressed RWD Firmware|*.gz;*.rwd";
             this.openFileDialog1.Title = "Open Honda RWD Firmware File";
-            // 
-            // darkButton3
-            // 
-            this.darkButton3.Checked = false;
-            this.darkButton3.Enabled = false;
-            this.darkButton3.Location = new System.Drawing.Point(6, 251);
-            this.darkButton3.Name = "darkButton3";
-            this.darkButton3.Size = new System.Drawing.Size(192, 23);
-            this.darkButton3.TabIndex = 60;
-            this.darkButton3.Text = "Flash Firmware (.rwd)";
-            this.darkButton3.Click += new System.EventHandler(this.darkButton3_Click);
             // 
             // GForm_Main
             // 
@@ -1803,6 +1835,7 @@ public class GForm_Main : DarkForm
             this.MinimumSize = new System.Drawing.Size(710, 573);
             this.Name = "GForm_Main";
             this.Text = "Honda CANBUS Tools";
+            this.Load += new System.EventHandler(this.GForm_Main_Load);
             this.darkGroupBox_0.ResumeLayout(false);
             this.darkGroupBox_0.PerformLayout();
             this.ResumeLayout(false);
@@ -1991,7 +2024,7 @@ public class GForm_Main : DarkForm
 
 
 
-    private DarkButton darkButton_5;
+    private DarkButton darkButton_FlashRom;
 
 
     private DarkButton darkButton_6;
@@ -2122,7 +2155,26 @@ public class GForm_Main : DarkForm
         DialogResult result = openFileDialog1.ShowDialog();
         if (result == DialogResult.OK)
         {
-            Class_RWD.LoadRWD(openFileDialog1.FileName, true);
+            Class_RWD.LoadRWD(openFileDialog1.FileName, true, true);
         }
+    }
+
+    private void GForm_Main_Load(object sender, EventArgs e)
+    {
+
+    }
+
+    private void darkButton3_Click_1(object sender, EventArgs e)
+    {
+        GForm_ConvertBIN gform = new GForm_ConvertBIN();
+        if (gform.ShowDialog() == DialogResult.OK)
+        {
+            string ThisB = gform.FileBIN;
+            string ThisR = gform.FileRWD;
+            gform.Dispose();
+            Class_RWD.LoadBIN(ThisB, ThisR);
+            return;
+        }
+        this.darkTextBox_0.Text = "Couldn't open file selection form";
     }
 }

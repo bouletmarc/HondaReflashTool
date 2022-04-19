@@ -16,6 +16,12 @@ static class Class_RWD
     public static byte[] _firmware_encrypted = new byte[] { };
     public static UInt32 start = 0U;
     public static UInt32 size = 0U;
+    private static string[] SuppportedVersions = new string[] { };
+    private static string[] SuppportedFWKeys = new string[] { };
+    private static string CanAddress = "";
+    private static byte[] DecodersBytes = new byte[] { };   //Used to decode rwd to bin
+    private static byte[] EncodersBytes = new byte[] { };   //Used to encode bin to rwd
+    private static byte[] RWD_encrypted_StartFile = new byte[] { };   //Used to encode bin to rwd
 
     private static GForm_Main GForm_Main_0;
 
@@ -24,17 +30,99 @@ static class Class_RWD
         GForm_Main_0 = GForm_Main_1;
     }
 
+    public static void CompressFile(string ThisFile, string CompressedName)
+    {
+        FileStream originalFileStream = File.Open(ThisFile, FileMode.Open);
+        FileStream compressedFileStream = File.Create(CompressedName);
+        GZipStream compressor = new GZipStream(compressedFileStream, CompressionMode.Compress);
+        originalFileStream.CopyTo(compressor);
+    }
+
     public static byte[] Decompress(string ThisFile)
     {
         Stream compressedStream = new MemoryStream(File.ReadAllBytes(ThisFile));
-        var zipStream = new GZipStream(compressedStream, CompressionMode.Decompress);
+        GZipStream zipStream = new GZipStream(compressedStream, CompressionMode.Decompress);
         MemoryStream resultStream = new MemoryStream();
         zipStream.CopyTo(resultStream);
         return resultStream.ToArray();
     }
 
+    public static UInt16 ToUInt16BE(byte[] TwoBytes)
+    {
+        UInt16 k0 = BitConverter.ToUInt16(TwoBytes, 0);
+        UInt16 k1 = BitConverter.ToUInt16(BitConverter.GetBytes(k0).Reverse().ToArray(), 0);
+        return k1;
+    }
 
-    public static void LoadRWD(string f_name, bool FullDecrypt)
+    private static UInt16 checksum_by_sum(byte[] fw, uint start, uint end)
+    {
+        int s = 0;
+        uint valuescount = (end - start) / 2;
+        for (int i = 0; i < valuescount; i++)
+        {
+            byte[] ThisTwoBytes = new byte[2] { fw[start + (i*2)], fw[start + (i * 2) + 1] };
+            s += ToUInt16BE(ThisTwoBytes);
+
+            if (s > 0xFFFF) s -= 0xFFFF;
+        }
+        return (UInt16) s;
+    }
+
+    private static UInt16 checksum_by_negative_sum(byte[] fw, uint start, uint end)
+    {
+        int s = 0;
+        uint valuescount = (end - start) / 2;
+        for (int i = 0; i < valuescount; i++)
+        {
+            byte[] ThisTwoBytes = new byte[2] { fw[start + (i * 2)], fw[start + (i * 2) + 1] };
+            s -= ToUInt16BE(ThisTwoBytes);
+
+            if (s < 0) s += 0xFFFF;
+        }
+        return (UInt16) s;
+    }
+
+    //######################################################################################################
+    //######################################################################################################
+    public static void LoadBIN(string f_name, string f_nameFW)
+    {
+        byte[] data = File.ReadAllBytes(f_name);
+        GForm_Main_0.method_1("Encrypting file: " + f_name);
+
+        //Load .rwd file for obtaining 'encryption' method and then encrypt the .bin using the same method.
+        LoadRWD(f_nameFW, true, false);
+
+        //Copy Start file bytes from the selected rwd file
+        byte[] dataEncrypted = new byte[RWD_encrypted_StartFile.Length + data.Length];
+        for (int i = 0; i < RWD_encrypted_StartFile.Length; i++) dataEncrypted[i] = RWD_encrypted_StartFile[i];
+
+        //Encrypt .bin data bytes to .rwd format
+        for (int i = 0; i < data.Length; i++)
+        {
+            byte ThisByte = data[i];
+            dataEncrypted[RWD_encrypted_StartFile.Length + i] = EncodersBytes[ThisByte];
+        }
+
+        //Fix Checksums
+        //TODO HERE #######################################
+
+        //Save Encrypted rwd firmware
+        string ThisPath = Path.GetDirectoryName(f_name) + @"\" + Path.GetFileNameWithoutExtension(f_name) + ".rwd";
+        File.Create(ThisPath).Dispose();
+        File.WriteAllBytes(ThisPath, dataEncrypted);
+        GForm_Main_0.method_1("Saved encrypted firmware file: " + ThisPath);
+
+        //Save ZIPPED Encrypted firmware
+        CompressFile(ThisPath, ThisPath + ".gz");
+    }
+
+    /*'39990-TLA-A030': { #CR-V thanks to joe1
+        'checksum-offsets': [(0, 0x6bf80), (1, 0x6bffe)] #original bin checksums are 0x419b at offset 0x6FF80 and 0x24ef at 0x6FFFE, but since we start the bin from 0x4000 after bootloader, we offset the checksum accordingly
+    },*/
+
+    //######################################################################################################
+    //######################################################################################################
+    public static void LoadRWD(string f_name, bool FullDecrypt, bool Saving)
     {
         byte[] data = new byte[] { };
         if (Path.GetExtension(f_name).ToLower().Contains("gz")) data = Decompress(f_name);
@@ -90,6 +178,10 @@ static class Class_RWD
         size = ReadUInt32BE(data, idx);
         idx += 4;
 
+        //Get Start file bytes array
+        RWD_encrypted_StartFile = new byte[idx];
+        for (int i = 0; i < idx; i++) RWD_encrypted_StartFile[i] = data[i];
+
         byte[] firmware = Slice(data, idx, data.Length - 4);
         idx += firmware.Length;
 
@@ -102,10 +194,55 @@ static class Class_RWD
         _firmware_encrypted = firmware;
         _keys = headers5;
 
-        if (FullDecrypt) DecryptRWD(f_name);
+        //Get supported versions and supported firmwares keys
+        int VersionsCount = (headers3.Length / 16);
+        SuppportedVersions = new string[VersionsCount];
+        SuppportedFWKeys = new string[VersionsCount];
+        string SoftwareKey = _keys[0].ToString("X2") + _keys[1].ToString("X2") + _keys[2].ToString("X2");
+        for (int i = 0; i < VersionsCount; i++)
+        {
+            //Get Supported versions
+            byte[] buf = new byte[16];
+            int EmptyCount = 0;
+            for (int i2 = 0; i2 < 16; i2++)
+            {
+                buf[i2] = headers3[(i * 16) + i2];
+                if (buf[i2] == 0)
+                {
+                    buf[i2] = 0x2E;
+                    EmptyCount++;
+                }
+            }
+            //Remove Empty chars
+            byte[] bufRedo = new byte[16 - EmptyCount];
+            for (int i2 = 0; i2 < bufRedo.Length; i2++) bufRedo[i2] = buf[i2];
+            SuppportedVersions[i] = System.Text.Encoding.ASCII.GetString(bufRedo);
+
+            //Get supported Firmwares keys according to the supported versions
+            byte[] bufkey = new byte[6];
+            for (int i2 = 0; i2 < 6; i2++)
+            {
+                bufkey[i2] = headers4[(i * 6) + i2];
+            }
+            SuppportedFWKeys[i] = bufkey[0].ToString("X2") + bufkey[1].ToString("X2") + bufkey[2].ToString("X2") + bufkey[3].ToString("X2") + bufkey[4].ToString("X2") + bufkey[5].ToString("X2");
+        }
+
+        //Get CanAddress Infos
+        CanAddress = "18DA" + headers2[0].ToString("X") + "F1";
+
+        //Print/Log Informations
+        GForm_Main_0.method_1("Firmware Start: 0x" + start.ToString("X"));
+        GForm_Main_0.method_1("Firmware Size: 0x" + size.ToString("X"));
+        GForm_Main_0.method_1("CanAddress: 0x" + CanAddress);
+        GForm_Main_0.method_1("Software Keys: 0x" + SoftwareKey);
+        GForm_Main_0.method_1("Supported Versions (and keys): ");
+        for (int i = 0; i < SuppportedVersions.Length; i++) GForm_Main_0.method_1(SuppportedVersions[i] + " (0x" + SuppportedFWKeys[i] + ")");
+
+        //Perform FULL decryption (convert .rwd to .bin)
+        if (FullDecrypt) DecryptRWD(f_name, Saving);
     }
 
-    private static void DecryptRWD(string f_name)
+    private static void DecryptRWD(string f_name, bool Saving)
     {
         part_number_prefix = get_part_number_prefix(f_name);
         firmware_candidates = decrypt(part_number_prefix);
@@ -123,6 +260,24 @@ static class Class_RWD
             GForm_Main_0.method_1("decryption failed!");
             GForm_Main_0.method_1("(could not find a cipher that results in the part number being in the data)");
             return;
+        }
+
+        //Remove duplicated Candidates
+        if (firmware_candidates.Count > 1)
+        {
+            List<byte[]> firmware_candidatesBUFFER = firmware_candidates;
+            firmware_candidates = new List<byte[]>();
+
+            byte[] LastCandidate = firmware_candidatesBUFFER[firmware_candidatesBUFFER.Count - 1];
+            for (int i = 0; i < firmware_candidatesBUFFER.Count - 1; i++)
+            {
+                byte[] CurrentCandidate = firmware_candidatesBUFFER[i];
+                if (CurrentCandidate != LastCandidate)
+                {
+                    firmware_candidates.Add(CurrentCandidate);
+                }
+            }
+            firmware_candidates.Add(LastCandidate);
         }
 
         if (firmware_candidates.Count > 1) GForm_Main_0.method_1("multiple sets of keys resulted in data containing the part number");
@@ -182,13 +337,23 @@ static class Class_RWD
         //###################################################################
 
         //Saving Decrypted Firmwares
-        foreach (byte[] f_data in firmware_candidates)
-        //foreach (byte[] f_data in firmware_good)
+        if (Saving)
         {
-            uint start_addr = start;
-            string ThisPath = Path.GetDirectoryName(f_name) + @"\" + Path.GetFileNameWithoutExtension(f_name).Replace(".rwd", "").Replace(".RWD", "") + ".0x" + start_addr.ToString("X") + ".bin";
-            File.Create(ThisPath).Dispose();
-            File.WriteAllBytes(ThisPath, f_data);   //-> f_data[start_addr:]
+            bool AsSavedFile = false;
+            int FileCount = 1;
+            foreach (byte[] f_data in firmware_candidates)
+            {
+                string FileNumber = "";
+                if (firmware_candidates.Count > 1) FileNumber = "_" + FileCount;
+                string ThisPath = Path.GetDirectoryName(f_name) + @"\" + Path.GetFileNameWithoutExtension(f_name).Replace(".rwd", "").Replace(".RWD", "") + ".0x" + start.ToString("X") + FileNumber + ".bin";
+                File.Create(ThisPath).Dispose();
+                File.WriteAllBytes(ThisPath, f_data);   //-> f_data[start_addr:]
+                GForm_Main_0.method_1("Saved decrypted firmware file: " + ThisPath);
+                AsSavedFile = true;
+                FileCount++;
+            }
+
+            if (AsSavedFile) GForm_Main_0.method_1("Note: The decrypted firmware file (.bin), is not a complete .bin file! It cannot be used to perform a 'Flash Rom' to the ECU, the bootloader section from 0x0000 to 0x" + start.ToString("X") + " of the rom is Missing.");
         }
     }
 
@@ -403,6 +568,21 @@ static class Class_RWD
         return BufferedContent;
     }
 
+    private static void MakeEncoderArray()
+    {
+        EncodersBytes = new byte[256];
+        if (DecodersBytes.Length != EncodersBytes.Length)
+        {
+            GForm_Main_0.method_1("Something went wrong getting Encoders bytes!");
+        }
+        else
+        {
+            for (int i = 0; i < EncodersBytes.Length; i++)
+            {
+                EncodersBytes[DecodersBytes[i]] = (byte) i;
+            }
+        }
+    }
 
     private static List<byte[]> decrypt(string search_value)
     {
@@ -415,13 +595,14 @@ static class Class_RWD
             search_value_padded += ThisChar + ".";
         }
         GForm_Main_0.method_1("Searching:");
-        GForm_Main_0.method_1(search_value);
-        GForm_Main_0.method_1(search_value_padded);
+        //GForm_Main_0.method_1(search_value);
+        //GForm_Main_0.method_1(search_value_padded);
 
-        string search_exact = search_value;
-        string search_padded = search_value_padded;
-        //string search_exact = re.compile(".*" + search_value + ".*", flags = re.IGNORECASE | re.MULTILINE | re.DOTALL);           //###############################
-        //string search_padded = re.compile(".*" + search_value_padded + ".*", flags = re.IGNORECASE | re.MULTILINE | re.DOTALL);   //###############################
+        string search_exact = search_value.ToUpper();
+        string search_padded = search_value_padded.ToUpper();
+        GForm_Main_0.method_1(search_exact);
+        GForm_Main_0.method_1(search_padded);
+
         string[] operators = new string[8] {
             "fn:^", //XOR
             "fn:&", //AND
@@ -439,7 +620,13 @@ static class Class_RWD
             string k = _keys[i].ToString("x2");
             keys.Add(String.Format("val:" + k + ",sym:" + "k{0}", i));
         }
-        //assert len(keys) == 3, "excatly three keys currently required!";
+
+        if (keys.Count != 3)
+        {
+            GForm_Main_0.method_1("excatly three keys currently required, cannot perform decryption!");
+            return new List<byte[]> { };
+            //return null;
+        }
 
         List<byte[]> firmware_candidates_0 = new List<byte[]> { };
 
@@ -495,6 +682,7 @@ static class Class_RWD
                     DoneCount++;
                 }
             }
+
             //Get operators values
             foreach (string LineOP in op_perms)
             {
@@ -514,20 +702,22 @@ static class Class_RWD
                     }
                 }
 
+                //Perform decoding of bytes and search for ECU name string
                 int Percent = (CurrentDone * 100) / (key_perms.Length * op_perms.Length);
                 GForm_Main_0.method_4(Percent);
                 CurrentDone++;
 
-                byte[] decoder = _get_decoder(k1, k2, k3, o1, o2, o3);
-                if (decoder != null && !attempted_decoders.Contains(decoder))
+                DecodersBytes = _get_decoder(k1, k2, k3, o1, o2, o3);
+                //MakeEncoderArray();
+                if (DecodersBytes != null && !attempted_decoders.Contains(DecodersBytes))
                 {
-                    attempted_decoders.Add(decoder);
+                    attempted_decoders.Add(DecodersBytes);
 
                     byte[] candidate = new byte[_firmware_encrypted.Length];
                     char[] decryptedCharArr = new char[_firmware_encrypted.Length];
                     for (int i2 = 0; i2 < _firmware_encrypted.Length; i2++)
                     {
-                        byte ThisByte = decoder[_firmware_encrypted[i2]];
+                        byte ThisByte = DecodersBytes[_firmware_encrypted[i2]];
                         candidate[i2] = ThisByte;
                         decryptedCharArr[i2] = (char) ThisByte;
                     }
@@ -535,6 +725,7 @@ static class Class_RWD
 
                     if ((decrypted.Contains(search_exact) || decrypted.Contains(search_padded)) && !firmware_candidates_0.Contains(candidate))
                     {
+                        MakeEncoderArray();
                         GForm_Main_0.method_Log("X");
                         firmware_candidates_0.Add(candidate);
                         display_ciphers.Add(string.Format("(((i {0} {1}) {2} {3}) {4} {5}) & 0xFF",
@@ -550,6 +741,8 @@ static class Class_RWD
                 }
             }
         }
+
+        GForm_Main_0.ResetProgressBar();
 
         GForm_Main_0.method_1(Environment.NewLine);
         foreach (string cipher in display_ciphers) {

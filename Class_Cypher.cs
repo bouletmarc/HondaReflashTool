@@ -190,7 +190,7 @@ public class Class_Cypher
     //#########################################
     //#########################################
     IL_170:
-        //(((k2 != 0 ? s * k1 % k2 : s * k1) ^ (s + k0)) & 0xFFFF)
+        //PERFORM CYPHER WORK BELLOW
         /*Console.WriteLine("num:" + num.ToString());         //num       = 2920096767U -> FF-23-0D-AE
         Console.WriteLine("num2:" + num2.ToString());       //num2      = 1080383667U -> B3-58-65-40
         Console.WriteLine("num3:" + num3.ToString());       //num3      = 0

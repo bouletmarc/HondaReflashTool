@@ -62,6 +62,9 @@
     <Compile Include="Class_ECUS.cs" />
     <Compile Include="Class_Cypher.cs" />
     <Compile Include="Class_RWD.cs" />
+    <Compile Include="GForm_ConvertBIN.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GForm_Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -73,6 +76,9 @@
     </Compile>
     <Compile Include="Class_Startup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="GForm_ConvertBIN.resx">
+      <DependentUpon>GForm_ConvertBIN.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GForm_Main.resx">
       <DependentUpon>GForm_Main.cs</DependentUpon>
     </EmbeddedResource>
