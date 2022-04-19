@@ -6,6 +6,8 @@ You can download the Tool and **use at Your Own Risk!**
 
 ### **The Tool is accessible in the 'bin/debug' folder**
 
+### Or download the lastest release [HERE](https://github.com/bouletmarc/HondaReflashTool/releases)
+
 # Description
 
 This is a Work In Progress Honda/Acura Reflash Tool under CanBUS Interface.
@@ -175,3 +177,4 @@ To apply any changes and updates to the project, uploads the changes you have do
 | 37805-RZP-M520 | CR-V (07, 08, 10) |
 | 37805-RZP-M720 | CR-V (07, 08, 10) |
 | 37805-RZP-M820 | CR-V (07, 08, 10) |
+
