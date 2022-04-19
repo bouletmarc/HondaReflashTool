@@ -40,6 +40,12 @@ You can freely 'Fork' this repository to your github account, this will create a
 
 To apply any changes and updates to the project, uploads the changes you have done to the duplicated project inside your reposities and then provide a 'Pull Requests' to this github repo to make the request to apply your changes done to the tool but inside my repository.
 
+# Compatible J2534 API Adapters
+
+I beleive ALL J2534 adapters are compatible with the Reflash tool if you have the appropriate drivers installed in your pc (this is generally done automaticly nowadays with usb protocols).
+
+Common's J2534 adapters such as the GNA600, Mongoose, Tactrix Openport 2.0 (also the fakes ones!) should works with no issues.
+
 # Compatible Cars (using unlock 0x27,0x01 button)
 
 | Car Manufacturer | Year(s) | Models |
