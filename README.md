@@ -24,13 +24,13 @@ You cannot perform all the works to the ecu if using the Unlock button (0x27,0x0
 |------|---------|
 | :white_check_mark: | Read ECU rom |
 | :white_check_mark: | Write/Flash ECU binary (.bin) rom file |
-| :white_large_square: | Write/Flash ECU firmware (.rwd) file |
+| :white_check_mark: | Write/Flash ECU firmware (.rwd) file |
 | :white_check_mark: | Checksum Verification for 1Mb (.bin) file (SH07058) |
 | :white_large_square: | Checksum Verification for 2Mb (.bin) file (SH72531) |
 | :white_check_mark: | Seed/Key ECU Unlock Algorithms(0x27,0x01) -> All ECUS?? |
 | :exclamation: | Seed/Key ECU Unlock Algorithms(0x27,0x41) -> ONLY Specified ECUS (see compatible list below) |
 | :white_check_mark: | RWD firmware file X-RAY/Decryptor to binary file (.bin) |
-| :white_large_square: | Binary file (.bin) to RWD firmware file builder |
+| :white_check_mark: | Binary file (.bin) to RWD firmware file builder (miss checksums verification) |
 
 # Want to contribute your work to this project?
 
