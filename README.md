@@ -4,7 +4,7 @@ CanBUS J2534 Honda Reflash Tool (Work in Progress)
 
 You can download the Tool and **use at Your Own Risk!**
 
-**The Tool is accessible in the 'bin/debug' folder**
+### **The Tool is accessible in the 'bin/debug' folder**
 
 # Description
 
