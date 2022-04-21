@@ -39,6 +39,7 @@ Firmware files update (.rwd|.gz) are only partial and encrypted ROM file. This i
 | :exclamation: | Seed/Key ECU Unlock Algorithms(0x27,0x41) -> ONLY Specified ECUS (see compatible list below) |
 | :white_check_mark: | RWD firmware file X-RAY/Decryptor to binary file (.bin) |
 | :white_check_mark: | Binary file (.bin) to RWD firmware file builder (miss checksums verification) |
+| :white_check_mark: | OBD2 Scan Tools |
 
 # Want to contribute your work to this project?
 
