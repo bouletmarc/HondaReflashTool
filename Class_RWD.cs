@@ -22,6 +22,7 @@ static class Class_RWD
     private static byte[] DecodersBytes = new byte[] { };   //Used to decode rwd to bin
     private static byte[] EncodersBytes = new byte[] { };   //Used to encode bin to rwd
     private static byte[] RWD_encrypted_StartFile = new byte[] { };   //Used to encode bin to rwd
+    public static byte BootloaderSum = 0;
 
     private static GForm_Main GForm_Main_0;
 
@@ -54,7 +55,7 @@ static class Class_RWD
         return k1;
     }
 
-    private static UInt16 checksum_by_sum(byte[] fw, uint start, uint end)
+    public static UInt16 checksum_by_sum(byte[] fw, uint start, uint end)
     {
         int s = 0;
         uint valuescount = (end - start) / 2;
@@ -105,6 +106,8 @@ static class Class_RWD
 
         //Fix Checksums
         //TODO HERE #######################################
+        //UInt16 thisnn = Class_RWD.checksum_by_sum(dataEncrypted, (uint)RWD_encrypted_StartFile.Length, (uint)dataEncrypted.Length);
+        //Console.WriteLine(thisnn.ToString("X4"));
 
         //Save Encrypted rwd firmware
         string ThisPath = Path.GetDirectoryName(f_name) + @"\" + Path.GetFileNameWithoutExtension(f_name) + ".rwd";
@@ -213,6 +216,7 @@ static class Class_RWD
                     EmptyCount++;
                 }
             }
+
             //Remove Empty chars
             byte[] bufRedo = new byte[16 - EmptyCount];
             for (int i2 = 0; i2 < bufRedo.Length; i2++) bufRedo[i2] = buf[i2];
@@ -228,12 +232,17 @@ static class Class_RWD
         }
 
         //Get CanAddress Infos
-        CanAddress = "18DA" + headers2[0].ToString("X") + "F1";
+        CanAddress = "18DA" + headers2[0].ToString("X2") + "F1";
+        string AdditionnalCanInfos = "";
+        if (headers2[0] == 0x0e) AdditionnalCanInfos = " (CVT Transmission (maybe?))";
+        if (headers2[0] == 0x10) AdditionnalCanInfos = " (Manual Transmission)";
+        if (headers2[0] == 0x11) AdditionnalCanInfos = " (Automatics Transmission)";
+        if (headers2[0] == 0x30) AdditionnalCanInfos = " (Electric Power Sterring)";
 
         //Print/Log Informations
         GForm_Main_0.method_1("Firmware Start: 0x" + start.ToString("X"));
         GForm_Main_0.method_1("Firmware Size: 0x" + size.ToString("X"));
-        GForm_Main_0.method_1("CanAddress: 0x" + CanAddress);
+        GForm_Main_0.method_1("CanAddress: 0x" + CanAddress + AdditionnalCanInfos);
         GForm_Main_0.method_1("Software Keys: 0x" + SoftwareKey);
         GForm_Main_0.method_1("Supported Versions (and keys): ");
         for (int i = 0; i < SuppportedVersions.Length; i++) GForm_Main_0.method_1(SuppportedVersions[i] + " (0x" + SuppportedFWKeys[i] + ")");
@@ -284,6 +293,29 @@ static class Class_RWD
 
         //###################################################################
         //###################################################################
+        foreach (byte[] fc in firmware_candidates)
+        {
+            //Checksum location for SH7058 1mb rom file are located at 0x8400, it's a 1byte sum calculated from negative sum of the full binary
+            //Since we are missing the bootloader section of the full binary we have to remove the section 0x0000 to 0x8000(Start_Address)
+            //we can calculate what was the 'sum' of the bootloader by subtracting the 'sum' of the decrypted firmware!
+
+            if (start == 0x8000) //Only SH7058 1mb file
+            {
+                byte num = GetBootloaderSum(fc);
+                byte num2 = GetNegativeChecksumFWBin(fc);
+                byte ThisSum = num;
+                ThisSum -= num2;
+                byte chk = fc[0x400];
+                if (chk == ThisSum)
+                {
+                    GForm_Main_0.method_1("checksums good!");
+                    BootloaderSum = num;
+                    GForm_Main_0.method_1("Bootloader Sum are 0x" + BootloaderSum.ToString("X"));
+                }
+            }
+        }
+
+        //###############################################
         /*List<byte[]> firmware_good = new List<byte[]>();
         idx = 0;
 
@@ -355,6 +387,33 @@ static class Class_RWD
 
             if (AsSavedFile) GForm_Main_0.method_1("Note: The decrypted firmware file (.bin), is not a complete .bin file! It cannot be used to perform a 'Flash Rom' to the ECU, the bootloader section from 0x0000 to 0x" + start.ToString("X") + " of the rom is Missing.");
         }
+    }
+
+    public static byte GetBootloaderSum(byte[] FWFileBytes)
+    {
+        //###############################
+        //Get Checksum (sum)
+        byte[] BufferBytes = FWFileBytes;
+        byte num = BufferBytes[0x400];
+        byte num2 = GetNegativeChecksumFWBin(BufferBytes);
+        byte BTSum = num;
+        BTSum += num2;
+        return BTSum;
+        //BootloaderSum = BTSum;
+        //GForm_Main_0.method_1("Bootloader Sum are 0x" + BootloaderSum.ToString("X"));
+    }
+
+    public static byte GetNegativeChecksumFWBin(byte[] byte_1)
+    {
+        byte b = 0;
+        for (int i = 0; i < byte_1.Length; i++)
+        {
+            if (i != 0x400)
+            {
+                b -= byte_1[i];
+            }
+        }
+        return b;
     }
 
     public static byte[] Push(byte[] bArray, byte[] newBytes)
@@ -594,12 +653,10 @@ static class Class_RWD
         {
             search_value_padded += ThisChar + ".";
         }
-        GForm_Main_0.method_1("Searching:");
-        //GForm_Main_0.method_1(search_value);
-        //GForm_Main_0.method_1(search_value_padded);
 
         string search_exact = search_value.ToUpper();
         string search_padded = search_value_padded.ToUpper();
+        GForm_Main_0.method_1("Searching:");
         GForm_Main_0.method_1(search_exact);
         GForm_Main_0.method_1(search_padded);
 
@@ -614,29 +671,36 @@ static class Class_RWD
             "fn:%", //MOD
         };
 
-        List<string> keys = new List<string> { };
+        if (_keys.Length != 3)
+        {
+            GForm_Main_0.method_1("excatly three keys currently required, cannot perform decryption!");
+            return new List<byte[]> { };
+        }
 
+        //#####################################################################################################
+        //This code is for trying all Keys and cypher methods to find the correct decrypting cypher
+        /*List<string> keys = new List<string> { };
         for (int i = 0; i < _keys.Length; i++) {
             string k = _keys[i].ToString("x2");
             keys.Add(String.Format("val:" + k + ",sym:" + "k{0}", i));
         }
-
-        if (keys.Count != 3)
-        {
-            GForm_Main_0.method_1("excatly three keys currently required, cannot perform decryption!");
-            return new List<byte[]> { };
-            //return null;
-        }
-
-        List<byte[]> firmware_candidates_0 = new List<byte[]> { };
-
         string[] key_perms = prnPermut(keys.ToArray());
-        string[] op_perms = prnPermutALL(operators);
-
-        //Console.WriteLine(key_perms.Length);
-        //Console.WriteLine(op_perms.Length);
+        string[] op_perms = prnPermutALL(operators);*/
+        //#####################################################################################################
+        //BUT the cypher seem to always be: (((i ^ k2) + k1) - k0) & 0xFF so use this code instead for 1000x faster decryption
+        string KeyPermStr = "";
+        for (int i = _keys.Length - 1; i >= 0; i--)
+        {
+            string k = _keys[i].ToString("x2");
+            KeyPermStr += String.Format("val:" + k + ",sym:" + "k{0}", i) + "|";
+        }
+        string OPPermStr = "fn:^,o1|fn:+,o2|fn:-,o3|";
+        string[] key_perms = new string[] { KeyPermStr };
+        string[] op_perms = new string[] { OPPermStr };
+        //#####################################################################################################
 
         List<string> display_ciphers = new List<string> { };
+        List<byte[]> firmware_candidates_0 = new List<byte[]> { };
         List<byte[]> attempted_decoders = new List<byte[]> { };
 
         int CurrentDone = 0;

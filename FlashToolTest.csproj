@@ -38,6 +38,9 @@
   <PropertyGroup>
     <ApplicationIcon>hnet.com-image.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="DarkUI">
       <HintPath>.\DarkUI.dll</HintPath>
@@ -58,10 +61,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClassDecryptString.cs" />
+    <Compile Include="ClassListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Class_ODB.cs" />
     <Compile Include="Class_ECUS.cs" />
     <Compile Include="Class_Cypher.cs" />
     <Compile Include="Class_RWD.cs" />
+    <Compile Include="frmOBD2Scan.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GClass3.cs" />
+    <Compile Include="GClass4.cs" />
+    <Compile Include="GEnum0.cs" />
+    <Compile Include="GEnum1.cs" />
+    <Compile Include="GForm_FWChkSum.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GForm_ConvertBIN.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -75,7 +92,17 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Class_Startup.cs" />
+    <Compile Include="LineG.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PerfChart.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="frmOBD2Scan.resx" />
+    <EmbeddedResource Include="GForm_FWChkSum.resx">
+      <DependentUpon>GForm_FWChkSum.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GForm_ConvertBIN.resx">
       <DependentUpon>GForm_ConvertBIN.cs</DependentUpon>
     </EmbeddedResource>
@@ -98,6 +125,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -116,6 +144,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="hnet.com-image.ico" />
+    <Content Include="OBD2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -24,6 +24,9 @@ public class GForm_Main : DarkForm
     bool WritingBinaryMode = true;  //if false we are in writing firmware mode
     private DarkButton darkButton_FlashFW;
     GForm_Main GForm_Main_0;
+    private DarkGroupBox DarkgroupBox1;
+    private DarkButton darkButton4;
+    private DarkButton darkButton5;
     private DarkButton darkButton3;
 
     public GForm_Main()
@@ -68,6 +71,7 @@ public class GForm_Main : DarkForm
 
     public void method_1(string string_3)
     {
+        //With newline automaticly added
         Console.WriteLine(string_3);
         GForm_Main.Class5 @class = new GForm_Main.Class5();
         @class.gform0_0 = this;
@@ -81,9 +85,9 @@ public class GForm_Main : DarkForm
         APIInfo[] apilist = APIFactory.GetAPIList();
         APIInfo apiinfo = apilist[0];
         DarkTextBox darkTextBox = this.darkTextBox_0;
-        Console.Write(apiinfo.Name + Environment.NewLine);
-        Console.Write("Filename:" + apiinfo.Filename + Environment.NewLine);
-        Console.Write(apiinfo.Details + Environment.NewLine);
+        Console.WriteLine(apiinfo.Name);
+        Console.WriteLine("Filename:" + apiinfo.Filename);
+        Console.WriteLine(apiinfo.Details);
         darkTextBox.Text = darkTextBox.Text + apiinfo.Name + Environment.NewLine;
         darkTextBox.Text = darkTextBox.Text + "Filename:" + apiinfo.Filename + Environment.NewLine;
         darkTextBox.Text = darkTextBox.Text + apiinfo.Details + Environment.NewLine;
@@ -100,9 +104,7 @@ public class GForm_Main : DarkForm
             darkButton1.Enabled = true;
             darkButton_4.Enabled = true;
             darkButton_0.Enabled = true;
-            return;
         }
-        this.darkTextBox_0.Text = "Couldn't open device selection form";
     }
 
 
@@ -174,7 +176,7 @@ public class GForm_Main : DarkForm
                             byte[] bytes = new byte[0x10];
                             Array.Copy(Received, 8, bytes, 0, 0x10);
                             this.darkTextBox_1.Text = Encoding.ASCII.GetString(bytes);  //Display VIN number
-                            this.method_1("VIN:" + Encoding.ASCII.GetString(bytes) + Environment.NewLine);
+                            this.method_1("VIN:" + Encoding.ASCII.GetString(bytes));
                             num2 = 1;
                         }
                         //#############################################################
@@ -192,14 +194,14 @@ public class GForm_Main : DarkForm
                             byte[] bytes = new byte[0x10];
                             Array.Copy(Received, 7, bytes, 0, 0x10);
                             this.darkTextBox_2.Text = Encoding.ASCII.GetString(bytes);   //Display CAL_ID Number
-                            this.method_1("ID:" + Encoding.ASCII.GetString(bytes) + Environment.NewLine);
-                            this.method_1("Vehicle is Online" + Environment.NewLine);
+                            this.method_1("ID:" + Encoding.ASCII.GetString(bytes));
+                            this.method_1("Vehicle is Online");
                             num2 = 2;
                         }
                         //#############################################################
                         if (num2 == 1)
                         {
-                            this.method_1("Vehicle is in recovery mode?" + Environment.NewLine);
+                            this.method_1("Vehicle is in recovery mode?");
                             DarkMessageBox.Show(this, "Failed to retrieve vin number, assuming recovery mode, read disabled", "RECOVERY MODE", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         }
                         else if (num2 != 2)
@@ -277,6 +279,7 @@ public class GForm_Main : DarkForm
             return;
         }
         File.WriteAllBytes(saveFileDialog.FileName, byte_12);
+        this.method_1("File saved: " + saveFileDialog.FileName);
         DarkMessageBox.Show(this, "Successfully Saved File!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
         this.darkButton_DownloadROM.Enabled = false;
         this.darkButton_Unlock41.Enabled = false;
@@ -386,7 +389,7 @@ public class GForm_Main : DarkForm
                     byte[] Received = SendJ2534Message(channel, arraySend1);
                     if (Received != null)
                     {
-                        this.method_1("Diag Mode Set" + Environment.NewLine);
+                        this.method_1("Diag Mode Set");
                     }
                     //################################################################
                     arraySend1 = new byte[]
@@ -396,7 +399,7 @@ public class GForm_Main : DarkForm
                     };
                     byte SeedSendByte = this.Unlocking_Mode;
                     arraySend1[1] = SeedSendByte;
-                    this.method_1("Requesting Seed" + Environment.NewLine);
+                    this.method_1("Requesting Seed");
                     Received = SendJ2534Message(channel, arraySend1);
 
                     byte[] byte_ = new byte[]
@@ -430,8 +433,8 @@ public class GForm_Main : DarkForm
                                         Array.Reverse(array6);
                                     }
 
-                                    this.method_1("Security Request - Seed Bytes:" + GForm_Main.smethod_1(array6) + Environment.NewLine);
-                                    if (!TwoBytesMode) this.method_1("Security Request - Algorithm:" + b.ToString("X2") + Environment.NewLine);
+                                    this.method_1("Security Request - Seed Bytes:" + GForm_Main.smethod_1(array6));
+                                    if (!TwoBytesMode) this.method_1("Security Request - Algorithm:" + b.ToString("X2"));
                                     break;
                                 }
                                 array6[index] = Received[(index + num) + 2];
@@ -447,7 +450,7 @@ public class GForm_Main : DarkForm
                         else value = Class_Cypher.GetKey01(array6, darkTextBox_2.Text);
 
                         byte[] bytes = BitConverter.GetBytes(value);
-                        this.method_1("Security Request - Key to Send:" + GForm_Main.smethod_1(bytes) + Environment.NewLine);
+                        this.method_1("Security Request - Key to Send:" + GForm_Main.smethod_1(bytes));
 
                         arraySend1 = new byte[]
                         {
@@ -480,7 +483,7 @@ public class GForm_Main : DarkForm
                             int num = GForm_Main.smethod_2(Received, byte_2, 0);       //looking for 0x67, 0x42
                             if (num > 0)
                             {
-                                this.method_1("Security Authorized: ECU Unlocked" + Environment.NewLine);
+                                this.method_1("Security Authorized: ECU Unlocked");
                                 ECU_Unlocked = true;
                                 if (!TwoBytesMode)
                                 {
@@ -497,7 +500,7 @@ public class GForm_Main : DarkForm
                             }
                             else
                             {
-                                this.method_1("Recv:" + GForm_Main.smethod_1(Received) + Environment.NewLine);
+                                this.method_1("Recv:" + GForm_Main.smethod_1(Received));
                                 ECU_Unlocked = false;
                                 this.darkButton_DownloadROM.Enabled = false;
                                 this.darkButton_FlashRom.Enabled = false;
@@ -508,7 +511,7 @@ public class GForm_Main : DarkForm
                     }
                     else
                     {
-                        this.method_1("Result NOT OK!!" + Environment.NewLine);
+                        this.method_1("Result NOT OK!!");
                     }
                 }
             }
@@ -542,13 +545,13 @@ public class GForm_Main : DarkForm
         //Send message
         SAE.J2534.Message messageCommands = new SAE.J2534.Message(arrayCommand, TxFlag.CAN_29BIT_ID | TxFlag.ISO15765_FRAME_PAD);
         channel.SendMessage(messageCommands);
-        this.method_1("Send:" + GForm_Main.smethod_1(messageCommands.Data) + Environment.NewLine);
+        this.method_1("Send:" + GForm_Main.smethod_1(messageCommands.Data));
 
         //Receive message
         GetMessageResults messagesReceived = channel.GetMessages(3, 1000);
         if (messagesReceived.Result.IsOK())
         {
-            //this.method_1("Programming Mode Set!" + Environment.NewLine);
+            //this.method_1("Programming Mode Set!");
             int IndexReceived = 1;
             foreach (SAE.J2534.Message message3 in messagesReceived.Messages)
             {
@@ -563,11 +566,11 @@ public class GForm_Main : DarkForm
                     Class_ODB.Mode mode = (Class_ODB.Mode)this.byte_6[0];
                     string str2 = mode.ToString();
                     Class_ODB.NegativeResponse negativeResponse = (Class_ODB.NegativeResponse)this.byte_6[1];
-                    this.method_1("BAD Response: " + str2 + "|" + negativeResponse.ToString() + Environment.NewLine);
+                    this.method_1("BAD Response: " + str2 + "|" + negativeResponse.ToString());
                 }
                 if (IndexReceived >= 3)
                 {
-                    this.method_1("Recv:" + GForm_Main.smethod_1(message3.Data) + Environment.NewLine);
+                    this.method_1("Recv:" + GForm_Main.smethod_1(message3.Data));
                     return message3.Data;   //after 3messages received, return the last messages bytes
                 }
                 IndexReceived++;
@@ -575,7 +578,7 @@ public class GForm_Main : DarkForm
         }
         else
         {
-            this.method_1("Result NOT OK!!" + Environment.NewLine);
+            this.method_1("Result NOT OK!!");
         }
         return null;
     }
@@ -961,30 +964,113 @@ public class GForm_Main : DarkForm
         }
     }
 
-    public int Check_Checksum(byte[] byte_1)
+    public byte GetNegativeChecksumFullBin(byte[] byte_1)
     {
         byte b = 0;
         for (int i = 0; i < byte_1.Length; i++)
         {
-            if (i != 33792) //0x8400
+            if (i != 0x8400)
             {
                 b -= byte_1[i];
             }
         }
-        return (int)b;
+        return b;
     }
 
-    public int GetChecksum(byte[] byte_1)
+    public byte GetNegativeChecksumArea(byte[] byte_1, int Start, int ChecksumLocation)
     {
         byte b = 0;
-        for (int i = 0; i < byte_1.Length; i++)
+        for (int i = Start; i < byte_1.Length; i++)
         {
-            if (i != 33792) //0x8400
+            if (i != ChecksumLocation)
             {
                 b -= byte_1[i];
             }
         }
-        return (int)b;
+        return b;
+    }
+
+    public byte[] VerifyChecksumFullBin(byte[] BinFileBytes)
+    {
+        //###############################
+        //Get Checksum and Fix it for 0x8400
+        byte[] BufferBytes = BinFileBytes;
+        int CheckLocation = 0x8400;
+        byte num = BufferBytes[CheckLocation];
+        byte num2 = GetNegativeChecksumArea(BufferBytes, 0, CheckLocation);
+        //byte num2 = this.GetNegativeChecksumFullBin(BufferBytes);
+        if (num != num2)
+        {
+            this.method_1("Checksum miss match.");
+            BufferBytes[0x8400] = num2;
+            this.method_1("Checksum fixed at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
+        }
+        else
+        {
+            this.method_1("Checksum are good at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
+        }
+        //########################################################
+        //########################################################
+        //Verify for 0x10400
+        CheckLocation = 0x10400;
+        num = BufferBytes[CheckLocation];
+        num2 = GetNegativeChecksumArea(BufferBytes, 0x8000, CheckLocation);
+        if (num != num2)
+        {
+            this.method_1("Checksum miss match.");
+            BufferBytes[CheckLocation] = num2;
+            this.method_1("Checksum fixed at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
+        }
+        else
+        {
+            this.method_1("Checksum are good at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
+        }
+        //########################################################
+        //########################################################
+        return BufferBytes;
+    }
+
+    public byte[] VerifyChecksumFWBin(byte[] FWFileBytes)
+    {
+        //###############################
+        //Get Checksum and Fix it at 0x400 (0x8400 in full bin)
+        byte[] BufferBytes = FWFileBytes;
+
+        byte num = Class_RWD.BootloaderSum;
+        byte num2 = Class_RWD.GetNegativeChecksumFWBin(BufferBytes);
+        byte ThisSum = num;
+        ThisSum -= num2;
+        int CheckLocation = 0x400;
+        byte chk = BufferBytes[CheckLocation];
+        if (chk != ThisSum)
+        {
+            this.method_1("Checksum miss match.");
+            BufferBytes[0x400] = ThisSum;
+            this.method_1("Checksum fixed at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
+        }
+        else 
+        {
+            GForm_Main_0.method_1("checksum good at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
+        }
+        //########################################################
+        //########################################################
+        //Verify for 0x8400 (0x10400 in full bin)
+        CheckLocation = 0x8400;
+        num = BufferBytes[CheckLocation];
+        num2 = GetNegativeChecksumArea(BufferBytes, 0, CheckLocation);
+        if (num != num2)
+        {
+            this.method_1("Checksum miss match.");
+            BufferBytes[CheckLocation] = num2;
+            this.method_1("Checksum fixed at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
+        }
+        else
+        {
+            this.method_1("Checksum are good at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
+        }
+        //########################################################
+        //########################################################
+        return BufferBytes;
     }
 
 
@@ -1002,18 +1088,8 @@ public class GForm_Main : DarkForm
                 WritingBinaryMode = true;
 
                 //###############################
-                //Get Checksum and Fix it
-                int num = (int) byte_ToWrite[33792];
-                int num2 = this.GetChecksum(byte_ToWrite);
-                if (num != num2)
-                {
-                    DialogResult dialogResult = MessageBox.Show("Checksum miss match." + Environment.NewLine + "Do you want to correct it?", "Checksum Error.", MessageBoxButtons.YesNo, MessageBoxIcon.Hand);
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        byte_ToWrite[33792] = (byte)num2;
-                    }
-                }
-                //###############################
+                //Get/Fix Checksums
+                byte_ToWrite = VerifyChecksumFullBin(byte_ToWrite);
 
                 if (MessageBox.Show("Are you sure you want to write this file to ECU?", "Flash Tool", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
@@ -1173,7 +1249,7 @@ public class GForm_Main : DarkForm
                                 byte[] Received = SendJ2534Message(channel, arraySend1);
                                 if (Received != null)
                                 {
-                                    this.method_1("Programming Mode Set!" + Environment.NewLine);
+                                    this.method_1("Programming Mode Set!");
                                 }
                                 //###################
                                 //Erase Memory
@@ -1189,7 +1265,7 @@ public class GForm_Main : DarkForm
                                 Received = SendJ2534Message(channel, arraySend1);
                                 if (Received != null)
                                 {
-                                    this.method_1("Memory Erased!" + Environment.NewLine);
+                                    this.method_1("Memory Erased!");
                                 }
                                 //###################
                                 //Set WRITE_DATA_BY_IDENTIFIER
@@ -1206,7 +1282,7 @@ public class GForm_Main : DarkForm
                                 Received = SendJ2534Message(channel, arraySend1);
                                 if (Received != null)
                                 {
-                                    this.method_1("WRITE_DATA_BY_IDENTIFIER Set!" + Environment.NewLine);
+                                    this.method_1("WRITE_DATA_BY_IDENTIFIER Set!");
                                 }
                                 //###################
                                 //Request Download
@@ -1246,7 +1322,7 @@ public class GForm_Main : DarkForm
                                 Received = SendJ2534Message(channel, arraySend1);
                                 if (Received != null)
                                 {
-                                    this.method_1("Request download started" + Environment.NewLine);
+                                    this.method_1("Request download started");
                                     stopwatch.Start();
 
                                     var block_size = (Received[Received.Length - 2] + Received[Received.Length - 1]);  //Get the two last bytes
@@ -1288,7 +1364,7 @@ public class GForm_Main : DarkForm
                                         this.method_5(Percent);
                                         /*if (Received != null)
                                         {
-                                            this.method_1("WRITE CHUNK CORRECT!" + Environment.NewLine);
+                                            this.method_1("WRITE CHUNK CORRECT!");
                                         }*/
                                     }
                                     stopwatch.Stop();
@@ -1365,7 +1441,7 @@ public class GForm_Main : DarkForm
             int num3 = GForm_Main.smethod_2(Received, buffer2, 0);
             if (num3 > 0)
             {
-                this.method_1("Transfer Exited" + Environment.NewLine);
+                this.method_1("Transfer Exited");
             }
 
             arraySend1 = new byte[]
@@ -1378,7 +1454,7 @@ public class GForm_Main : DarkForm
             Received = SendJ2534Message(channel_0, arraySend1);
             if (Received != null)
             {
-                this.method_1("Routine control check dependencies" + Environment.NewLine);
+                this.method_1("Routine control check dependencies");
             }
         }
     }
@@ -1485,16 +1561,16 @@ public class GForm_Main : DarkForm
             this.darkButton_DownloadROM = new DarkUI.Controls.DarkButton();
             this.darkButton_0 = new DarkUI.Controls.DarkButton();
             this.darkGroupBox_0 = new DarkUI.Controls.DarkGroupBox();
-            this.darkButton3 = new DarkUI.Controls.DarkButton();
             this.darkButton_FlashFW = new DarkUI.Controls.DarkButton();
-            this.darkButton2 = new DarkUI.Controls.DarkButton();
             this.darkButton_Unlock01 = new DarkUI.Controls.DarkButton();
-            this.darkTextBox_4 = new DarkUI.Controls.DarkTextBox();
             this.darkButton_Unlock41 = new DarkUI.Controls.DarkButton();
-            this.darkTextBox_3 = new DarkUI.Controls.DarkTextBox();
             this.darkButton1 = new DarkUI.Controls.DarkButton();
             this.darkButton_6 = new DarkUI.Controls.DarkButton();
             this.darkButton_FlashRom = new DarkUI.Controls.DarkButton();
+            this.darkButton3 = new DarkUI.Controls.DarkButton();
+            this.darkButton2 = new DarkUI.Controls.DarkButton();
+            this.darkTextBox_4 = new DarkUI.Controls.DarkTextBox();
+            this.darkTextBox_3 = new DarkUI.Controls.DarkTextBox();
             this.darkLabel_3 = new DarkUI.Controls.DarkLabel();
             this.darkButton_4 = new DarkUI.Controls.DarkButton();
             this.darkLabel_2 = new DarkUI.Controls.DarkLabel();
@@ -1508,7 +1584,11 @@ public class GForm_Main : DarkForm
             this.darkLabel_7 = new DarkUI.Controls.DarkLabel();
             this.darkLabel_8 = new DarkUI.Controls.DarkLabel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.DarkgroupBox1 = new DarkUI.Controls.DarkGroupBox();
+            this.darkButton4 = new DarkUI.Controls.DarkButton();
+            this.darkButton5 = new DarkUI.Controls.DarkButton();
             this.darkGroupBox_0.SuspendLayout();
+            this.DarkgroupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // darkTextBox_0
@@ -1556,7 +1636,7 @@ public class GForm_Main : DarkForm
             // 
             this.darkButton_0.Checked = false;
             this.darkButton_0.Enabled = false;
-            this.darkButton_0.Location = new System.Drawing.Point(6, 338);
+            this.darkButton_0.Location = new System.Drawing.Point(695, 24);
             this.darkButton_0.Name = "darkButton_0";
             this.darkButton_0.Size = new System.Drawing.Size(192, 23);
             this.darkButton_0.TabIndex = 50;
@@ -1567,39 +1647,22 @@ public class GForm_Main : DarkForm
             // darkGroupBox_0
             // 
             this.darkGroupBox_0.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
-            this.darkGroupBox_0.Controls.Add(this.darkButton3);
+            this.darkGroupBox_0.Controls.Add(this.darkButton5);
             this.darkGroupBox_0.Controls.Add(this.darkButton_FlashFW);
-            this.darkGroupBox_0.Controls.Add(this.darkButton2);
             this.darkGroupBox_0.Controls.Add(this.darkButton_Unlock01);
-            this.darkGroupBox_0.Controls.Add(this.darkTextBox_4);
             this.darkGroupBox_0.Controls.Add(this.darkButton_Unlock41);
-            this.darkGroupBox_0.Controls.Add(this.darkTextBox_3);
             this.darkGroupBox_0.Controls.Add(this.darkButton1);
             this.darkGroupBox_0.Controls.Add(this.darkButton_6);
             this.darkGroupBox_0.Controls.Add(this.darkButton_FlashRom);
-            this.darkGroupBox_0.Controls.Add(this.darkLabel_3);
-            this.darkGroupBox_0.Controls.Add(this.darkButton_4);
-            this.darkGroupBox_0.Controls.Add(this.darkButton_0);
             this.darkGroupBox_0.Controls.Add(this.darkButton_3);
-            this.darkGroupBox_0.Controls.Add(this.darkLabel_2);
             this.darkGroupBox_0.Controls.Add(this.darkButton_DownloadROM);
             this.darkGroupBox_0.Controls.Add(this.darkButton_2);
             this.darkGroupBox_0.Location = new System.Drawing.Point(7, 6);
             this.darkGroupBox_0.Name = "darkGroupBox_0";
-            this.darkGroupBox_0.Size = new System.Drawing.Size(204, 500);
+            this.darkGroupBox_0.Size = new System.Drawing.Size(204, 314);
             this.darkGroupBox_0.TabIndex = 56;
             this.darkGroupBox_0.TabStop = false;
             this.darkGroupBox_0.Text = "J2534 Controls";
-            // 
-            // darkButton3
-            // 
-            this.darkButton3.Checked = false;
-            this.darkButton3.Location = new System.Drawing.Point(6, 309);
-            this.darkButton3.Name = "darkButton3";
-            this.darkButton3.Size = new System.Drawing.Size(192, 23);
-            this.darkButton3.TabIndex = 67;
-            this.darkButton3.Text = "Convert Firmware .bin to .rwd";
-            this.darkButton3.Click += new System.EventHandler(this.darkButton3_Click_1);
             // 
             // darkButton_FlashFW
             // 
@@ -1612,16 +1675,6 @@ public class GForm_Main : DarkForm
             this.darkButton_FlashFW.Text = "Flash Firmware (.rwd)";
             this.darkButton_FlashFW.Click += new System.EventHandler(this.darkButton3_Click);
             // 
-            // darkButton2
-            // 
-            this.darkButton2.Checked = false;
-            this.darkButton2.Location = new System.Drawing.Point(6, 280);
-            this.darkButton2.Name = "darkButton2";
-            this.darkButton2.Size = new System.Drawing.Size(192, 23);
-            this.darkButton2.TabIndex = 59;
-            this.darkButton2.Text = "Convert Firmware .rwd to .bin";
-            this.darkButton2.Click += new System.EventHandler(this.darkButton2_Click_1);
-            // 
             // darkButton_Unlock01
             // 
             this.darkButton_Unlock01.Checked = false;
@@ -1633,14 +1686,6 @@ public class GForm_Main : DarkForm
             this.darkButton_Unlock01.Text = "UNLOCK ECU (0x27,0x01)";
             this.darkButton_Unlock01.Click += new System.EventHandler(this.darkButton_Unlock01_Click);
             // 
-            // darkTextBox_4
-            // 
-            this.darkTextBox_4.Location = new System.Drawing.Point(85, 474);
-            this.darkTextBox_4.Name = "darkTextBox_4";
-            this.darkTextBox_4.Size = new System.Drawing.Size(113, 20);
-            this.darkTextBox_4.TabIndex = 66;
-            this.darkTextBox_4.Visible = false;
-            // 
             // darkButton_Unlock41
             // 
             this.darkButton_Unlock41.Checked = false;
@@ -1651,14 +1696,6 @@ public class GForm_Main : DarkForm
             this.darkButton_Unlock41.TabIndex = 57;
             this.darkButton_Unlock41.Text = "UNLOCK ECU (0x27,0x41)";
             this.darkButton_Unlock41.Click += new System.EventHandler(this.darkButton2_Click);
-            // 
-            // darkTextBox_3
-            // 
-            this.darkTextBox_3.Location = new System.Drawing.Point(85, 450);
-            this.darkTextBox_3.Name = "darkTextBox_3";
-            this.darkTextBox_3.Size = new System.Drawing.Size(113, 20);
-            this.darkTextBox_3.TabIndex = 65;
-            this.darkTextBox_3.Visible = false;
             // 
             // darkButton1
             // 
@@ -1692,11 +1729,47 @@ public class GForm_Main : DarkForm
             this.darkButton_FlashRom.Text = "Flash Rom (.bin)";
             this.darkButton_FlashRom.Click += new System.EventHandler(this.method_17);
             // 
+            // darkButton3
+            // 
+            this.darkButton3.Checked = false;
+            this.darkButton3.Location = new System.Drawing.Point(6, 48);
+            this.darkButton3.Name = "darkButton3";
+            this.darkButton3.Size = new System.Drawing.Size(192, 23);
+            this.darkButton3.TabIndex = 67;
+            this.darkButton3.Text = "Convert Firmware .bin to .rwd";
+            this.darkButton3.Click += new System.EventHandler(this.darkButton3_Click_1);
+            // 
+            // darkButton2
+            // 
+            this.darkButton2.Checked = false;
+            this.darkButton2.Location = new System.Drawing.Point(6, 19);
+            this.darkButton2.Name = "darkButton2";
+            this.darkButton2.Size = new System.Drawing.Size(192, 23);
+            this.darkButton2.TabIndex = 59;
+            this.darkButton2.Text = "Convert Firmware .rwd to .bin";
+            this.darkButton2.Click += new System.EventHandler(this.darkButton2_Click_1);
+            // 
+            // darkTextBox_4
+            // 
+            this.darkTextBox_4.Location = new System.Drawing.Point(774, 104);
+            this.darkTextBox_4.Name = "darkTextBox_4";
+            this.darkTextBox_4.Size = new System.Drawing.Size(113, 20);
+            this.darkTextBox_4.TabIndex = 66;
+            this.darkTextBox_4.Visible = false;
+            // 
+            // darkTextBox_3
+            // 
+            this.darkTextBox_3.Location = new System.Drawing.Point(774, 80);
+            this.darkTextBox_3.Name = "darkTextBox_3";
+            this.darkTextBox_3.Size = new System.Drawing.Size(113, 20);
+            this.darkTextBox_3.TabIndex = 65;
+            this.darkTextBox_3.Visible = false;
+            // 
             // darkLabel_3
             // 
             this.darkLabel_3.AutoSize = true;
             this.darkLabel_3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.darkLabel_3.Location = new System.Drawing.Point(24, 476);
+            this.darkLabel_3.Location = new System.Drawing.Point(713, 106);
             this.darkLabel_3.Name = "darkLabel_3";
             this.darkLabel_3.Size = new System.Drawing.Size(56, 13);
             this.darkLabel_3.TabIndex = 60;
@@ -1707,7 +1780,7 @@ public class GForm_Main : DarkForm
             // 
             this.darkButton_4.Checked = false;
             this.darkButton_4.Enabled = false;
-            this.darkButton_4.Location = new System.Drawing.Point(6, 367);
+            this.darkButton_4.Location = new System.Drawing.Point(695, 53);
             this.darkButton_4.Name = "darkButton_4";
             this.darkButton_4.Size = new System.Drawing.Size(192, 23);
             this.darkButton_4.TabIndex = 51;
@@ -1719,7 +1792,7 @@ public class GForm_Main : DarkForm
             // 
             this.darkLabel_2.AutoSize = true;
             this.darkLabel_2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.darkLabel_2.Location = new System.Drawing.Point(7, 453);
+            this.darkLabel_2.Location = new System.Drawing.Point(696, 83);
             this.darkLabel_2.Name = "darkLabel_2";
             this.darkLabel_2.Size = new System.Drawing.Size(73, 13);
             this.darkLabel_2.TabIndex = 59;
@@ -1813,31 +1886,71 @@ public class GForm_Main : DarkForm
             // 
             this.openFileDialog1.DefaultExt = "*.gz";
             this.openFileDialog1.Filter = "Honda Compressed RWD Firmware|*.gz;*.rwd";
-            this.openFileDialog1.Title = "Open Honda RWD Firmware File";
+            this.openFileDialog1.Title = "Open Honda/Acura File";
+            // 
+            // DarkgroupBox1
+            // 
+            this.DarkgroupBox1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.DarkgroupBox1.Controls.Add(this.darkButton4);
+            this.DarkgroupBox1.Controls.Add(this.darkButton3);
+            this.DarkgroupBox1.Controls.Add(this.darkButton2);
+            this.DarkgroupBox1.Location = new System.Drawing.Point(7, 326);
+            this.DarkgroupBox1.Name = "DarkgroupBox1";
+            this.DarkgroupBox1.Size = new System.Drawing.Size(204, 180);
+            this.DarkgroupBox1.TabIndex = 70;
+            this.DarkgroupBox1.TabStop = false;
+            this.DarkgroupBox1.Text = "File Controls";
+            // 
+            // darkButton4
+            // 
+            this.darkButton4.Checked = false;
+            this.darkButton4.Location = new System.Drawing.Point(6, 77);
+            this.darkButton4.Name = "darkButton4";
+            this.darkButton4.Size = new System.Drawing.Size(192, 23);
+            this.darkButton4.TabIndex = 68;
+            this.darkButton4.Text = "Fix Checksums";
+            this.darkButton4.Click += new System.EventHandler(this.darkButton4_Click);
+            // 
+            // darkButton5
+            // 
+            this.darkButton5.Checked = false;
+            this.darkButton5.Location = new System.Drawing.Point(6, 280);
+            this.darkButton5.Name = "darkButton5";
+            this.darkButton5.Size = new System.Drawing.Size(192, 23);
+            this.darkButton5.TabIndex = 69;
+            this.darkButton5.Text = "Open OBD2 Scan Tools";
+            this.darkButton5.Click += new System.EventHandler(this.darkButton5_Click);
             // 
             // GForm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(694, 571);
+            this.Controls.Add(this.DarkgroupBox1);
             this.Controls.Add(this.darkLabel_8);
             this.Controls.Add(this.darkLabel_7);
             this.Controls.Add(this.darkProgressBar_0);
             this.Controls.Add(this.darkTextBox_2);
+            this.Controls.Add(this.darkTextBox_4);
             this.Controls.Add(this.darkTextBox_1);
             this.Controls.Add(this.darkLabel_5);
+            this.Controls.Add(this.darkTextBox_3);
             this.Controls.Add(this.darkLabel_4);
             this.Controls.Add(this.darkLabel_1);
             this.Controls.Add(this.darkLabel_0);
             this.Controls.Add(this.darkGroupBox_0);
+            this.Controls.Add(this.darkLabel_3);
             this.Controls.Add(this.darkTextBox_0);
+            this.Controls.Add(this.darkButton_4);
+            this.Controls.Add(this.darkLabel_2);
+            this.Controls.Add(this.darkButton_0);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(710, 573);
             this.Name = "GForm_Main";
             this.Text = "Honda CANBUS Tools";
             this.Load += new System.EventHandler(this.GForm_Main_Load);
             this.darkGroupBox_0.ResumeLayout(false);
-            this.darkGroupBox_0.PerformLayout();
+            this.DarkgroupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2152,6 +2265,8 @@ public class GForm_Main : DarkForm
 
     private void darkButton2_Click_1(object sender, EventArgs e)
     {
+        this.openFileDialog1.Filter = "Honda Compressed RWD Firmware|*.gz;*.rwd";
+        this.openFileDialog1.DefaultExt = "*.gz";
         DialogResult result = openFileDialog1.ShowDialog();
         if (result == DialogResult.OK)
         {
@@ -2172,9 +2287,72 @@ public class GForm_Main : DarkForm
             string ThisB = gform.FileBIN;
             string ThisR = gform.FileRWD;
             gform.Dispose();
+
             Class_RWD.LoadBIN(ThisB, ThisR);
-            return;
         }
-        this.darkTextBox_0.Text = "Couldn't open file selection form";
+    }
+
+    private void darkButton4_Click(object sender, EventArgs e)
+    {
+        //this.openFileDialog1.Filter = "Honda Compressed RWD Firmware|*.gz;*.rwd";
+        this.openFileDialog1.Filter = "Honda full binary rom file|*.bin|Honda decompressed firmware binary|*.bin";
+        this.openFileDialog1.DefaultExt = "*.bin";
+        DialogResult result = openFileDialog1.ShowDialog();
+        if (result == DialogResult.OK)
+        {
+            if (openFileDialog1.FilterIndex == 1)
+            {
+                byte[] FilesBytes = File.ReadAllBytes(openFileDialog1.FileName);
+                if (FilesBytes.Length == 0xFFFFF)
+                {
+                    byte[] NewFilesBytes = VerifyChecksumFullBin(FilesBytes);
+                    if (NewFilesBytes != FilesBytes)
+                    {
+                        string NewPath = Path.GetDirectoryName(openFileDialog1.FileName) + @"\" + Path.GetFileNameWithoutExtension(openFileDialog1.FileName) + "_FixedChkSum.bin";
+                        File.Create(NewPath).Dispose();
+                        File.WriteAllBytes(NewPath, NewFilesBytes);
+                        this.method_1("File saved: " + NewPath);
+                    }
+                }
+                else
+                {
+                    this.method_1("This file is not compatible!");
+                }
+            }
+            if (openFileDialog1.FilterIndex == 2)
+            {
+                GForm_FWChkSum gform = new GForm_FWChkSum();
+                gform.FileBIN = openFileDialog1.FileName;
+                if (gform.ShowDialog() == DialogResult.OK)
+                {
+                    string ThisB = gform.FileBIN;
+                    string ThisR = gform.FileRWD;
+                    gform.Dispose();
+                    byte[] FilesBytes = File.ReadAllBytes(ThisB);
+                    if (FilesBytes.Length == 0xF7FFF)
+                    {
+                        Class_RWD.LoadRWD(ThisR, true, false);
+                        byte[] NewFilesBytes = VerifyChecksumFWBin(FilesBytes);
+                        if (NewFilesBytes != FilesBytes)
+                        {
+                            string NewPath = Path.GetDirectoryName(ThisB) + @"\" + Path.GetFileNameWithoutExtension(ThisB) + "_FixedChkSum.bin";
+                            File.Create(NewPath).Dispose();
+                            File.WriteAllBytes(NewPath, NewFilesBytes);
+                            this.method_1("File saved: " + NewPath);
+                        }
+                    }
+                    else
+                    {
+                        this.method_1("This file is not compatible!");
+                    }
+                }
+            }
+        }
+    }
+
+    private void darkButton5_Click(object sender, EventArgs e)
+    {
+        frmOBD2Scan frmOBD2Scan_0 = new frmOBD2Scan();
+        frmOBD2Scan_0.Show();
     }
 }
