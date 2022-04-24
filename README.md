@@ -22,9 +22,9 @@ You can perform all the works to the ecu if using the Unlock button (0x27,0x41),
 
 You cannot perform all the works to the ecu if using the Unlock button (0x27,0x01). When using this button you cannot read the ECU rom and cannot write binary file (.bin) to the ECU however this unlock method can be used to write a firmware file update (.rwd|.gz) to the ECU.
 
-Firmware files update (.rwd|.gz) can be obtained when downloading HDS (Honda Diagnostic System) software from others websites and look inside the installation folder of 'J2534 Rewrite software' which is generally installed while installed HDS on the pc.
+Firmware files update (.rwd|.gz) can be obtained when downloading HDS (Honda Diagnostic System) software from others websites and look inside the installation folder of 'J2534 Rewrite software' which is generally installed while installing HDS on the pc.
 
-Firmware files update (.rwd|.gz) are only partial and encrypted ROM file. This is not the complete ROM file and it is encrypted too, those file are missing the bootloader section of the original ROM (.bin). However you can decrypt and convert the firmware file (.rwd|.gz) to a decrypted ROM file (.bin) with the missing bootloader section, then modifiy the .bin on your own, then remake a new encrypted firmware (.rwd|.gz) from the modified .bin, then flash the modified firmware file to the ECU using Unlock (0x27,0x01).
+Firmware files update (.rwd|.gz) are only partial and encrypted ROM file. This is not the complete ROM file and it is encrypted too, those file are missing the bootloader section of the original ROM (.bin). However you can convert the firmware file (.rwd|.gz) to a decrypted ROM file (.bin) with the missing bootloader section, then modifiy the .bin on your own, then remake a new encrypted firmware (.rwd|.gz) from the modified .bin, then flash the modified firmware file to the ECU using Unlock (0x27,0x01).
 
 # Tool Features
 
