@@ -23,11 +23,13 @@ public class GForm_Main : DarkForm
     byte Unlocking_Mode = 0x41;
     bool WritingBinaryMode = true;  //if false we are in writing firmware mode
     private DarkButton darkButton_FlashFW;
-    GForm_Main GForm_Main_0;
+    private GForm_Main GForm_Main_0;
     private DarkGroupBox DarkgroupBox1;
     private DarkButton darkButton4;
     private DarkButton darkButton5;
+    private DarkButton darkButton6;
     private DarkButton darkButton3;
+    public Editortable Editortable_0;
 
     public GForm_Main()
     {
@@ -42,6 +44,8 @@ public class GForm_Main : DarkForm
         this.darkTextBox_0.Text = this.darkTextBox_0.Text + Environment.NewLine;
 
         GForm_Main_0 = this;
+
+        Editortable_0 = new Editortable(ref GForm_Main_0);
 
         Class_RWD.Load(ref GForm_Main_0);
     }
@@ -1184,7 +1188,8 @@ public class GForm_Main : DarkForm
         channel.SetConfig(config);
     }
 
-    private unsafe void backgroundWorker_0_DoWork_1(object sender, DoWorkEventArgs e)
+    //private unsafe void backgroundWorker_0_DoWork_1(object sender, DoWorkEventArgs e)
+    private void backgroundWorker_0_DoWork_1(object sender, DoWorkEventArgs e)
     {
         using (API api = APIFactory.GetAPI(GForm_Main.string_0))
         {
@@ -1582,6 +1587,7 @@ public class GForm_Main : DarkForm
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.DarkgroupBox1 = new DarkUI.Controls.DarkGroupBox();
             this.darkButton4 = new DarkUI.Controls.DarkButton();
+            this.darkButton6 = new DarkUI.Controls.DarkButton();
             this.darkGroupBox_0.SuspendLayout();
             this.DarkgroupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -1897,6 +1903,7 @@ public class GForm_Main : DarkForm
             // DarkgroupBox1
             // 
             this.DarkgroupBox1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.DarkgroupBox1.Controls.Add(this.darkButton6);
             this.DarkgroupBox1.Controls.Add(this.darkButton4);
             this.DarkgroupBox1.Controls.Add(this.darkButton3);
             this.DarkgroupBox1.Controls.Add(this.darkButton2);
@@ -1916,6 +1923,16 @@ public class GForm_Main : DarkForm
             this.darkButton4.TabIndex = 68;
             this.darkButton4.Text = "Fix Checksums";
             this.darkButton4.Click += new System.EventHandler(this.darkButton4_Click);
+            // 
+            // darkButton6
+            // 
+            this.darkButton6.Checked = false;
+            this.darkButton6.Location = new System.Drawing.Point(6, 106);
+            this.darkButton6.Name = "darkButton6";
+            this.darkButton6.Size = new System.Drawing.Size(192, 23);
+            this.darkButton6.TabIndex = 69;
+            this.darkButton6.Text = "Open ROM Editor";
+            this.darkButton6.Click += new System.EventHandler(this.darkButton6_Click);
             // 
             // GForm_Main
             // 
@@ -2299,7 +2316,7 @@ public class GForm_Main : DarkForm
             if (openFileDialog1.FilterIndex == 1)
             {
                 byte[] FilesBytes = File.ReadAllBytes(openFileDialog1.FileName);
-                if (FilesBytes.Length == 0xFFFFF)
+                if ((FilesBytes.Length - 1) == 0xFFFFF)
                 {
                     byte[] NewFilesBytes = VerifyChecksumFullBin(FilesBytes);
                     if (NewFilesBytes != FilesBytes)
@@ -2325,7 +2342,7 @@ public class GForm_Main : DarkForm
                     string ThisR = gform.FileRWD;
                     gform.Dispose();
                     byte[] FilesBytes = File.ReadAllBytes(ThisB);
-                    if (FilesBytes.Length == 0xF7FFF)
+                    if ((FilesBytes.Length - 1) == 0xF7FFF)
                     {
                         Class_RWD.LoadRWD(ThisR, true, false);
                         byte[] NewFilesBytes = VerifyChecksumFWBin(FilesBytes);
@@ -2356,5 +2373,26 @@ public class GForm_Main : DarkForm
     {
         GForm_Credits GForm_Credits_0 = new GForm_Credits();
         GForm_Credits_0.ShowDialog();
+    }
+
+    private void darkButton6_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            this.Editortable_0.Show();
+        }
+        catch (Exception ex)
+        {
+            try
+            {
+                this.Editortable_0 = null;
+                this.Editortable_0 = new Editortable(ref GForm_Main_0);
+                this.Editortable_0.Show();
+            }
+            catch
+            {
+
+            }
+        }
     }
 }

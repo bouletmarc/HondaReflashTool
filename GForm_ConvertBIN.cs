@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.CompilerServices;
@@ -176,7 +177,14 @@ public class GForm_ConvertBIN : DarkForm
         DialogResult result = this.openFileDialog1.ShowDialog();
         if (result == DialogResult.OK)
         {
-            this.textBox_bin.Text = this.openFileDialog1.FileName;
+            if ((File.ReadAllBytes(this.openFileDialog1.FileName).Length - 1) == 0xF7FFF)
+            {
+                this.textBox_bin.Text = this.openFileDialog1.FileName;
+            }
+            else
+            {
+                DarkMessageBox.Show(this, "This file is not compatible!");
+            }
         }
     }
 

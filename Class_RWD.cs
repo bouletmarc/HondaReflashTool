@@ -141,7 +141,6 @@ static class Class_RWD
         {
             GForm_Main_0.method_1("Checksum is not 4bytes long!");
         }
-        //Console.WriteLine(Get_rwd_checksum(dataEncrypted, 0, (uint)dataEncrypted.Length).ToString("X8"));
 
         //Save Encrypted rwd firmware
         string ThisPath = Path.GetDirectoryName(f_name) + @"\" + Path.GetFileNameWithoutExtension(f_name) + ".rwd";
@@ -152,10 +151,6 @@ static class Class_RWD
         //Save ZIPPED Encrypted firmware
         CompressFile(ThisPath, ThisPath + ".gz");
     }
-
-    /*'39990-TLA-A030': { #CR-V thanks to joe1
-        'checksum-offsets': [(0, 0x6bf80), (1, 0x6bffe)] #original bin checksums are 0x419b at offset 0x6FF80 and 0x24ef at 0x6FFFE, but since we start the bin from 0x4000 after bootloader, we offset the checksum accordingly
-    },*/
 
     //######################################################################################################
     //######################################################################################################
@@ -691,8 +686,7 @@ static class Class_RWD
         string search_exact = search_value.ToUpper();
         string search_padded = search_value_padded.ToUpper();
         GForm_Main_0.method_1("Searching:");
-        GForm_Main_0.method_1(search_exact);
-        GForm_Main_0.method_1(search_padded);
+        GForm_Main_0.method_1("'" + search_exact + "' and '" + search_padded + "'");
 
         string[] operators = new string[8] {
             "fn:^", //XOR
@@ -740,7 +734,6 @@ static class Class_RWD
         int CurrentDone = 0;
         foreach (string Line in key_perms)
         {
-            //Console.WriteLine(Line);
             string k1 = "";
             string k2 = "";
             string k3 = "";
@@ -842,7 +835,6 @@ static class Class_RWD
 
         GForm_Main_0.ResetProgressBar();
 
-        GForm_Main_0.method_1(Environment.NewLine);
         foreach (string cipher in display_ciphers) {
             GForm_Main_0.method_1(String.Format("cipher: {0}", cipher));
         } 
