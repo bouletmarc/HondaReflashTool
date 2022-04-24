@@ -1304,7 +1304,6 @@ public class GForm_Main : DarkForm
                                     0x00    //0x00 -> Set later
                                 };
                                 arraySend1[2] = (byte) ((Addrr << 4) | Addrr);
-                                //if (memory_address >= Math.Pow(2 ^ Addrr * 8)) throw new Exception(string.Format("invalid memory_address: 0x{0}", memory_address.ToString("X4")));
                                 if (memory_address >= Math.Pow(2, Addrr * 8)) throw new Exception(string.Format("invalid memory_address: 0x{0}", memory_address.ToString("X4")));
                                 for (int i = 0; i < Addrr; i++)
                                 {
@@ -1332,10 +1331,6 @@ public class GForm_Main : DarkForm
                                     {
                                         cnt += 1;
                                         byte[] chunk = Class_RWD.Slice(Class_RWD._firmware_encrypted, i, i + chunk_size);
-                                        //console.log(`${ cnt}: 0x${ i.toString(16)} -0x${ (i + chunk_size).toString(16)}`);
-                                        //await this.client.transfer_data(cnt & 0xFF, chunk);
-                                        // bitwise | converts float to int
-                                        //postMessage({ command: 'flash-progress', result: (i / this.rwd.firmware.data.byteLength * 100) | 0 })
 
                                         byte bsct = (byte) (cnt & 0xFF);
                                         arraySend1 = new byte[]
@@ -1561,6 +1556,7 @@ public class GForm_Main : DarkForm
             this.darkButton_DownloadROM = new DarkUI.Controls.DarkButton();
             this.darkButton_0 = new DarkUI.Controls.DarkButton();
             this.darkGroupBox_0 = new DarkUI.Controls.DarkGroupBox();
+            this.darkButton5 = new DarkUI.Controls.DarkButton();
             this.darkButton_FlashFW = new DarkUI.Controls.DarkButton();
             this.darkButton_Unlock01 = new DarkUI.Controls.DarkButton();
             this.darkButton_Unlock41 = new DarkUI.Controls.DarkButton();
@@ -1586,7 +1582,6 @@ public class GForm_Main : DarkForm
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.DarkgroupBox1 = new DarkUI.Controls.DarkGroupBox();
             this.darkButton4 = new DarkUI.Controls.DarkButton();
-            this.darkButton5 = new DarkUI.Controls.DarkButton();
             this.darkGroupBox_0.SuspendLayout();
             this.DarkgroupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -1663,6 +1658,16 @@ public class GForm_Main : DarkForm
             this.darkGroupBox_0.TabIndex = 56;
             this.darkGroupBox_0.TabStop = false;
             this.darkGroupBox_0.Text = "J2534 Controls";
+            // 
+            // darkButton5
+            // 
+            this.darkButton5.Checked = false;
+            this.darkButton5.Location = new System.Drawing.Point(6, 280);
+            this.darkButton5.Name = "darkButton5";
+            this.darkButton5.Size = new System.Drawing.Size(192, 23);
+            this.darkButton5.TabIndex = 69;
+            this.darkButton5.Text = "Open OBD2 Scan Tools";
+            this.darkButton5.Click += new System.EventHandler(this.darkButton5_Click);
             // 
             // darkButton_FlashFW
             // 
@@ -1822,13 +1827,14 @@ public class GForm_Main : DarkForm
             // darkLabel_4
             // 
             this.darkLabel_4.AutoSize = true;
-            this.darkLabel_4.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F);
+            this.darkLabel_4.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.darkLabel_4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.darkLabel_4.Location = new System.Drawing.Point(404, 509);
+            this.darkLabel_4.Location = new System.Drawing.Point(596, 509);
             this.darkLabel_4.Name = "darkLabel_4";
-            this.darkLabel_4.Size = new System.Drawing.Size(272, 25);
+            this.darkLabel_4.Size = new System.Drawing.Size(80, 25);
             this.darkLabel_4.TabIndex = 61;
-            this.darkLabel_4.Text = "Copyright 2022 @ BMDevs";
+            this.darkLabel_4.Text = "Credits";
+            this.darkLabel_4.Click += new System.EventHandler(this.darkLabel_4_Click);
             // 
             // darkLabel_5
             // 
@@ -1910,16 +1916,6 @@ public class GForm_Main : DarkForm
             this.darkButton4.TabIndex = 68;
             this.darkButton4.Text = "Fix Checksums";
             this.darkButton4.Click += new System.EventHandler(this.darkButton4_Click);
-            // 
-            // darkButton5
-            // 
-            this.darkButton5.Checked = false;
-            this.darkButton5.Location = new System.Drawing.Point(6, 280);
-            this.darkButton5.Name = "darkButton5";
-            this.darkButton5.Size = new System.Drawing.Size(192, 23);
-            this.darkButton5.TabIndex = 69;
-            this.darkButton5.Text = "Open OBD2 Scan Tools";
-            this.darkButton5.Click += new System.EventHandler(this.darkButton5_Click);
             // 
             // GForm_Main
             // 
@@ -2354,5 +2350,11 @@ public class GForm_Main : DarkForm
     {
         frmOBD2Scan frmOBD2Scan_0 = new frmOBD2Scan();
         frmOBD2Scan_0.Show();
+    }
+
+    private void darkLabel_4_Click(object sender, EventArgs e)
+    {
+        GForm_Credits GForm_Credits_0 = new GForm_Credits();
+        GForm_Credits_0.ShowDialog();
     }
 }

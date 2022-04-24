@@ -76,6 +76,9 @@
     <Compile Include="GClass4.cs" />
     <Compile Include="GEnum0.cs" />
     <Compile Include="GEnum1.cs" />
+    <Compile Include="GForm_Credits.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GForm_FWChkSum.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,6 +103,9 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="frmOBD2Scan.resx" />
+    <EmbeddedResource Include="GForm_Credits.resx">
+      <DependentUpon>GForm_Credits.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GForm_FWChkSum.resx">
       <DependentUpon>GForm_FWChkSum.cs</DependentUpon>
     </EmbeddedResource>

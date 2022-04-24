@@ -55,7 +55,14 @@ static class Class_RWD
         return k1;
     }
 
-    public static UInt16 checksum_by_sum(byte[] fw, uint start, uint end)
+    public static UInt32 ToUInt32BE(byte[] FourBytes)
+    {
+        int k0 = BitConverter.ToInt32(FourBytes, 0);
+        int k1 = BitConverter.ToInt32(BitConverter.GetBytes(k0).Reverse().ToArray(), 0);
+        return (UInt32) k1;
+    }
+
+    /*public static UInt16 checksum_by_sum(byte[] fw, uint start, uint end)
     {
         int s = 0;
         uint valuescount = (end - start) / 2;
@@ -81,6 +88,21 @@ static class Class_RWD
             if (s < 0) s += 0xFFFF;
         }
         return (UInt16) s;
+    }*/
+
+    private static UInt32 Get_rwd_checksum(byte[] data, uint start, uint end)
+    {
+        uint s = 0;
+        uint valuescount = (end - start);
+        for (int i = 0; i < valuescount; i++)
+        {
+            byte ThisValuee = data[start + i];
+            s += ThisValuee;
+
+            if (s > 0xFFFFFFFF) s -= 0xFFFFFFFF;
+        }
+        s = ToUInt32BE(BitConverter.GetBytes(s));
+        return (UInt32)s;
     }
 
     //######################################################################################################
@@ -93,8 +115,8 @@ static class Class_RWD
         //Load .rwd file for obtaining 'encryption' method and then encrypt the .bin using the same method.
         LoadRWD(f_nameFW, true, false);
 
-        //Copy Start file bytes from the selected rwd file
-        byte[] dataEncrypted = new byte[RWD_encrypted_StartFile.Length + data.Length];
+        //Copy Start file bytes from the selected rwd file, then add the dat aand checksum bytes
+        byte[] dataEncrypted = new byte[RWD_encrypted_StartFile.Length + data.Length + 4];
         for (int i = 0; i < RWD_encrypted_StartFile.Length; i++) dataEncrypted[i] = RWD_encrypted_StartFile[i];
 
         //Encrypt .bin data bytes to .rwd format
@@ -105,9 +127,21 @@ static class Class_RWD
         }
 
         //Fix Checksums
-        //TODO HERE #######################################
-        //UInt16 thisnn = Class_RWD.checksum_by_sum(dataEncrypted, (uint)RWD_encrypted_StartFile.Length, (uint)dataEncrypted.Length);
-        //Console.WriteLine(thisnn.ToString("X4"));
+        UInt32 ChecksumValue = Get_rwd_checksum(dataEncrypted, 0, (uint)dataEncrypted.Length);
+        byte[] ChecksumBytes = BitConverter.GetBytes(ChecksumValue);
+        if (ChecksumBytes.Length == 4)
+        {
+            for (int i = 0; i < ChecksumBytes.Length; i++)
+            {
+                dataEncrypted[((dataEncrypted.Length - 1) - 4) + i] = ChecksumBytes[i];
+            }
+            GForm_Main_0.method_1("Checksum bytes fixed!");
+        }
+        else
+        {
+            GForm_Main_0.method_1("Checksum is not 4bytes long!");
+        }
+        //Console.WriteLine(Get_rwd_checksum(dataEncrypted, 0, (uint)dataEncrypted.Length).ToString("X8"));
 
         //Save Encrypted rwd firmware
         string ThisPath = Path.GetDirectoryName(f_name) + @"\" + Path.GetFileNameWithoutExtension(f_name) + ".rwd";
