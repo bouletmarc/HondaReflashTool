@@ -40,6 +40,7 @@ Firmware files update (.rwd|.gz) are only partial and encrypted ROM file. This i
 | :white_check_mark: | RWD firmware file X-RAY/Decryptor to binary file (.bin) |
 | :white_check_mark: | Binary file (.bin) to RWD firmware file builder |
 | :white_check_mark: | OBD2 Scan Tools |
+| :exclamation: | Binary ROM Tables Editor (with Definitions) |
 
 # Want to contribute your work to this project?
 
