@@ -153,6 +153,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="bin\Debug\Definitions\37805-RRB-A140.txt" />
+    <None Include="bin\Debug\Definitions\37805-RWC-A620.txt" />
+    <None Include="bin\Debug\Definitions\37805-S2K.txt" />
     <Content Include="ECUS_KEYS.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

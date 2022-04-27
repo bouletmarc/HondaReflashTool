@@ -1,0 +1,760 @@
+#
+#
+#
+#
+# Name:ANY_NAME
+# Unit1:KPH
+# Unit2:RPM
+# TableSize:4x1
+# IsInverted:false
+# IsSingleByteX:false
+# IsSingleByteY:false
+# IsSingleByteTable:false
+# ValueMin:0
+# ValueMax:255
+# ChangeAmount:1
+# Headers:2000,4000,6000,8000
+# ROMLocationX:0xFFFF
+# ROMLocationY:0xFFFF
+# ROMLocationTable:0xFFFF
+# MathX:X*1
+# MathY:X*1
+# MathTable:X*1
+# FormatX:0.00
+# FormatY:0.00
+# FormatTable:0.00
+#
+#
+#
+#
+#######################################################################
+#######################################################################
+#######################################################################
+#######################################################################
+# Supported ECU:
+#######################################################################
+37805-RRB-A110
+37805-RRB-A120
+37805-RRB-A130
+37805-RRB-A140
+#######################################################################
+#######################################################################
+#######################################################################
+# ROM Parameters Definitions
+#######################################################################
+ROMLocationX:0xB5C2
+Name:VTEC Engagement
+Unit2:RPM
+TableSize:1x4
+IsInverted:true
+ValueMin:-10000
+ValueMax:30000
+ChangeAmount:10
+Headers:Enable Low,Disable Low,Enable High,Disable High
+#############################
+ROMLocationX:0x11680
+Name:Revlimiter
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationX:0x11688
+Name:--Revlimiter 1
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationX:0x11690
+Name:--Revlimiter 2
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationX:0x11698
+Name:--Revlimiter 3
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationX:0x116A0
+Name:--Revlimiter 4
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationX:0x116A4
+Name:--Revlimiter 5
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationX:0x116B4
+Name:--Revlimiter 6
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationX:0x11690
+Name:--Revlimiter 7
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationX:0xB488
+Name:--Revlimiter 8
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationX:0xBA4A
+Name:Speedlimiter
+Unit2:KPH
+TableSize:1x1
+# MathX:X/1.609
+ValueMax:255
+#############################
+ROMLocationX:0x128F4
+Name:Injector Voltage Compensation
+Unit1:Volts
+Unit2:ms
+TableSize:5x1
+MathX:X*0.002
+FormatX:0.00
+ValueMin:-1000
+ValueMax:3000
+Headers:6.00,8.00,12.00,14.00,16.00
+#############################
+ROMLocationX:0x101D2
+ROMLocationY:0x102D2
+Name:Mass Airflow Conversion Curve
+Unit1:Volts
+Unit2:g/s
+TableSize:64x1
+MathY:X*0.0048828125
+ValueMin:-10000
+ValueMax:30000
+FormatY:0.00
+#############################
+ROMLocationX:0x1564C
+ROMLocationY:0x15674
+ROMLocationTable:0x18DCC
+Name:Cam Angle VTC High
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-10
+ValueMax:40
+ChangeAmount:0.5
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x15624
+ROMLocationY:0x15674
+ROMLocationTable:0x18F5C
+Name:Cam Angle VTC Low
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-10
+ValueMax:40
+ChangeAmount:0.5
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x14684
+Name:Ignition Timing VTC Low
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-10
+ValueMax:55
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x14814
+Name:--10\x00b0
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-10
+ValueMax:55
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x149A4
+Name:--20\x00b0
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-10
+ValueMax:55
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x14B34
+Name:--30\x00b0
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-10
+ValueMax:55
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x14CC4
+Name:--40\x00b0
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-10
+ValueMax:55
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x14E54
+Name:Ignition Timing VTC High
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-10
+ValueMax:55
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x14FE4
+Name:--10\x00b0
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-10
+ValueMax:55
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x15174
+Name:--20\x00b0
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-10
+ValueMax:55
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x15304
+Name:--30\x00b0
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-10
+ValueMax:55
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x15494
+Name:--40\x00b0
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-10
+ValueMax:55
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+Name:AFM Fuel
+#############################
+ROMLocationX:0x11BF0
+ROMLocationY:0x12884
+ROMLocationTable:0x11BE0
+Name:--Fuel Value 1
+Unit1:AirMass (mg)
+Unit2:IPW (ms)
+TableSize:8x1
+ValueMin:0
+ValueMax:14
+ChangeAmount:0.1
+FormatX:0.00
+MathY:X*0.1
+MathX:X*0.002
+#############################
+ROMLocationX:0x12894
+ROMLocationY:0x12884
+ROMLocationTable:0x11BE0
+Name:--Fuel Value 2
+Unit1:AirMass (mg)
+Unit2:IPW (ms)
+TableSize:8x1
+ValueMin:0
+ValueMax:14
+ChangeAmount:0.1
+FormatX:0.00
+MathY:X*0.1
+MathX:X*0.002
+#############################
+Name:Lambda Target High Cam
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x12132
+Name:--Target 1
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:10
+ValueMax:14.8
+ChangeAmount:0.1
+IsSingleByteTable:true
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:128.0/X*14.7
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x122C2
+Name:--Target 2
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:10
+ValueMax:14.8
+ChangeAmount:0.1
+IsSingleByteTable:true
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:128.0/X*14.7
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x1251A
+Name:--Target 3
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:10
+ValueMax:14.8
+ChangeAmount:0.1
+IsSingleByteTable:true
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:128.0/X*14.7
+#############################
+Name:Lambda Target Low Cam
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x121FA
+Name:--Target 1
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:10
+ValueMax:14.8
+ChangeAmount:0.1
+IsSingleByteTable:true
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:128.0/X*14.7
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x1238A
+Name:--Target 2
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:10
+ValueMax:14.8
+ChangeAmount:0.1
+IsSingleByteTable:true
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:128.0/X*14.7
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x12452
+Name:--Target 3
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:10
+ValueMax:14.8
+ChangeAmount:0.1
+IsSingleByteTable:true
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:128.0/X*14.7
+#############################
+ROMLocationX:0x11774
+Name:LAF Voltage to Lambda
+Unit1:Volts(V)
+Unit2:λ
+MathX:32767/X
+FormatX:0.00
+TableSize:15x1
+ValueMax:4
+ChangeAmount:0.01
+Headers:1.23,1.67,2.04,2.5,2.75,2.89,3.02,3.13,3.23,3.36,3.51,3.63,3.74,4.01,4.19
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x13660
+Name:Knock Limit High
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-25
+ValueMax:60
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x137F0
+Name:--10\x00b0
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-25
+ValueMax:60
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x13980
+Name:--20\x00b0
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-25
+ValueMax:60
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x13B10
+Name:--30\x00b0
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-25
+ValueMax:60
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x13CA0
+Name:--40\x00b0
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-25
+ValueMax:60
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x12E90
+Name:Knock Limit Low
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-25
+ValueMax:80
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x13020
+Name:--10\x00b0
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-25
+ValueMax:80
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x131B0
+Name:--20\x00b0
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-25
+ValueMax:80
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x13340
+Name:--30\x00b0
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-25
+ValueMax:80
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x134D0
+Name:--40\x00b0
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-25
+ValueMax:80
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x15E04
+Name:Knock Sensitivity High
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-5
+ValueMax:205
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x15C74
+Name:Knock Sensitivity Low
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-5
+ValueMax:205
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x12D00
+Name:Knock Retard High
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-5
+ValueMax:20
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+IsSingleByteTable:true
+#############################
+ROMLocationX:0x1913C
+ROMLocationY:0x15674
+ROMLocationTable:0x12DC8
+Name:Knock Retard Low
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-5
+ValueMax:20
+ChangeAmount:0.1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+IsSingleByteTable:true
+#############################
+ROMLocationX:0xFC6C
+ROMLocationY:0xFA70
+Name:Idle Speed
+Unit1:Coolant Temp
+Unit2:RPM
+TableSize:8x1
+ValueMin:-1000
+ValueMax:4000
+ChangeAmount:50
+MathY:X/10
+#############################
+ROMLocationX:0xFC7C
+ROMLocationY:0xFA70
+Name:Post Start Idle Speed
+Unit1:Coolant Temp
+Unit2:RPM
+TableSize:8x1
+ValueMin:-1000
+ValueMax:4000
+ChangeAmount:50
+MathY:X/10
+#############################
+ROMLocationX:0xFE34
+Name:WOT Determiniation 1(TPS)
+Unit1:RPM
+Unit2:TPS(%)
+TableSize:6x1
+ValueMin:-50
+ValueMax:200
+MathX:X*0.005
+FormatX:0.00
+ChangeAmount:1
+Headers:1000,2000,3000,4000,5000,6000
+#############################
+ROMLocationX:0xFE4C
+Name:WOT Determiniation 2(TPS)
+Unit1:RPM
+Unit2:TPS(%)
+TableSize:6x1
+ValueMin:-50
+ValueMax:200
+MathX:X*0.005
+FormatX:0.00
+ChangeAmount:1
+Headers:1000,2000,3000,4000,5000,6000
+#############################
+ROMLocationX:0x10064
+Name:WOT Determiniation (MAP)
+Unit1:RPM
+Unit2:MAP(kpa)
+TableSize:7x1
+ValueMin:0
+ValueMax:120
+MathX:X*0.01
+FormatX:0.00
+ChangeAmount:1
+Headers:1000,2000,3000,4000,5000,6000,7000
+#############################
+ROMLocationX:0x10F82
+ROMLocationY:0x10FB4
+ROMLocationTable:0x10D5C
+Name:Throttle Response 1
+Unit1:RPM/MAP
+TableSize:5x10
+ValueMin:-50
+ValueMax:200
+ChangeAmount:1
+FormatY:0.0
+FormatTable:0.00
+MathTable:X*0.006
+#############################
+ROMLocationX:0x10FBE
+ROMLocationY:0x10F96
+ROMLocationTable:0x10DC0
+Name:Throttle Response 2
+Unit1:RPM/KPH
+TableSize:15x15
+ValueMin:-50
+ValueMax:200
+ChangeAmount:1
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.01
+MathTable:X*0.006
+#############################
+ROMLocationX:0x11546
+Name:Overrun Fuel Cut(Gear Determiniation)
+Unit1:Gear
+Unit2:Delay(ms)
+TableSize:5x1
+ValueMin:-1000
+ValueMax:5000
+ChangeAmount:50
+Headers:1,2,3,4,5-6
+#############################
+ROMLocationX:0xAE82
+Name:MAF Load Limit
+Unit1:Mg/Stroke
+TableSize:4x1
+ValueMin:-1000
+ValueMax:4000
+ChangeAmount:50
+#############################
+ROMLocationX:0xAE82
+Name:Minimum IPW
+Unit1:Min IPW
+TableSize:1x1
+ValueMin:-6
+ValueMax:5
+ChangeAmount:0.001
+MathX:X*0.002
+FormatX:0.000
+#############################

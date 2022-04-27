@@ -16,6 +16,31 @@ using DarkUI.Forms;
 
 internal class ClassEditor
 {
+    public List<string> Ecus_Definitions_Compatible = new List<string>();
+
+    //Variables for loaded rom definition
+    public List<string> DefinitionsLocationsX = new List<string>();
+    public List<string> DefinitionsLocationsY = new List<string>();
+    public List<string> DefinitionsLocationsTable = new List<string>();
+    public List<string> DefinitionsMathX = new List<string>();
+    public List<string> DefinitionsMathY = new List<string>();
+    public List<string> DefinitionsMathTable = new List<string>();
+    public List<string> DefinitionsFormatX = new List<string>();
+    public List<string> DefinitionsFormatY = new List<string>();
+    public List<string> DefinitionsFormatTable = new List<string>();
+    public List<bool> DefinitionsIsSingleByteX = new List<bool>();
+    public List<bool> DefinitionsIsSingleByteY = new List<bool>();
+    public List<bool> DefinitionsIsSingleByteTable = new List<bool>();
+
+    public List<string> DefinitionsName = new List<string>();
+    public List<string> DefinitionsUnit1 = new List<string>();
+    public List<string> DefinitionsUnit2 = new List<string>();
+    public List<string> DefinitionsTableSize = new List<string>();
+    public List<float> DefinitionsValueMin = new List<float>();
+    public List<float> DefinitionsValueMax = new List<float>();
+    public List<double> DefinitionsChangeAmount = new List<double>();
+    public List<string> DefinitionsHeaders = new List<string>();
+    public List<bool> DefinitionsIsInverted = new List<bool>();
 
     private Editortable Editortable_0;
 
@@ -24,45 +49,82 @@ internal class ClassEditor
         Editortable_0 = Editortable_1;
     }
 
-    /*public string smethod_0(ZipArchiveEntry zipArchiveEntry_0)
-    {
-        string text = "";
-        using (Stream stream = zipArchiveEntry_0.Open())
-        {
-            using (StreamReader streamReader = new StreamReader(stream, Encoding.GetEncoding("iso-8859-1")))
-            {
-                text += streamReader.ReadToEnd();
-            }
-        }
-        return text;
-    }*/
-
     public float smethod_1()
     {
         return Editortable.float_0;
     }
 
-    public string smethod_2(int int_232, int int_233, bool bool_5, bool bool_6)
+    public string ValueIncDec(int RowIndex, int CellIndex, bool Increasing, bool Multiply4x)
     {
         float num = this.smethod_1();
         string format = "0";
-        string text = Editortable_0.dataGridView_0.Rows[int_232].Cells[int_233].Value.ToString();
+        string text = Editortable_0.dataGridView_0.Rows[RowIndex].Cells[CellIndex].Value.ToString();
         if (text.Contains("."))
         {
             format = "0.000";
         }
-        if (bool_6)
+        if (Multiply4x)
         {
             num *= 4f;
         }
-        if (bool_5)
+        if (Increasing)
         {
             return (float.Parse(text) + num).ToString(format);
         }
         return (float.Parse(text) - num).ToString(format);
     }
 
-    public void smethod_3(KeyEventArgs keyEventArgs_0, int int_232)
+    public void IncDecreaseSelection(bool Decreasing, bool HoldShift)
+    {
+        if (!Decreasing)
+        {
+            int num3 = 0;
+            int num4 = 0;
+            int j = 0;
+            while (j < Editortable_0.dataGridView_0.Rows.Count)
+            {
+                if (Editortable_0.dataGridView_0.Rows[j].Cells[num4].Selected)
+                {
+                    Editortable_0.dataGridView_0.Rows[j].Cells[num4].Value = this.ValueIncDec(j, num4, true, HoldShift);
+                }
+                if (num4 == Editortable_0.dataGridView_0.Columns.Count - 1)
+                {
+                    num4 = 0;
+                    j++;
+                }
+                else
+                {
+                    num4++;
+                }
+                num3++;
+            }
+        }
+        else
+        {
+            int num5 = 0;
+            int num6 = 0;
+            int k = 0;
+            while (k < Editortable_0.dataGridView_0.Rows.Count)
+            {
+                if (Editortable_0.dataGridView_0.Rows[k].Cells[num6].Selected)
+                {
+                    Editortable_0.dataGridView_0.Rows[k].Cells[num6].Value = this.ValueIncDec(k, num6, false, HoldShift);
+                }
+                if (num6 == Editortable_0.dataGridView_0.Columns.Count - 1)
+                {
+                    num6 = 0;
+                    k++;
+                }
+                else
+                {
+                    num6++;
+                }
+                num5++;
+            }
+        }
+    }
+
+    public void ShortcutsCommand(KeyEventArgs keyEventArgs_0, int int_232)
     {
         bool bool_ = false;
         if (Control.ModifierKeys == Keys.Shift)
@@ -97,49 +159,11 @@ internal class ClassEditor
         }
         if (keyEventArgs_0.KeyCode == Keys.W || int_232 == 2)
         {
-            int num3 = 0;
-            int num4 = 0;
-            int j = 0;
-            while (j < Editortable_0.dataGridView_0.Rows.Count)
-            {
-                if (Editortable_0.dataGridView_0.Rows[j].Cells[num4].Selected)
-                {
-                    Editortable_0.dataGridView_0.Rows[j].Cells[num4].Value = this.smethod_2(j, num4, true, bool_);
-                }
-                if (num4 == Editortable_0.dataGridView_0.Columns.Count - 1)
-                {
-                    num4 = 0;
-                    j++;
-                }
-                else
-                {
-                    num4++;
-                }
-                num3++;
-            }
+            IncDecreaseSelection(false, bool_);
         }
         if (keyEventArgs_0.KeyCode == Keys.S || int_232 == 3)
         {
-            int num5 = 0;
-            int num6 = 0;
-            int k = 0;
-            while (k < Editortable_0.dataGridView_0.Rows.Count)
-            {
-                if (Editortable_0.dataGridView_0.Rows[k].Cells[num6].Selected)
-                {
-                    Editortable_0.dataGridView_0.Rows[k].Cells[num6].Value = this.smethod_2(k, num6, false, bool_);
-                }
-                if (num6 == Editortable_0.dataGridView_0.Columns.Count - 1)
-                {
-                    num6 = 0;
-                    k++;
-                }
-                else
-                {
-                    num6++;
-                }
-                num5++;
-            }
+            IncDecreaseSelection(true, bool_);
         }
         Class40 class40_0 = new Class40();
         //this.smethod_4(200).ContinueWith(new Action<Task>(this.<> c.<> 9.method_0));
@@ -154,150 +178,80 @@ internal class ClassEditor
         return class40_0.taskCompletionSource_0.Task;
     }
 
-    public void smethod_5(string TableSize)
+    public void GetChanges()
     {
-        int[] array = new int[0];
-        int[] tablearray = new int[0];
-        bool Is1x20Table = false;
+        int num = this.SelectedROMLocation;
+        int multiplier = 2;
+        if (this.IsSingleByteX || this.IsSingleByteY || this.IsSingleByteTable) multiplier = 1; //###############################
 
-        if (TableSize == "10X20")
+        //Get all Tables values
+        for (int i = 0; i < this.BufferTableSize[1]; i++)
         {
-            int num = 2;
-            if (this.bool_3) num = 1;
-            int num2 = this.int_0;
-            array = new int[this.int_1 * num];
-            for (int i = 0; i < this.int_1 * num; i++)
+            for (int k = 0; k < this.BufferTableSize[0]; k++)
             {
-                array[i] = (int)this.byte_0[num2];
-                this.byte_0[num2] = (byte)this.int_219[i];
-                num2++;
+                //calculate value inversed to make bytes
+                double ThisValue = double.Parse(Editortable_0.dataGridView_0.Rows[i].Cells[k].Value.ToString(), CultureInfo.InvariantCulture);
+                ThisValue = DoMath(ThisValue, BufferMath, true); 
+                
+                if (multiplier == 2)
+                {
+                    byte[] ThisBytesToChange = BitConverter.GetBytes((Int16) ThisValue);
+                    if (ThisBytesToChange.Length <= 2)
+                    {
+                        BufferBytesArray[(i * 2)] = ThisBytesToChange[1];
+                        BufferBytesArray[(i * 2) + 1] = ThisBytesToChange[0];
+                    }
+                    else
+                    {
+                        Editortable_0.GForm_Main_0.method_1("Modified Value doesn't return into '2bytes' format");
+                    }
+                }
+                else
+                {
+                    byte ThisByteToChange = (byte) ThisValue;
+                    BufferBytesArray[i] = ThisByteToChange;
+                }
             }
-            tablearray = this.int_219;
-            Is1x20Table = true;
-        }
-        else
-        {
-            int num = this.int_0;
-            array = new int[this.int_1 * 2];
-            for (int i = 0; i < this.int_1 * 2; i++)
-            {
-                array[i] = (int)this.byte_0[num];
-                if (TableSize == "1X64") this.byte_0[num] = (byte)this.int_220[i];
-                if (TableSize == "1X15") this.byte_0[num] = (byte)this.int_221[i];
-                if (TableSize == "1X8") this.byte_0[num] = (byte)this.int_222[i];
-                if (TableSize == "1X7") this.byte_0[num] = (byte)this.int_223[i];
-                if (TableSize == "1X6") this.byte_0[num] = (byte)this.int_224[i];
-                if (TableSize == "1X5") this.byte_0[num] = (byte)this.int_225[i];
-                if (TableSize == "1X4") this.byte_0[num] = (byte)this.int_226[i];
-                if (TableSize == "1X2") this.byte_0[num] = (byte)this.int_231[i];
-                if (TableSize == "1X1") this.byte_0[num] = (byte)this.int_231[i];
-                num++;
-            }
-            if (TableSize == "1X64") tablearray = this.int_220;
-            if (TableSize == "1X15") tablearray = this.int_221;
-            if (TableSize == "1X8") tablearray = this.int_222;
-            if (TableSize == "1X7") tablearray = this.int_223;
-            if (TableSize == "1X6") tablearray = this.int_224;
-            if (TableSize == "1X5") tablearray = this.int_225;
-            if (TableSize == "1X4") tablearray = this.int_226;
-            if (TableSize == "1X2") tablearray = this.int_231;
-            if (TableSize == "1X1") tablearray = this.int_231;
         }
 
+        byte[] array = new byte[this.SelectedTableSize * multiplier];
+        for (int i = 0; i < this.SelectedTableSize * multiplier; i++)
+        {
+            array[i] = this.byte_0[num + i];
+            //Apply Changes
+            this.byte_0[num + i] = BufferBytesArray[i];
+        }
+
+        /*Console.WriteLine(BufferBytesArray[0].ToString("X2"));
+        Console.WriteLine(BufferBytesArray[1].ToString("X2"));
+        Console.WriteLine(array[0].ToString("X2"));
+        Console.WriteLine(array[1].ToString("X2"));*/
 
         int num3 = 0;
         string text = null;
-        foreach (int num4 in tablearray)
+        foreach (int num4 in BufferBytesArray)
         {
             //if ((!this.bool_3 || num3 < 200) && num4.ToString() != array[num3].ToString())
-            if (((Is1x20Table && (!this.bool_3 || num3 < 200)) || (!Is1x20Table)) && num4.ToString() != array[num3].ToString())
+            //if (((Is1x20Table && (!this.IsSingleByteX || num3 < 200)) || (!Is1x20Table)) && num4.ToString() != array[num3].ToString())
+            if (num4.ToString() != array[num3].ToString())
             {
-                text = string.Concat(new string[]
-                {
-                    text,
-                    "Change at line: ",
-                    num3.ToString(),
-                    "[",
-                    array[num3].ToString(),
-                    " : ",
-                    num4.ToString(),
-                    "]",
-                    Environment.NewLine
-                });
-                Editortable_0.GForm_Main_0.method_1(string.Concat(new string[]
-                {
-                    "Change at line: ",
-                    num3.ToString(),
-                    "[",
-                    array[num3].ToString(),
-                    " : ",
-                    num4.ToString(),
-                    "]"
-                }));
+                string BufText = "Change at line: " + num3.ToString() + "[" + array[num3].ToString("X2") + "->" + num4.ToString("X2") + "]";
+                text = text + BufText + Environment.NewLine;
+                Editortable_0.GForm_Main_0.method_1(BufText);
             }
             num3++;
         }
-        this.string_3 = string.Concat(new string[]
-        {
-            this.string_3,
-            "Table: ",
-            TableSize,
-            Environment.NewLine,
-            "Address: ",
-            this.int_0.ToString(),
-            Environment.NewLine,
-            text
-        });
+        this.string_3 = this.string_3 + "Address: " + this.SelectedROMLocation.ToString() + Environment.NewLine + text;
+        //this.string_3 = this.string_3 + "Table: " + TableSize + Environment.NewLine + "Address: " + this.SelectedROMLocation.ToString() + Environment.NewLine + text;
     }
 
-    public void smethod_15(string string_4)
+    public void SaveROMBytes(string string_4)
     {
         try
         {
-            if (this.bool_2 && this.int_1 != 0 && this.int_0 != 0)
+            if (this.bool_2 && this.SelectedTableSize != 0 && this.SelectedROMLocation != 0)
             {
-                if (this.int_1 == 200)
-                {
-                    this.smethod_5("10X20");
-                }
-                else if (this.int_1 == 64)
-                {
-                    this.smethod_5("1X64");
-                }
-                else if (this.int_1 == 15)
-                {
-                    this.smethod_5("1X15");
-                }
-                else if (this.int_1 == 8)
-                {
-                    this.smethod_5("1X8");
-                }
-                else if (this.int_1 == 7)
-                {
-                    this.smethod_5("1X7");
-                    //this.smethod_5("1X5");
-                }
-                else if (this.int_1 == 6)
-                {
-                    this.smethod_5("1X6");
-                    //this.smethod_5("1X5");
-                }
-                else if (this.int_1 == 5)
-                {
-                    this.smethod_5("1X5");
-                }
-                else if (this.int_1 == 4)
-                {
-                    this.smethod_5("1X4");
-                }
-                else if (this.int_1 == 2)
-                {
-                    this.smethod_5("1X2");
-                }
-                else if (this.int_1 == 1)
-                {
-                    this.smethod_5("1X1");
-                }
+                this.GetChanges();
                 this.string_2 = this.string_2 + this.string_3 + Environment.NewLine;
             }
             this.bool_2 = false;
@@ -305,7 +259,7 @@ internal class ClassEditor
             //################################################
             byte[] SavingBytes = this.byte_0;
 
-            //Remove fake bootloader section
+            //Remove fake bootloader section if it's a partial firmware .bin file
             if (!this.Editortable_0.IsFullBinary)
             {
                 byte[] BufferBytes = new byte[SavingBytes.Length - 0x8000];
@@ -344,105 +298,216 @@ internal class ClassEditor
         }
     }
 
-    public void smethod_16(int[] int_232, int int_233, string string_4, string string_5, string[] string_6, Editortable.GEnum2 genum2_0, bool bool_5)
+    public void SetTableValues(int[] TableSize, int ROMLocationX, string TopLeftString, string RowHeaderString, string[] HeaderStringList, string ThisMathX, string ThisFormatX, bool IsInverted, int ROMLocationTable, string ThisMathTable, string ThisTableFormat)
     {
         try
         {
-            this.int_1 = int_232[0] * int_232[1];
-            this.int_0 = int_233;
+            this.SelectedTableSize = TableSize[0] * TableSize[1];
+            this.SelectedROMLocation = ROMLocationX;
+            BufferMath = ThisMathX;
+            BufferValuesArray = new int[SelectedTableSize];
+            BufferTableSize = TableSize;
+
             Editortable_0.dataGridView_0.Rows.Clear();
             Editortable_0.dataGridView_0.Columns.Clear();
             Editortable_0.dataGridView_0.RowTemplate.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            Editortable_0.dataGridView_0.TopLeftHeaderCell.Value = string_4;
-            if (bool_5)
+            Editortable_0.dataGridView_0.TopLeftHeaderCell.Value = TopLeftString;
+            Editortable_0.dataGridView_0.AllowUserToAddRows = false;
+
+            //Correct the Table Orientation if Bad
+            if ((TableSize[1] == 1 && IsInverted) || (TableSize[0] == 1 && !IsInverted))
             {
-                Editortable_0.dataGridView_0.ColumnCount = int_232[0];
-                for (int i = 0; i < int_232[1]; i++)
-                {
-                    Editortable_0.dataGridView_0.Rows.Add(new object[]
-                    {
-                        this.smethod_18(int_233 + i * 2).ToString()
-                    });
-                    Editortable_0.dataGridView_0.Rows[i].HeaderCell.Value = string_6[i].ToString();
-                }
+                int Buf0 = TableSize[1];
+                int Buf1 = TableSize[0];
+                TableSize[0] = Buf0;
+                TableSize[1] = Buf1;
             }
-            else
+
+            //Check if table size have more than 1x roms (or 1column if inverted) ... aka if it's a 3D table
+            bool IsMultiTable = false;
+            if (TableSize[1] > 1 && !IsInverted) IsMultiTable = true;
+            if (TableSize[0] > 1 && IsInverted) IsMultiTable = true;
+
+            if (IsMultiTable)
             {
-                for (int j = 0; j < int_232[0]; j++)
+                SelectedROMLocation = ROMLocationTable;
+                BufferMath = ThisMathTable;
+
+                //Apply Columns(Y)
+                if (IsInverted)
                 {
-                    Editortable_0.dataGridView_0.Columns.Add(string_6[j].ToString(), string_6[j].ToString());
-                }
-                List<string> list = new List<string>();
-                if (genum2_0 == Editortable.GEnum2.LAF_VOLTAGE)
-                {
-                    for (int k = 0; k < int_232[0]; k++)
+                    for (int i = 0; i < TableSize[1]; i++)
                     {
-                        ushort num = (ushort)this.smethod_18(int_233 + k * 2);
-                        list.Add((32767f / (float)num).ToString("0.00"));
+                        double num = 0;
+                        if (IsSingleByteX) num = (double)this.GetSingleByteValue(ROMLocationX + i);
+                        else num = (double)this.GetIntValue(ROMLocationX + i * 2);
+
+                        string HeaderStr = "";
+                        if (ThisFormatX != "") HeaderStr = DoMath(num, ThisMathX, false).ToString(ThisFormatX);
+                        if (ThisFormatX == "") HeaderStr = DoMath(num, ThisMathX, false).ToString();
+                        Editortable_0.dataGridView_0.Columns.Add(HeaderStr, HeaderStr);
                     }
                 }
                 else
                 {
-                    if (genum2_0 != Editortable.GEnum2.INJ_DEADTIME)
-                    {
-                        if (genum2_0 != Editortable.GEnum2.MIN_IPW)
-                        {
-                            if (genum2_0 == Editortable.GEnum2.WOT_MAP)
-                            {
-                                for (int l = 0; l < int_232[0]; l++)
-                                {
-                                    ushort num2 = (ushort)this.smethod_18(int_233 + l * 2);
-                                    list.Add(((double)num2 * 0.01).ToString("0.00"));
-                                }
-                                goto IL_258;
-                            }
-                            if (genum2_0 == Editortable.GEnum2.THROTTLE_REQ)
-                            {
-                                for (int m = 0; m < int_232[0]; m++)
-                                {
-                                    ushort num3 = (ushort)this.smethod_18(int_233 + m * 2);
-                                    list.Add(((double)num3 * 0.005).ToString("0.00"));
-                                }
-                                goto IL_258;
-                            }
-                            for (int n = 0; n < int_232[0]; n++)
-                            {
-                                list.Add(this.smethod_18(int_233 + n * 2).ToString());
-                            }
-                            goto IL_258;
-                        }
-                    }
-                    for (int num4 = 0; num4 < int_232[0]; num4++)
-                    {
-                        ushort num5 = (ushort)this.smethod_18(int_233 + num4 * 2);
-                        list.Add(((double)num5 * 0.002).ToString("0.000"));
-                    }
+                    for (int j = 0; j < TableSize[0]; j++) Editortable_0.dataGridView_0.Columns.Add(HeaderStringList[j], HeaderStringList[j]);
                 }
-            IL_258:
-                Editortable_0.dataGridView_0.Rows.Add();
-                for (int num6 = 0; num6 < int_232[0]; num6++)
+
+                int index = 0;
+                while (true)
                 {
-                    DataGridViewRow dataGridViewRow = Editortable_0.dataGridView_0.Rows[0];
-                    dataGridViewRow.Cells[num6].Value = list[num6];
+                    if (index >= SelectedTableSize) // More than TableSize (ex: 10x20.. more than 200)
+                    {
+                        int[,] numArray2 = smethod_35<int>(BufferValuesArray, TableSize[0], TableSize[1]);
+                        int rowIndex = 0;
+                        while (true)
+                        {
+                            if ((rowIndex >= TableSize[1] && !IsInverted) || (rowIndex >= TableSize[0] && IsInverted))   //More than Y (make the 3D table)
+                            {
+                                int num10 = 0;
+                                while (true)
+                                {
+                                    if ((num10 >= TableSize[1] && !IsInverted) || (num10 >= TableSize[0] && IsInverted))   //Another More than Y (set X Header)
+                                    {
+                                        if (!IsInverted) SetBackColor(TableSize[0], Editortable.float_1[0], Editortable.float_1[1]);
+                                        if (IsInverted) SetBackColor(TableSize[1], Editortable.float_1[0], Editortable.float_1[1]);
+                                        break;
+                                    }
+                                    //Rows(X) Math
+                                    if (IsInverted)
+                                    {
+                                        Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = HeaderStringList[num10];
+                                    }
+                                    else
+                                    {
+                                        double num = 0;
+                                        if (IsSingleByteX) num = (double)this.GetSingleByteValue(ROMLocationX + num10);
+                                        else num = (double)this.GetIntValue(ROMLocationX + num10 * 2);
+                                        if (ThisFormatX != "") Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = DoMath(num, ThisMathX, false).ToString(ThisFormatX);
+                                        if (ThisFormatX == "") Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = DoMath(num, ThisMathX, false).ToString();
+                                    }
+                                    num10++;
+                                }
+                                break;
+                            }
+
+                            //TableMath (Get full 1full row of value at a time)
+                            object[] values = new object[0];
+                            if (IsInverted)
+                            {
+                                values = new object[TableSize[1]];
+                                for (int i = 0; i < TableSize[1]; i++)
+                                {
+                                    if (ThisTableFormat != "") values[i] = DoMath((double)numArray2[rowIndex, i], ThisMathTable, false).ToString(ThisTableFormat);
+                                    if (ThisTableFormat == "") values[i] = DoMath((double)numArray2[rowIndex, i], ThisMathTable, false).ToString();
+                                }
+                            }
+                            else
+                            {
+                                values = new object[TableSize[0]];
+                                for (int i = 0; i < TableSize[0]; i++)
+                                {
+                                    if (ThisTableFormat != "") values[i] = DoMath((double)numArray2[i, rowIndex], ThisMathTable, false).ToString(ThisTableFormat);
+                                    if (ThisTableFormat == "") values[i] = DoMath((double)numArray2[i, rowIndex], ThisMathTable, false).ToString();
+                                }
+                            }
+                            Editortable_0.dataGridView_0.Rows.Insert(rowIndex, values);
+                            rowIndex++;
+                        }
+                        break;
+                    }
+
+                    //Math perfomed just above
+                    if (IsSingleByteTable) BufferValuesArray[index] = GetSingleByteValue(SelectedROMLocation + index);
+                    else BufferValuesArray[index] = GetIntValue(SelectedROMLocation + (index * 2));
+
+                    index++;
                 }
-                Editortable_0.dataGridView_0.Rows[0].HeaderCell.Value = string_5;
             }
-            Editortable_0.dataGridView_0.AllowUserToAddRows = false;
+            //##############################################
+            else
+            {
+                if (IsSingleByteX) BufferBytesArray = new byte[SelectedTableSize];
+                else BufferBytesArray = new byte[SelectedTableSize * 2];
+
+                //Normal 'single' table 
+                if (IsInverted)
+                {
+                    for (int i = 0; i < TableSize[0]; i++) Editortable_0.dataGridView_0.Columns.Add(RowHeaderString, RowHeaderString);
+
+                    for (int i = 0; i < TableSize[1]; i++)
+                    {
+                        double num = 0;
+                        if (IsSingleByteX)
+                        {
+                            num = (double)this.GetSingleByteValue(ROMLocationX + i);
+                            BufferBytesArray[i] = byte_0[ROMLocationX + i];
+                        }
+                        else
+                        {
+                            num = (double)this.GetIntValue(ROMLocationX + i * 2);
+                            BufferBytesArray[(i * 2)] = byte_0[ROMLocationX + (i * 2)];
+                            BufferBytesArray[(i * 2) + 1] = byte_0[ROMLocationX + (i * 2) + 1];
+                        }
+
+                        BufferValuesArray[i] = (int) num;
+
+                        double FinalValue = DoMath(num, ThisMathX, false);
+
+                        if (ThisFormatX == "") Editortable_0.dataGridView_0.Rows.Add(new object[] { FinalValue.ToString() });
+                        if (ThisFormatX != "") Editortable_0.dataGridView_0.Rows.Add(new object[] { FinalValue.ToString(ThisFormatX) });
+
+                        Editortable_0.dataGridView_0.Rows[i].HeaderCell.Value = HeaderStringList[i];
+                    }
+                }
+                if (!IsInverted)
+                {
+                    for (int j = 0; j < TableSize[0]; j++) Editortable_0.dataGridView_0.Columns.Add(HeaderStringList[j], HeaderStringList[j]);
+                    List<string> list = new List<string>();
+
+                    //################################################################################################################
+                    for (int k = 0; k < TableSize[0]; k++)
+                    {
+                        double num = 0;
+                        if (IsSingleByteX)
+                        {
+                            num = (double)this.GetSingleByteValue(ROMLocationX + k);
+                            BufferBytesArray[k] = byte_0[ROMLocationX + k];
+                        }
+                        else
+                        {
+                            num = (double)this.GetIntValue(ROMLocationX + k * 2);
+                            BufferBytesArray[(k * 2)] = byte_0[ROMLocationX + (k * 2)];
+                            BufferBytesArray[(k * 2) + 1] = byte_0[ROMLocationX + (k * 2) + 1];
+                        }
+                        BufferValuesArray[k] = (int) num;
+
+                        if (ThisFormatX == "") list.Add(DoMath(num, ThisMathX, false).ToString());
+                        if (ThisFormatX != "") list.Add(DoMath(num, ThisMathX, false).ToString(ThisFormatX));
+                    }
+                    //################################################################################################################
+
+                    Editortable_0.dataGridView_0.Rows.Add();
+                    for (int num6 = 0; num6 < TableSize[0]; num6++)
+                    {
+                        DataGridViewRow dataGridViewRow = Editortable_0.dataGridView_0.Rows[0];
+                        dataGridViewRow.Cells[num6].Value = list[num6];
+                    }
+                    Editortable_0.dataGridView_0.Rows[0].HeaderCell.Value = RowHeaderString;
+                }
+            }
             foreach (object obj in Editortable_0.dataGridView_0.Columns)
             {
                 DataGridViewColumn dataGridViewColumn = (DataGridViewColumn)obj;
                 dataGridViewColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
-                dataGridViewColumn.Width = 50;
+                //dataGridViewColumn.Width = 50;
             }
-            if (!bool_5)
+            foreach (object obj2 in ((IEnumerable)Editortable_0.dataGridView_0.Rows))
             {
-                foreach (object obj2 in ((IEnumerable)Editortable_0.dataGridView_0.Rows))
-                {
-                    DataGridViewRow dataGridViewRow2 = (DataGridViewRow)obj2;
-                    dataGridViewRow2.Height = 20;
-                }
+                DataGridViewRow dataGridViewRow2 = (DataGridViewRow)obj2;
+                dataGridViewRow2.Height = 20;
             }
-            this.smethod_33(int_232[0], Editortable.float_1[0], Editortable.float_1[1]);
+            this.SetBackColor(TableSize[0], Editortable.float_1[0], Editortable.float_1[1]);
             this.bool_0 = true;
         }
         catch (Exception ex)
@@ -452,7 +517,239 @@ internal class ClassEditor
         }
     }
 
-    public bool smethod_17(string string_4)
+    private int GetNearestMathIndex(string ThisMath)
+    {
+        int IndexOfNearest = -1;
+        int IndexOfMathDiv = ThisMath.IndexOf('/');
+        int IndexOfMathMul = ThisMath.IndexOf('*');
+        int IndexOfMathAdd = ThisMath.IndexOf('+');
+        //int IndexOfMathSub = ThisMath.IndexOf('-'); //don't check for sub, this is causing issue with negative number
+
+        if (IndexOfMathDiv == 0) return 0;
+        if (IndexOfMathMul == 0) return 0;
+        if (IndexOfMathAdd == 0) return 0;
+        //if (IndexOfMathSub == 0) return 0;
+
+        if (IndexOfMathDiv == -1) IndexOfMathDiv = 99;
+        if (IndexOfMathMul == -1) IndexOfMathMul = 99;
+        if (IndexOfMathAdd == -1) IndexOfMathAdd = 99;
+        //if (IndexOfMathSub == -1) IndexOfMathSub = 99;
+
+        /*if (IndexOfMathDiv > 0 && IndexOfMathDiv < IndexOfMathMul && IndexOfMathDiv < IndexOfMathAdd && IndexOfMathDiv < IndexOfMathSub) IndexOfNearest = IndexOfMathDiv;
+        if (IndexOfMathMul > 0 && IndexOfMathMul < IndexOfMathDiv && IndexOfMathMul < IndexOfMathAdd && IndexOfMathMul < IndexOfMathSub) IndexOfNearest = IndexOfMathMul;
+        if (IndexOfMathAdd > 0 && IndexOfMathAdd < IndexOfMathMul && IndexOfMathAdd < IndexOfMathDiv && IndexOfMathAdd < IndexOfMathSub) IndexOfNearest = IndexOfMathAdd;
+        if (IndexOfMathSub > 0 && IndexOfMathSub < IndexOfMathMul && IndexOfMathSub < IndexOfMathAdd && IndexOfMathSub < IndexOfMathDiv) IndexOfNearest = IndexOfMathSub;*/
+        if (IndexOfMathDiv > 0 && IndexOfMathDiv < IndexOfMathMul && IndexOfMathDiv < IndexOfMathAdd) IndexOfNearest = IndexOfMathDiv;
+        if (IndexOfMathMul > 0 && IndexOfMathMul < IndexOfMathDiv && IndexOfMathMul < IndexOfMathAdd) IndexOfNearest = IndexOfMathMul;
+        if (IndexOfMathAdd > 0 && IndexOfMathAdd < IndexOfMathMul && IndexOfMathAdd < IndexOfMathDiv) IndexOfNearest = IndexOfMathAdd;
+
+        if (IndexOfNearest == 99) IndexOfNearest = -1;
+
+        return IndexOfNearest;
+    }
+
+    private char GetNextMath(string ThisMath)
+    {
+        int Thisindex = GetNearestMathIndex(ThisMath);
+        return ThisMath.Substring(Thisindex, 1)[0];
+    }
+
+    private double GetNextValue(string ThisMath)
+    {
+        double Value = 0;
+        //bool IsNegative = false;
+
+        int Nearestindex = GetNearestMathIndex(ThisMath);
+        if (Nearestindex == 0)
+        {
+            /*if (ThisMath[0] == '-')
+            {
+                IsNegative = true;
+                ThisMath = ThisMath.Substring(1);
+                Nearestindex = GetNearestMathIndex(ThisMath);
+            }
+            else
+            {*/
+                ThisMath = ThisMath.Substring(1);
+            //}
+        }
+        //Nearestindex = GetNearestMathIndex(ThisMath);
+
+        if (Nearestindex == -1)
+        {
+            Value = double.Parse(ThisMath, CultureInfo.InvariantCulture);
+        }
+        else
+        {
+            string ThisVarStr = ThisMath.Substring(0, Nearestindex);
+            Value = double.Parse(ThisVarStr, CultureInfo.InvariantCulture);
+        }
+
+        //if (IsNegative) Value = -Value;
+
+        return Value;
+    }
+
+    public string InvertMathString(string ThisMath)
+    {
+        string ReturnStr = "";
+        List<double> ValuesList = new List<double>();
+        List<char> MathFuncList = new List<char>();
+        bool WeHaveVal1 = false;
+        while (ThisMath != "")
+        {
+            if (!WeHaveVal1) ValuesList.Add(GetNextValue(ThisMath));
+            MathFuncList.Add(GetNextMath(ThisMath));
+            ThisMath = ThisMath.Substring(GetNearestMathIndex(ThisMath) + 1);
+            ValuesList.Add(GetNextValue(ThisMath));
+
+            int NearestIndex = GetNearestMathIndex(ThisMath);
+            if (NearestIndex != -1) ThisMath = ThisMath.Substring(GetNearestMathIndex(ThisMath) + 1);
+
+            WeHaveVal1 = true;
+
+            //if (!ThisMath.Contains("/") && !ThisMath.Contains("*") && !ThisMath.Contains("+") && !ThisMath.Contains("-"))
+            if (!ThisMath.Contains("/") && !ThisMath.Contains("*") && !ThisMath.Contains("+"))
+            {
+                ThisMath = ""; //No remaining maths to perform
+            }
+        }
+
+        //Create inverted math function
+        for (int i = ValuesList.Count - 1; i >= 0; i--)
+        {
+            ReturnStr = ReturnStr + ValuesList[i];
+            if (i > 0)
+            {
+                if (MathFuncList[i - 1] == '*') ReturnStr = ReturnStr + "/";
+                if (MathFuncList[i - 1] == '/') ReturnStr = ReturnStr + "*";
+                if (MathFuncList[i - 1] == '+') ReturnStr = ReturnStr + "+-";
+            }
+        }
+
+        return ReturnStr;
+    }
+
+    public double DoMath(double ThisValue, string ThisMath, bool Reverse)
+    {
+        double ReturnVal = ThisValue;
+
+        //No Math found, return value with no math calculation
+        if (ThisMath == "X" || ThisMath == "") return ReturnVal;
+
+        //Put X at the end
+        if (Reverse)
+        {
+            if (ThisMath[ThisMath.Length - 1] != 'X')
+            {
+                string XandMath = ThisMath.Substring(ThisMath.IndexOf('X'), 2);
+                ThisMath = ThisMath.Replace(XandMath, "") + XandMath[1].ToString() + XandMath[0].ToString();
+            }
+        }
+
+        ThisMath = ThisMath.Replace("X", ThisValue.ToString());
+
+        //128/X*14.7
+        //12/34*14.7
+        //---
+        //14.7/X*128
+        if (Reverse) ThisMath = InvertMathString(ThisMath);
+        //if (Reverse) Console.WriteLine(ThisMath);
+
+        bool WeHaveVal1 = false;
+        double Val1 = 0;
+        while (ThisMath != "")
+        {
+            if (!WeHaveVal1) Val1 = GetNextValue(ThisMath);
+            char MathChar = GetNextMath(ThisMath);
+            ThisMath = ThisMath.Substring(GetNearestMathIndex(ThisMath) + 1);
+            double Val2 = GetNextValue(ThisMath);
+
+            if (MathChar == '*') ReturnVal = Val1 * Val2;
+            if (MathChar == '/') ReturnVal = Val1 / Val2;
+            if (MathChar == '+') ReturnVal = Val1 + Val2;
+            if (MathChar == '-') ReturnVal = Val1 - Val2;
+
+            int NearestIndex = GetNearestMathIndex(ThisMath);
+            if (NearestIndex != -1) ThisMath = ThisMath.Substring(GetNearestMathIndex(ThisMath) + 1);
+
+            WeHaveVal1 = true;
+            Val1 = ReturnVal;
+
+            //Check for remaining maths
+            //if (!ThisMath.Contains("/") && !ThisMath.Contains("*") && !ThisMath.Contains("+") && !ThisMath.Contains("-"))
+            if (!ThisMath.Contains("/") && !ThisMath.Contains("*") && !ThisMath.Contains("+"))
+            {
+                ThisMath = ""; //No remaining maths to perform
+            }
+        }
+        //if (Reverse) Console.WriteLine(ReturnVal);
+        return ReturnVal;
+    }
+
+    public string[] GetAdvancedHeader(int ValuesCount, int ThisLocation, string ThisMath, string HeaderFormat)
+    {
+        string[] strArray = new string[ValuesCount];
+        for (int i = 0; i < ValuesCount; i++)
+        {
+            int Valuue = 0;
+            if (IsSingleByteY) Valuue = GetSingleByteValue(ThisLocation + i);
+            else Valuue = GetIntValue(ThisLocation + (i * 2));
+
+            if (HeaderFormat == "") strArray[i] = DoMath((double) Valuue, ThisMath, false).ToString();
+            if (HeaderFormat != "") strArray[i] = DoMath((double) Valuue, ThisMath, false).ToString(HeaderFormat);
+        }
+        return strArray;
+    }
+
+    public byte[] StringToByteArray(string hex)
+    {
+        return Enumerable.Range(0, hex.Length)
+                            .Where(x => x % 2 == 0)
+                            .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
+                            .ToArray();
+    }
+
+    /*public Int16 ToInt16BE(byte[] TwoBytes)
+    {
+        Int16 k0 = BitConverter.ToInt16(TwoBytes, 0);
+        Int16 k1 = BitConverter.ToInt16(BitConverter.GetBytes(k0).Reverse().ToArray(), 0);
+        return k1;
+    }
+
+    public Int32 ToInt32BE(byte[] FourBytes)
+    {
+        Int32 k0 = BitConverter.ToInt32(FourBytes, 0);
+        Int32 k1 = BitConverter.ToInt32(BitConverter.GetBytes(k0).Reverse().ToArray(), 0);
+        return k1;
+    }*/
+
+    public int HexStringToInt(string hex)
+    {
+        string ThisStr = hex.Replace("0x", "");
+        if (ThisStr.Length == 1 || ThisStr.Length == 3 || ThisStr.Length == 5 || ThisStr.Length == 7)
+        {
+            ThisStr = "0" + ThisStr;
+        }
+        byte[] ThisBytes = StringToByteArray(ThisStr);
+        Array.Reverse(ThisBytes);
+
+        //Add Empty Bytes
+        if (ThisBytes.Length == 3)
+        {
+            byte[] buffArray = new byte[4];
+            buffArray[3] = 0;
+            for (int i = 0; i < ThisBytes.Length; i++) buffArray[i] = ThisBytes[i];
+            ThisBytes = buffArray;
+        }
+
+        if (ThisBytes.Length == 2) return BitConverter.ToUInt16(ThisBytes, 0);
+        if (ThisBytes.Length == 4) return BitConverter.ToInt32(ThisBytes, 0);
+        //if (ThisBytes.Length == 8) return BitConverter.ToUInt64(ThisBytes, 0);
+        return 0;
+    }
+
+    public bool LoadROMbytes(string string_4)
     {
         if (File.Exists(string_4))
         {
@@ -471,7 +768,7 @@ internal class ClassEditor
                 }
 
                 //Get ECU filename  (33 37 38 30 35 2D  ->  37805- 'in ASCII chars')  (37805-RRB-A140)
-                this.string_0 = "";
+                this.string_ECU_Name = "";
                 for (int i = 0; i < this.byte_0.Length; i++)
                 {
                     if (this.byte_0[i] == 0x33 &&
@@ -483,7 +780,7 @@ internal class ClassEditor
                     {
                         for (int i2 = 0; i2 < 14; i2++)
                         {
-                            this.string_0 += (char)this.byte_0[i + i2];
+                            this.string_ECU_Name += (char)this.byte_0[i + i2];
                         }
                         break;
                     }
@@ -542,124 +839,370 @@ internal class ClassEditor
         return false;
     }
 
-    public int smethod_18(int int_232)
+    public int GetIntValue(int int_232)
     {
         return (int)((short)((int)this.byte_0[int_232] << 8 | (int)this.byte_0[int_232 + 1]));
     }
 
-    public int smethod_19(int int_232)
+    public int GetSingleByteValue(int int_232)
     {
         return (int)this.byte_0[int_232];
     }
 
-    public bool smethod_21()
+    public void SetBackColor(int int_232, float float_0, float float_1)
     {
-        int num = 0;
-        int num2 = 2;
-        bool flag = false;
-        string[] array = new string[200];
-        if (this.bool_3)
+        for (int i = 0; i < int_232; i++)
         {
-            num2 = 1;
-        }
-        if (Editortable_0.dataGridView_0.ColumnCount == 20)
-        {
-            flag = true;
-            int num3 = 0;
-            for (int i = 0; i < Editortable_0.dataGridView_0.RowCount; i++)
+            foreach (object obj in ((IEnumerable)Editortable_0.dataGridView_0.Rows))
             {
-                array[num3] = Editortable_0.dataGridView_0.Rows[i].Cells[0].Value.ToString();
-                array[num3 + 1] = Editortable_0.dataGridView_0.Rows[i].Cells[1].Value.ToString();
-                array[num3 + 2] = Editortable_0.dataGridView_0.Rows[i].Cells[2].Value.ToString();
-                array[num3 + 3] = Editortable_0.dataGridView_0.Rows[i].Cells[3].Value.ToString();
-                array[num3 + 4] = Editortable_0.dataGridView_0.Rows[i].Cells[4].Value.ToString();
-                array[num3 + 5] = Editortable_0.dataGridView_0.Rows[i].Cells[5].Value.ToString();
-                array[num3 + 6] = Editortable_0.dataGridView_0.Rows[i].Cells[6].Value.ToString();
-                array[num3 + 7] = Editortable_0.dataGridView_0.Rows[i].Cells[7].Value.ToString();
-                array[num3 + 8] = Editortable_0.dataGridView_0.Rows[i].Cells[8].Value.ToString();
-                array[num3 + 9] = Editortable_0.dataGridView_0.Rows[i].Cells[9].Value.ToString();
-                array[num3 + 10] = Editortable_0.dataGridView_0.Rows[i].Cells[10].Value.ToString();
-                array[num3 + 11] = Editortable_0.dataGridView_0.Rows[i].Cells[11].Value.ToString();
-                array[num3 + 12] = Editortable_0.dataGridView_0.Rows[i].Cells[12].Value.ToString();
-                array[num3 + 13] = Editortable_0.dataGridView_0.Rows[i].Cells[13].Value.ToString();
-                array[num3 + 14] = Editortable_0.dataGridView_0.Rows[i].Cells[14].Value.ToString();
-                array[num3 + 15] = Editortable_0.dataGridView_0.Rows[i].Cells[15].Value.ToString();
-                array[num3 + 16] = Editortable_0.dataGridView_0.Rows[i].Cells[16].Value.ToString();
-                array[num3 + 17] = Editortable_0.dataGridView_0.Rows[i].Cells[17].Value.ToString();
-                array[num3 + 18] = Editortable_0.dataGridView_0.Rows[i].Cells[18].Value.ToString();
-                array[num3 + 19] = Editortable_0.dataGridView_0.Rows[i].Cells[19].Value.ToString();
-                num3 += 20;
-            }
-        }
-        else if (Editortable_0.dataGridView_0.ColumnCount == 10)
-        {
-            object[,] array2 = new object[Editortable_0.dataGridView_0.ColumnCount, Editortable_0.dataGridView_0.RowCount];
-            for (int j = 0; j < Editortable_0.dataGridView_0.RowCount; j++)
-            {
-                array2[0, j] = Editortable_0.dataGridView_0.Rows[j].Cells[0].Value.ToString();
-                array2[1, j] = Editortable_0.dataGridView_0.Rows[j].Cells[1].Value.ToString();
-                array2[2, j] = Editortable_0.dataGridView_0.Rows[j].Cells[2].Value.ToString();
-                array2[3, j] = Editortable_0.dataGridView_0.Rows[j].Cells[3].Value.ToString();
-                array2[4, j] = Editortable_0.dataGridView_0.Rows[j].Cells[4].Value.ToString();
-                array2[5, j] = Editortable_0.dataGridView_0.Rows[j].Cells[5].Value.ToString();
-                array2[6, j] = Editortable_0.dataGridView_0.Rows[j].Cells[6].Value.ToString();
-                array2[7, j] = Editortable_0.dataGridView_0.Rows[j].Cells[7].Value.ToString();
-                array2[8, j] = Editortable_0.dataGridView_0.Rows[j].Cells[8].Value.ToString();
-                array2[9, j] = Editortable_0.dataGridView_0.Rows[j].Cells[9].Value.ToString();
-            }
-            array = array2.Cast<string>().ToArray<string>();
-        }
-        foreach (string s in array)
-        {
-            try
-            {
-                if (!this.bool_3)
+                DataGridViewRow dataGridViewRow = (DataGridViewRow)obj;
+                try
                 {
-                    int num4 = (int)(float.Parse(s, CultureInfo.InvariantCulture) * 10f);
-                    this.int_219[num + 1] = (int)((byte)num4);
-                    this.int_219[num] = (int)((byte)(num4 >> 8));
-                    num += 2;
+                    float float_2 = float.Parse(dataGridViewRow.Cells[i].Value.ToString());
+                    dataGridViewRow.Cells[i].Style.BackColor = this.GetColor(float_2, float_1, float_0);
                 }
-                else
+                catch
                 {
-                    int num5;
-                    if (flag)
-                    {
-                        num5 = (int)(128f / (float.Parse(s, CultureInfo.InvariantCulture) / 14.7f));
-                    }
-                    else
-                    {
-                        num5 = (int)(float.Parse(s, CultureInfo.InvariantCulture) * 10f);
-                    }
-                    this.int_219[num] = (int)((byte)num5);
-                    num++;
+                    dataGridViewRow.Cells[i].Style.BackColor = System.Drawing.SystemColors.ControlLight;
+                    //dataGridViewRow.Cells[i].Style.BackColor = Color.White;
                 }
             }
-            catch
-            {
-                return false;
-            }
         }
-        int num6 = this.int_0;
-        int[] array4 = new int[this.int_1 * num2];
-        for (int l = 0; l < this.int_1 * num2; l++)
-        {
-            array4[l] = (int)this.byte_0[num6];
-            num6++;
-        }
-        int num7 = 0;
-        foreach (int num8 in this.int_219)
-        {
-            if ((!this.bool_3 || num7 < 200) && num8.ToString() != array4[num7].ToString())
-            {
-                this.bool_2 = true;
-            }
-            num7++;
-        }
-        return true;
     }
 
-    public bool smethod_22(string TableSize)
+    public Color GetColor(float float_0, float float_1, float float_2)
+    {
+        Color result;
+        try
+        {
+            int num = (int)(1023f * (float_0 - float_1) / (float_2 - float_1));
+            if (num < 256)
+            {
+                result = Color.FromArgb(255, num, 0);
+            }
+            else if (num < 512)
+            {
+                num -= 256;
+                result = Color.FromArgb(255 - num, 255, 0);
+            }
+            else if (num < 768)
+            {
+                num -= 512;
+                result = Color.FromArgb(0, 255, num);
+            }
+            else
+            {
+                num -= 768;
+                result = Color.FromArgb(0, 255 - num, 255);
+            }
+        }
+        catch
+        {
+            result = Color.White;
+        }
+        return result;
+    }
+
+    public T[,] smethod_35<T>(T[] gparam_0, int int_232, int int_233)
+    {
+        T[,] array = new T[int_232, int_233];
+        for (int i = 0; i < int_232; i++)
+        {
+            for (int j = 0; j < int_233; j++)
+            {
+                array[i, j] = gparam_0[i * int_233 + j];
+            }
+        }
+        return array;
+    }
+
+    public void LoadSupportedECUDefinitions()
+    {
+        try
+        {
+            Ecus_Definitions_Compatible = new List<string>();
+
+            Editortable_0.CheckDefinitionFolderExist();
+
+            string Folderpath = Application.StartupPath + @"\Definitions";
+            if (Directory.Exists(Folderpath))
+            {
+                string[] AllDefinitionFiles = Directory.GetFiles(Folderpath, "*.txt");
+
+                Editortable_0.GForm_Main_0.method_1("Loading definitions files...");
+                foreach (string ThisFilePath in AllDefinitionFiles)
+                {
+                    string[] AllLines = File.ReadAllLines(ThisFilePath);
+                    bool GettingEcuList = true;
+                    for (int i = 0; i < AllLines.Length; i++)
+                    {
+                        string Thisline = AllLines[i];
+                        if (Thisline.Contains("ROM Parameters")) GettingEcuList = false; //make sure we are not reading false contents
+
+                        if (Thisline[0] != '#' && Thisline != "")
+                        {
+                            if (GettingEcuList)
+                            {
+                                Ecus_Definitions_Compatible.Add(Thisline);
+                                Editortable_0.GForm_Main_0.method_1("Definitions found for ecu: " + Thisline);
+                            }
+                        }
+
+                        if (!GettingEcuList) i = AllLines.Length;
+                    }
+                }
+            }
+            else
+            {
+                DarkMessageBox.Show("Failed to find definitions folder.");
+            }
+        }
+        catch (Exception ex)
+        {
+            DarkMessageBox.Show("Failed to load definitions. " + ex.ToString());
+        }
+    }
+
+    public void LoadThisECUDefinitions(string ThisECU)
+    {
+        try
+        {
+            Editortable_0.CheckDefinitionFolderExist();
+
+            string Folderpath = Application.StartupPath + @"\Definitions";
+            if (Directory.Exists(Folderpath))
+            {
+                string[] AllDefinitionFiles = Directory.GetFiles(Folderpath, "*.txt");
+
+                DefinitionsLocationsX = new List<string>();
+                DefinitionsLocationsY = new List<string>();
+                DefinitionsLocationsTable = new List<string>();
+                DefinitionsName = new List<string>();
+                DefinitionsUnit1 = new List<string>();
+                DefinitionsUnit2 = new List<string>();
+                DefinitionsTableSize = new List<string>();
+                DefinitionsMathX = new List<string>();
+                DefinitionsMathY = new List<string>();
+                DefinitionsValueMin = new List<float>();
+                DefinitionsValueMax = new List<float>();
+                DefinitionsChangeAmount = new List<double>();
+                DefinitionsIsSingleByteX = new List<bool>();
+                DefinitionsIsSingleByteY = new List<bool>();
+                DefinitionsIsSingleByteTable = new List<bool>();
+                DefinitionsFormatX = new List<string>();
+                DefinitionsHeaders = new List<string>();
+                DefinitionsFormatY = new List<string>();
+                DefinitionsIsInverted = new List<bool>();
+
+                Editortable_0.GForm_Main_0.method_1("Loading ECU definitions for: " + ThisECU);
+                bool ECUFound = false;
+                foreach (string ThisFilePath in AllDefinitionFiles)
+                {
+                    string[] AllLines = File.ReadAllLines(ThisFilePath);
+                    bool GettingEcuList = true;
+
+                    string CurrentLocationX = "";
+                    string CurrentLocationY = "";
+                    string CurrentLocationTable = "";
+                    string CurrentName = "";
+                    string CurrentUnit1 = "";
+                    string CurrentUnit2 = "";
+                    string CurrentTableSize = "";
+                    string CurrentMathX = "";
+                    string CurrentMathY = "";
+                    string CurrentMathTable = "";
+                    float CurrentValueMin = 0f;
+                    float CurrentValueMax = 255f;
+                    double CurrentChangeAmount = 1;
+                    bool CurrentIsSingleByteX = false;
+                    bool CurrentIsSingleByteY = false;
+                    bool CurrentIsSingleByteTable = false;
+                    string CurrentFormatX = "";
+                    string CurrentFormatY = "";
+                    string CurrentFormatTable = "";
+                    string CurrentHeaders = "";
+                    bool CurrentIsInverted = false;
+
+                    for (int i = 0; i < AllLines.Length; i++)
+                    {
+                        string Thisline = AllLines[i];
+                        if (Thisline.Contains("ROM Parameters")) GettingEcuList = false; //make sure we are not reading false contents
+
+                        //Get supported ecu list from file and check if it's match
+                        if (Thisline[0] != '#' && Thisline != "")
+                        {
+                            if (GettingEcuList && Thisline == ThisECU) ECUFound = true;
+                        }
+
+                        if (!GettingEcuList && !ECUFound) i = AllLines.Length;
+                        if (!GettingEcuList && ECUFound)
+                        {
+                            //Get Definitions parameters
+                            if (Thisline[0] != '#' && Thisline != "")
+                            {
+                                //ROMLocation Name Unit1 Unit2 TableSize  Math  ValueMin  ValueMax ChangeAmount IsWord  Format  Headers
+                                if (Thisline.Contains(":"))
+                                {
+                                    string[] Commands = Thisline.Split(':');
+                                    if (Commands[0] == "ROMLocationX") CurrentLocationX = Commands[1];
+                                    if (Commands[0] == "ROMLocationY") CurrentLocationY = Commands[1];
+                                    if (Commands[0] == "ROMLocationTable") CurrentLocationTable = Commands[1];
+                                    if (Commands[0] == "Name") CurrentName = Commands[1];
+                                    if (Commands[0] == "Unit1") CurrentUnit1 = Commands[1];
+                                    if (Commands[0] == "Unit2") CurrentUnit2 = Commands[1];
+                                    if (Commands[0] == "TableSize") CurrentTableSize = Commands[1];
+                                    if (Commands[0] == "MathX") CurrentMathX = Commands[1];
+                                    if (Commands[0] == "MathY") CurrentMathY = Commands[1];
+                                    if (Commands[0] == "MathTable") CurrentMathTable = Commands[1];
+                                    if (Commands[0] == "ValueMin") CurrentValueMin = (float) double.Parse(Commands[1], CultureInfo.InvariantCulture);
+                                    if (Commands[0] == "ValueMax") CurrentValueMax = (float) double.Parse(Commands[1], CultureInfo.InvariantCulture);
+                                    if (Commands[0] == "ChangeAmount") CurrentChangeAmount = double.Parse(Commands[1], CultureInfo.InvariantCulture);
+                                    if (Commands[0] == "IsSingleByteX") CurrentIsSingleByteX = bool.Parse(Commands[1].ToLower());
+                                    if (Commands[0] == "IsSingleByteY") CurrentIsSingleByteY = bool.Parse(Commands[1].ToLower());
+                                    if (Commands[0] == "IsSingleByteTable") CurrentIsSingleByteTable = bool.Parse(Commands[1].ToLower());
+                                    if (Commands[0] == "FormatX") CurrentFormatX = Commands[1];
+                                    if (Commands[0] == "FormatY") CurrentFormatY = Commands[1];
+                                    if (Commands[0] == "FormatTable") CurrentFormatTable = Commands[1];
+                                    if (Commands[0] == "Headers") CurrentHeaders = Commands[1];
+                                    if (Commands[0] == "IsInverted") CurrentIsInverted = bool.Parse(Commands[1].ToLower());
+                                }
+                            }
+
+                            //Insert Definitions
+                            //if (Thisline.Contains("######") || Thisline == "")
+                            if (Thisline.Contains("######"))
+                            {
+                                if (CurrentName != "")
+                                {
+                                    CurrentName = CurrentName.Replace("\\x00b0", "°");
+                                    DefinitionsLocationsX.Add(CurrentLocationX);
+                                    DefinitionsLocationsY.Add(CurrentLocationY);
+                                    DefinitionsLocationsTable.Add(CurrentLocationTable);
+                                    DefinitionsName.Add(CurrentName);
+                                    DefinitionsUnit1.Add(CurrentUnit1);
+                                    DefinitionsUnit2.Add(CurrentUnit2);
+                                    DefinitionsTableSize.Add(CurrentTableSize);
+                                    DefinitionsMathX.Add(CurrentMathX);
+                                    DefinitionsMathY.Add(CurrentMathY);
+                                    DefinitionsMathTable.Add(CurrentMathTable);
+                                    DefinitionsValueMin.Add(CurrentValueMin);
+                                    DefinitionsValueMax.Add(CurrentValueMax);
+                                    DefinitionsChangeAmount.Add(CurrentChangeAmount);
+                                    DefinitionsIsSingleByteX.Add(CurrentIsSingleByteX);
+                                    DefinitionsIsSingleByteY.Add(CurrentIsSingleByteY);
+                                    DefinitionsIsSingleByteTable.Add(CurrentIsSingleByteTable);
+                                    DefinitionsFormatX.Add(CurrentFormatX);
+                                    DefinitionsFormatY.Add(CurrentFormatY);
+                                    DefinitionsFormatTable.Add(CurrentFormatTable);
+                                    DefinitionsHeaders.Add(CurrentHeaders);
+                                    DefinitionsIsInverted.Add(CurrentIsInverted);
+
+                                    //Reset values to default
+                                    CurrentLocationX = "";
+                                    CurrentLocationY = "";
+                                    CurrentLocationTable = "";
+                                    CurrentName = "";
+                                    CurrentUnit1 = "";
+                                    CurrentUnit2 = "";
+                                    CurrentTableSize = "";
+                                    CurrentMathX = "";
+                                    CurrentMathY = "";
+                                    CurrentMathTable = "";
+                                    CurrentValueMin = 0f;
+                                    CurrentValueMax = 255f;
+                                    CurrentChangeAmount = 1f;
+                                    CurrentIsSingleByteX = false;
+                                    CurrentIsSingleByteY = false;
+                                    CurrentIsSingleByteTable = false;
+                                    CurrentFormatX = "";
+                                    CurrentHeaders = "";
+                                    CurrentFormatY = "";
+                                    CurrentFormatTable = "";
+                                    CurrentIsInverted = false;
+                                }
+                            }
+                        }
+                    }
+                    Editortable_0.GForm_Main_0.method_1("Definitions loaded!");
+
+                    if (ECUFound) return;
+                }
+
+                if (!ECUFound) Editortable_0.GForm_Main_0.method_1("Definitions NOT loaded!");
+            }
+            else
+            {
+                DarkMessageBox.Show("Failed to find definitions folder.");
+            }
+        }
+        catch (Exception ex)
+        {
+            DarkMessageBox.Show("Failed to load definitions. " + ex.ToString());
+        }
+    }
+
+    public int SelectedROMLocation;
+    public int SelectedTableSize;
+    public bool bool_0 = false;
+    public bool bool_1 = false;
+    public string string_ECU_Name;
+    public byte[] byte_0;
+    public string string_2;
+    public string string_3;
+    public bool bool_2 = false;
+    public bool IsSingleByteX = false;
+    public bool IsSingleByteY = false;
+    public bool IsSingleByteTable = false;
+
+    public int[] BufferValuesArray = new int[200];
+    public byte[] BufferBytesArray = new byte[400];
+    public int[] BufferTableSize = new int[2];
+    public string BufferMath = "";
+
+    public int[] int_219 = new int[400];
+    public int[] int_220 = new int[128];
+    public int[] int_221 = new int[30];
+    public int[] int_222 = new int[16];
+    public int[] int_223 = new int[14];
+    public int[] int_224 = new int[12];
+    public int[] int_225 = new int[10];
+    public int[] int_226 = new int[8];
+    public int[] int_231 = new int[2];
+
+    [CompilerGenerated]
+    private sealed class Class40
+    {
+        internal Class40()
+        {
+        }
+
+        internal void method_0(object object_0)
+        {
+            this.taskCompletionSource_0.SetResult(null);
+        }
+
+        public TaskCompletionSource<object> taskCompletionSource_0;
+    }
+
+    //########################################################################################################################################
+    //########################################################################################################################################
+    //########################################################################################################################################
+    //########################################################################################################################################
+
+    /*public string smethod_0(ZipArchiveEntry zipArchiveEntry_0)
+    {
+        string text = "";
+        using (Stream stream = zipArchiveEntry_0.Open())
+        {
+            using (StreamReader streamReader = new StreamReader(stream, Encoding.GetEncoding("iso-8859-1")))
+            {
+                text += streamReader.ReadToEnd();
+            }
+        }
+        return text;
+    }*/
+
+    /*public bool smethod_22(string TableSize)
     {
         int[] arraytableint = new int[0];
         if (TableSize == "1X64") arraytableint = this.int_220;
@@ -754,9 +1297,9 @@ internal class ClassEditor
             num4++;
         }
         return true;
-    }
+    }*/
 
-    public bool smethod_31()
+    /*public bool smethod_31()
     {
         if (this.int_1 != 0 && this.int_0 != 0)
         {
@@ -802,9 +1345,9 @@ internal class ClassEditor
             }
         }
         return false;
-    }
+    }*/
 
-    public void smethod_32()
+    /*public void smethod_32()
     {
         Editortable_0.dataGridView_0.ReadOnly = true;
         if (this.bool_0)
@@ -824,1098 +1367,5 @@ internal class ClassEditor
                 DarkMessageBox.Show("Table changes fail");
             }
         }
-    }
-
-    public void smethod_33(int int_232, float float_0, float float_1)
-    {
-        for (int i = 0; i < int_232; i++)
-        {
-            foreach (object obj in ((IEnumerable)Editortable_0.dataGridView_0.Rows))
-            {
-                DataGridViewRow dataGridViewRow = (DataGridViewRow)obj;
-                try
-                {
-                    float float_2 = float.Parse(dataGridViewRow.Cells[i].Value.ToString());
-                    dataGridViewRow.Cells[i].Style.BackColor = this.smethod_34(float_2, float_1, float_0);
-                }
-                catch
-                {
-                    dataGridViewRow.Cells[i].Style.BackColor = System.Drawing.SystemColors.ControlLight;
-                    //dataGridViewRow.Cells[i].Style.BackColor = Color.White;
-                }
-            }
-        }
-    }
-
-    public Color smethod_34(float float_0, float float_1, float float_2)
-    {
-        Color result;
-        try
-        {
-            int num = (int)(1023f * (float_0 - float_1) / (float_2 - float_1));
-            if (num < 256)
-            {
-                result = Color.FromArgb(255, num, 0);
-            }
-            else if (num < 512)
-            {
-                num -= 256;
-                result = Color.FromArgb(255 - num, 255, 0);
-            }
-            else if (num < 768)
-            {
-                num -= 512;
-                result = Color.FromArgb(0, 255, num);
-            }
-            else
-            {
-                num -= 768;
-                result = Color.FromArgb(0, 255 - num, 255);
-            }
-        }
-        catch
-        {
-            result = Color.White;
-        }
-        return result;
-    }
-
-    public T[,] smethod_35<T>(T[] gparam_0, int int_232, int int_233)
-    {
-        T[,] array = new T[int_232, int_233];
-        for (int i = 0; i < int_232; i++)
-        {
-            for (int j = 0; j < int_233; j++)
-            {
-                array[i, j] = gparam_0[i * int_233 + j];
-            }
-        }
-        return array;
-    }
-
-    public void smethod_36()
-    {
-        this.int_2 = 47458;
-        this.int_3 = 0;
-        this.int_4 = 0;
-        this.int_5 = new int[]
-        {
-            1,
-            4
-        };
-        this.int_6 = 85312;
-        this.int_25 = 0;
-        this.int_26 = 0;
-        this.int_27 = new int[]
-        {
-            2,
-            1
-        };
-        this.int_30 = 90452;
-        this.int_31 = 0;
-        this.int_32 = 0;
-        this.int_33 = new int[]
-        {
-            5,
-            1
-        };
-        this.int_99 = 94604;
-        this.int_100 = 78380;
-        this.int_101 = 96212;
-        this.int_102 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_103 = 94164;
-        this.int_104 = 78380;
-        this.int_105 = 94104;
-        this.int_106 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_107 = 89972;
-        this.int_108 = 78380;
-        this.int_109 = 96212;
-        this.int_110 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_111 = 89572;
-        this.int_112 = 78380;
-        this.int_113 = 94104;
-        this.int_114 = new int[]
-        {
-            10,
-            20
-        };
-    }
-
-    public void smethod_37()
-    {
-        //Load RRB ROM
-        this.int_2 = 46530;     //vtec engagement??
-        this.int_3 = 0;
-        this.int_4 = 0;
-        this.int_5 = new int[]
-        {
-            1,
-            4
-        };
-        this.int_6 = 71296;
-        this.int_7 = 71304;
-        this.int_8 = 71312;
-        this.int_9 = 71320;
-        this.int_10 = 71328;
-        this.int_11 = 71332;
-        this.int_12 = 71348;
-        this.int_13 = 71356;
-        this.int_14 = 46216;
-        this.int_23 = 46216;
-        this.int_24 = 46218;
-        this.int_25 = 0;
-        this.int_26 = 0;
-        this.int_27 = new int[]
-        {
-            2,
-            1
-        };
-        this.int_28 = 47690;
-        this.int_29 = new int[]
-        {
-            1,
-            1
-        };
-        this.int_30 = 76020;
-        this.int_31 = 0;
-        this.int_32 = 0;
-        this.int_33 = new int[]
-        {
-            5,
-            1
-        };
-        this.int_34 = 66002;
-        this.int_35 = 0;
-        this.int_36 = 66258;
-        this.int_37 = new int[]
-        {
-            64,
-            1
-        };
-        this.int_38 = 101836;
-        this.int_39 = 87668;
-        this.int_40 = 87628;
-        this.int_41 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_42 = 102236;
-        this.int_43 = 87668;
-        this.int_44 = 87588;
-        this.int_45 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_46 = 102636;
-        this.int_47 = 0;
-        this.int_48 = 102716;
-        this.int_49 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_50 = 102676;
-        this.int_51 = 0;
-        this.int_52 = 102756;
-        this.int_53 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_54 = 85588;
-        this.int_55 = 87668;
-        this.int_56 = 102716;
-        this.int_57 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_58 = 85988;
-        this.int_59 = 87668;
-        this.int_60 = 102716;
-        this.int_61 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_62 = 86388;
-        this.int_63 = 87668;
-        this.int_64 = 102716;
-        this.int_65 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_66 = 86788;
-        this.int_67 = 87668;
-        this.int_68 = 102716;
-        this.int_69 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_70 = 87188;
-        this.int_71 = 87668;
-        this.int_72 = 102716;
-        this.int_73 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_74 = 83588;
-        this.int_75 = 87668;
-        this.int_76 = 102756;
-        this.int_77 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_78 = 83988;
-        this.int_79 = 87668;
-        this.int_80 = 102756;
-        this.int_81 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_82 = 84388;
-        this.int_83 = 87668;
-        this.int_84 = 102756;
-        this.int_85 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_86 = 84788;
-        this.int_87 = 87668;
-        this.int_88 = 102756;
-        this.int_89 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_90 = 85188;
-        this.int_91 = 87668;
-        this.int_92 = 102756;
-        this.int_93 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_115 = 0;
-        this.int_116 = 72672;
-        this.int_119 = 0;
-        this.int_120 = 75908;
-        this.int_117 = 72688;
-        this.int_118 = new int[]
-        {
-            8,
-            1
-        };
-        this.int_121 = 75924;
-        this.int_122 = new int[]
-        {
-            8,
-            1
-        };
-        this.int_123 = 102756;
-        this.int_124 = 87668;
-        this.int_125 = 102716;
-        this.int_126 = 87668;
-        this.int_127 = 74034;
-        this.int_128 = new int[]
-        {
-            20,
-            10
-        };
-        this.int_129 = 74434;
-        this.int_130 = new int[]
-        {
-            20,
-            10
-        };
-        this.int_131 = 75034;
-        this.int_132 = new int[]
-        {
-            20,
-            10
-        };
-        this.int_133 = 74234;
-        this.int_134 = new int[]
-        {
-            20,
-            10
-        };
-        this.int_135 = 74634;
-        this.int_136 = new int[]
-        {
-            20,
-            10
-        };
-        this.int_137 = 74834;
-        this.int_138 = new int[]
-        {
-            20,
-            10
-        };
-        this.int_139 = 71540;
-        this.int_140 = new int[]
-        {
-            15,
-            1
-        };
-        this.int_141 = 79456;
-        this.int_142 = 87668;
-        this.int_143 = 102716;
-        this.int_144 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_145 = 79856;
-        this.int_146 = 87668;
-        this.int_147 = 102716;
-        this.int_148 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_149 = 80256;
-        this.int_150 = 87668;
-        this.int_151 = 102716;
-        this.int_152 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_153 = 80656;
-        this.int_154 = 87668;
-        this.int_155 = 102716;
-        this.int_156 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_157 = 81056;
-        this.int_158 = 87668;
-        this.int_159 = 102716;
-        this.int_160 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_161 = 77456;
-        this.int_162 = 87668;
-        this.int_163 = 102756;
-        this.int_164 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_165 = 77856;
-        this.int_166 = 87668;
-        this.int_167 = 102756;
-        this.int_168 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_169 = 78256;
-        this.int_170 = 87668;
-        this.int_171 = 102756;
-        this.int_172 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_173 = 78656;
-        this.int_174 = 87668;
-        this.int_175 = 102756;
-        this.int_176 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_177 = 79056;
-        this.int_178 = 87668;
-        this.int_179 = 102756;
-        this.int_180 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_189 = 89604;
-        this.int_190 = 87668;
-        this.int_191 = 102716;
-        this.int_192 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_193 = 89204;
-        this.int_194 = 87668;
-        this.int_195 = 102756;
-        this.int_196 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_181 = 77056;
-        this.int_182 = 87668;
-        this.int_183 = 102716;
-        this.int_184 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_185 = 77256;
-        this.int_186 = 87668;
-        this.int_187 = 102756;
-        this.int_188 = new int[]
-        {
-            10,
-            20
-        };
-        this.int_197 = 64620;
-        this.int_199 = 64636;
-        this.int_201 = 65076;
-        this.int_203 = 65100;
-        this.int_205 = 65636;
-        this.int_207 = 68956;
-        this.int_211 = 69056;
-        this.int_198 = new int[]
-        {
-            8,
-            1
-        };
-        this.int_200 = new int[]
-        {
-            8,
-            1
-        };
-        this.int_202 = new int[]
-        {
-            6,
-            1
-        };
-        this.int_204 = new int[]
-        {
-            6,
-            1
-        };
-        this.int_206 = new int[]
-        {
-            7,
-            1
-        };
-        this.int_208 = new int[]
-        {
-            10,
-            5
-        };
-        this.int_207 = 68956;
-        this.int_209 = 69506;
-        this.int_210 = 69556;
-        this.int_214 = new int[]
-        {
-            15,
-            15
-        };
-        this.int_211 = 69056;
-        this.int_212 = 69526;
-        this.int_213 = 69566;
-        this.int_215 = 70982;
-        this.int_216 = 44674;
-        this.int_217 = 49780;
-    }
-
-    public int int_0;
-    public int int_1;
-    public bool bool_0 = false;
-    public bool bool_1 = false;
-    public string string_0;
-    public string string_1;
-    public byte[] byte_0;
-    public string string_2;
-    public string string_3;
-    public bool bool_2 = false;
-    public bool bool_3 = false;
-    public int int_2;
-    public int int_3;
-    public int int_4;
-    public int[] int_5;
-    public int int_6;
-    public int int_7;
-    public int int_8;
-    public int int_9;
-    public int int_10;
-    public int int_11;
-    public int int_12;
-    public int int_13;
-    public int int_14;
-    public int int_15;
-    public int int_16;
-    public int int_17;
-    public int int_18;
-    public int int_19;
-    public int int_20;
-    public int int_21;
-    public int int_22;
-    public int int_23;
-    public int int_24;
-    public int int_25;
-    public int int_26;
-    public int[] int_27;
-    public int int_28;
-    public int[] int_29;
-    public int int_30;
-    public int int_31;
-    public int int_32;
-    public int[] int_33;
-    public int int_34;
-    public int int_35;
-    public int int_36;
-    public int[] int_37;
-    public int int_38;
-    public int int_39;
-    public int int_40;
-    public int[] int_41;
-    public int int_42;
-    public int int_43;
-    public int int_44;
-    public int[] int_45;
-    public int int_46;
-    public int int_47;
-    public int int_48;
-    public int[] int_49;
-    public int int_50;
-    public int int_51;
-    public int int_52;
-    public int[] int_53;
-    public int int_54;
-    public int int_55;
-    public int int_56;
-    public int[] int_57;
-    public int int_58;
-    public int int_59;
-    public int int_60;
-    public int[] int_61;
-    public int int_62;
-    public int int_63;
-    public int int_64;
-    public int[] int_65;
-    public int int_66;
-    public int int_67;
-    public int int_68;
-    public int[] int_69;
-    public int int_70;
-    public int int_71;
-    public int int_72;
-    public int[] int_73;
-    public int int_74;
-    public int int_75;
-
-    // Token: 0x040016A7 RID: 5799
-    public int int_76;
-
-    // Token: 0x040016A8 RID: 5800
-    public int[] int_77;
-
-    // Token: 0x040016A9 RID: 5801
-    public int int_78;
-
-    // Token: 0x040016AA RID: 5802
-    public int int_79;
-
-    // Token: 0x040016AB RID: 5803
-    public int int_80;
-
-    // Token: 0x040016AC RID: 5804
-    public int[] int_81;
-
-    // Token: 0x040016AD RID: 5805
-    public int int_82;
-
-    // Token: 0x040016AE RID: 5806
-    public int int_83;
-
-    // Token: 0x040016AF RID: 5807
-    public int int_84;
-
-    // Token: 0x040016B0 RID: 5808
-    public int[] int_85;
-
-    // Token: 0x040016B1 RID: 5809
-    public int int_86;
-
-    // Token: 0x040016B2 RID: 5810
-    public int int_87;
-
-    // Token: 0x040016B3 RID: 5811
-    public int int_88;
-
-    // Token: 0x040016B4 RID: 5812
-    public int[] int_89;
-
-    // Token: 0x040016B5 RID: 5813
-    public int int_90;
-
-    // Token: 0x040016B6 RID: 5814
-    public int int_91;
-
-    // Token: 0x040016B7 RID: 5815
-    public int int_92;
-
-    // Token: 0x040016B8 RID: 5816
-    public int[] int_93;
-
-    // Token: 0x040016B9 RID: 5817
-    public int[] int_94 = new int[200];
-
-    // Token: 0x040016BA RID: 5818
-    public int[] int_95 = new int[200];
-
-    // Token: 0x040016BB RID: 5819
-    public int[] int_96 = new int[200];
-
-    // Token: 0x040016BC RID: 5820
-    public int[] int_97 = new int[50];
-
-    // Token: 0x040016BD RID: 5821
-    public int[] int_98 = new int[225];
-
-    // Token: 0x040016BE RID: 5822
-    public int int_99;
-
-    // Token: 0x040016BF RID: 5823
-    public int int_100;
-
-    // Token: 0x040016C0 RID: 5824
-    public int int_101;
-
-    // Token: 0x040016C1 RID: 5825
-    public int[] int_102;
-
-    // Token: 0x040016C2 RID: 5826
-    public int int_103;
-
-    // Token: 0x040016C3 RID: 5827
-    public int int_104;
-
-    // Token: 0x040016C4 RID: 5828
-    public int int_105;
-
-    // Token: 0x040016C5 RID: 5829
-    public int[] int_106;
-
-    // Token: 0x040016C6 RID: 5830
-    public int int_107;
-
-    // Token: 0x040016C7 RID: 5831
-    public int int_108;
-
-    // Token: 0x040016C8 RID: 5832
-    public int int_109;
-
-    // Token: 0x040016C9 RID: 5833
-    public int[] int_110;
-
-    // Token: 0x040016CA RID: 5834
-    public int int_111;
-
-    // Token: 0x040016CB RID: 5835
-    public int int_112;
-
-    // Token: 0x040016CC RID: 5836
-    public int int_113;
-
-    // Token: 0x040016CD RID: 5837
-    public int[] int_114;
-
-    // Token: 0x040016CE RID: 5838
-    public int int_115;
-
-    // Token: 0x040016CF RID: 5839
-    public int int_116;
-
-    // Token: 0x040016D0 RID: 5840
-    public int int_117;
-
-    // Token: 0x040016D1 RID: 5841
-    public int[] int_118;
-
-    // Token: 0x040016D2 RID: 5842
-    public int int_119;
-
-    // Token: 0x040016D3 RID: 5843
-    public int int_120;
-
-    // Token: 0x040016D4 RID: 5844
-    public int int_121;
-
-    // Token: 0x040016D5 RID: 5845
-    public int[] int_122;
-
-    // Token: 0x040016D6 RID: 5846
-    public int int_123;
-
-    // Token: 0x040016D7 RID: 5847
-    public int int_124;
-
-    // Token: 0x040016D8 RID: 5848
-    public int int_125;
-
-    // Token: 0x040016D9 RID: 5849
-    public int int_126;
-
-    // Token: 0x040016DA RID: 5850
-    public int int_127;
-
-    // Token: 0x040016DB RID: 5851
-    public int[] int_128;
-
-    // Token: 0x040016DC RID: 5852
-    public int int_129;
-
-    // Token: 0x040016DD RID: 5853
-    public int[] int_130;
-
-    // Token: 0x040016DE RID: 5854
-    public int int_131;
-
-    // Token: 0x040016DF RID: 5855
-    public int[] int_132;
-
-    // Token: 0x040016E0 RID: 5856
-    public int int_133;
-
-    // Token: 0x040016E1 RID: 5857
-    public int[] int_134;
-
-    // Token: 0x040016E2 RID: 5858
-    public int int_135;
-
-    // Token: 0x040016E3 RID: 5859
-    public int[] int_136;
-
-    // Token: 0x040016E4 RID: 5860
-    public int int_137;
-
-    // Token: 0x040016E5 RID: 5861
-    public int[] int_138;
-
-    // Token: 0x040016E6 RID: 5862
-    public int int_139;
-
-    // Token: 0x040016E7 RID: 5863
-    public int[] int_140;
-
-    // Token: 0x040016E8 RID: 5864
-    public int int_141;
-
-    // Token: 0x040016E9 RID: 5865
-    public int int_142;
-
-    // Token: 0x040016EA RID: 5866
-    public int int_143;
-
-    // Token: 0x040016EB RID: 5867
-    public int[] int_144;
-
-    // Token: 0x040016EC RID: 5868
-    public int int_145;
-
-    // Token: 0x040016ED RID: 5869
-    public int int_146;
-
-    // Token: 0x040016EE RID: 5870
-    public int int_147;
-
-    // Token: 0x040016EF RID: 5871
-    public int[] int_148;
-
-    // Token: 0x040016F0 RID: 5872
-    public int int_149;
-
-    // Token: 0x040016F1 RID: 5873
-    public int int_150;
-
-    // Token: 0x040016F2 RID: 5874
-    public int int_151;
-
-    // Token: 0x040016F3 RID: 5875
-    public int[] int_152;
-
-    // Token: 0x040016F4 RID: 5876
-    public int int_153;
-
-    // Token: 0x040016F5 RID: 5877
-    public int int_154;
-
-    // Token: 0x040016F6 RID: 5878
-    public int int_155;
-
-    // Token: 0x040016F7 RID: 5879
-    public int[] int_156;
-
-    // Token: 0x040016F8 RID: 5880
-    public int int_157;
-
-    // Token: 0x040016F9 RID: 5881
-    public int int_158;
-
-    // Token: 0x040016FA RID: 5882
-    public int int_159;
-
-    // Token: 0x040016FB RID: 5883
-    public int[] int_160;
-
-    // Token: 0x040016FC RID: 5884
-    public int int_161;
-
-    // Token: 0x040016FD RID: 5885
-    public int int_162;
-
-    // Token: 0x040016FE RID: 5886
-    public int int_163;
-
-    // Token: 0x040016FF RID: 5887
-    public int[] int_164;
-
-    // Token: 0x04001700 RID: 5888
-    public int int_165;
-
-    // Token: 0x04001701 RID: 5889
-    public int int_166;
-
-    // Token: 0x04001702 RID: 5890
-    public int int_167;
-
-    // Token: 0x04001703 RID: 5891
-    public int[] int_168;
-
-    // Token: 0x04001704 RID: 5892
-    public int int_169;
-
-    // Token: 0x04001705 RID: 5893
-    public int int_170;
-
-    // Token: 0x04001706 RID: 5894
-    public int int_171;
-
-    // Token: 0x04001707 RID: 5895
-    public int[] int_172;
-
-    // Token: 0x04001708 RID: 5896
-    public int int_173;
-
-    // Token: 0x04001709 RID: 5897
-    public int int_174;
-
-    // Token: 0x0400170A RID: 5898
-    public int int_175;
-
-    // Token: 0x0400170B RID: 5899
-    public int[] int_176;
-
-    // Token: 0x0400170C RID: 5900
-    public int int_177;
-
-    // Token: 0x0400170D RID: 5901
-    public int int_178;
-
-    // Token: 0x0400170E RID: 5902
-    public int int_179;
-
-    // Token: 0x0400170F RID: 5903
-    public int[] int_180;
-
-    // Token: 0x04001710 RID: 5904
-    public int int_181;
-
-    // Token: 0x04001711 RID: 5905
-    public int int_182;
-
-    // Token: 0x04001712 RID: 5906
-    public int int_183;
-
-    // Token: 0x04001713 RID: 5907
-    public int[] int_184;
-
-    // Token: 0x04001714 RID: 5908
-    public int int_185;
-
-    // Token: 0x04001715 RID: 5909
-    public int int_186;
-
-    // Token: 0x04001716 RID: 5910
-    public int int_187;
-
-    // Token: 0x04001717 RID: 5911
-    public int[] int_188;
-
-    // Token: 0x04001718 RID: 5912
-    public int int_189;
-
-    // Token: 0x04001719 RID: 5913
-    public int int_190;
-
-    // Token: 0x0400171A RID: 5914
-    public int int_191;
-
-    // Token: 0x0400171B RID: 5915
-    public int[] int_192;
-
-    // Token: 0x0400171C RID: 5916
-    public int int_193;
-
-    // Token: 0x0400171D RID: 5917
-    public int int_194;
-
-    // Token: 0x0400171E RID: 5918
-    public int int_195;
-
-    // Token: 0x0400171F RID: 5919
-    public int[] int_196;
-
-    // Token: 0x04001720 RID: 5920
-    public int int_197;
-
-    // Token: 0x04001721 RID: 5921
-    public int[] int_198;
-
-    // Token: 0x04001722 RID: 5922
-    public int int_199;
-
-    // Token: 0x04001723 RID: 5923
-    public int[] int_200;
-
-    // Token: 0x04001724 RID: 5924
-    public int int_201;
-
-    // Token: 0x04001725 RID: 5925
-    public int[] int_202;
-
-    // Token: 0x04001726 RID: 5926
-    public int int_203;
-
-    // Token: 0x04001727 RID: 5927
-    public int[] int_204;
-
-    // Token: 0x04001728 RID: 5928
-    public int int_205;
-
-    // Token: 0x04001729 RID: 5929
-    public int[] int_206;
-
-    // Token: 0x0400172A RID: 5930
-    public int int_207;
-
-    // Token: 0x0400172B RID: 5931
-    public int[] int_208;
-
-    // Token: 0x0400172C RID: 5932
-    public int int_209;
-
-    // Token: 0x0400172D RID: 5933
-    public int int_210;
-
-    // Token: 0x0400172E RID: 5934
-    public int int_211;
-
-    // Token: 0x0400172F RID: 5935
-    public int int_212;
-
-    // Token: 0x04001730 RID: 5936
-    public int int_213;
-
-    // Token: 0x04001731 RID: 5937
-    public int[] int_214;
-
-    // Token: 0x04001732 RID: 5938
-    public int int_215;
-
-    // Token: 0x04001733 RID: 5939
-    public int int_216;
-
-    // Token: 0x04001734 RID: 5940
-    public int int_217;
-
-    // Token: 0x04001735 RID: 5941
-    public bool bool_4 = false;
-
-    // Token: 0x04001736 RID: 5942
-    public int[] int_218 = new int[450];
-
-    // Token: 0x04001737 RID: 5943
-    public int[] int_219 = new int[400];
-
-    // Token: 0x04001738 RID: 5944
-    public int[] int_220 = new int[128];
-
-    // Token: 0x04001739 RID: 5945
-    public int[] int_221 = new int[30];
-
-    // Token: 0x0400173A RID: 5946
-    public int[] int_222 = new int[16];
-
-    // Token: 0x0400173B RID: 5947
-    public int[] int_223 = new int[14];
-
-    // Token: 0x0400173C RID: 5948
-    public int[] int_224 = new int[12];
-
-    // Token: 0x0400173D RID: 5949
-    public int[] int_225 = new int[10];
-
-    // Token: 0x0400173E RID: 5950
-    public int[] int_226 = new int[8];
-
-    // Token: 0x0400173F RID: 5951
-    public int[] int_227 = new int[7];
-
-    // Token: 0x04001740 RID: 5952
-    public int[] int_228 = new int[6];
-
-    // Token: 0x04001741 RID: 5953
-    public int[] int_229 = new int[5];
-
-    // Token: 0x04001742 RID: 5954
-    public int[] int_230 = new int[4];
-
-    // Token: 0x04001743 RID: 5955
-    public int[] int_231 = new int[2];
-
-    // Token: 0x020000F8 RID: 248
-    [CompilerGenerated]
-    private sealed class Class40
-    {
-        // Token: 0x06000F06 RID: 3846 RVA: 0x00004E37 File Offset: 0x00003037
-        internal Class40()
-        {
-        }
-
-        // Token: 0x06000F07 RID: 3847 RVA: 0x0000B4B5 File Offset: 0x000096B5
-        internal void method_0(object object_0)
-        {
-            this.taskCompletionSource_0.SetResult(null);
-        }
-
-        // Token: 0x04001746 RID: 5958
-        public TaskCompletionSource<object> taskCompletionSource_0;
-    }
+    }*/
 }

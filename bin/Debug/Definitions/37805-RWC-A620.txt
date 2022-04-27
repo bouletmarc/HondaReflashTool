@@ -1,0 +1,126 @@
+#######################################################################
+#######################################################################
+#######################################################################
+#######################################################################
+# Supported ECU:
+#######################################################################
+37805-RWC-A620
+37805-RWC-A610
+#######################################################################
+#######################################################################
+#######################################################################
+# ROM Parameters Definitions
+#######################################################################
+ROMLocationX:0xB730
+Name:VTEC Engagement
+Unit2:RPM
+TableSize:1x4
+IsInverted:true
+ValueMin:-10000
+ValueMax:30000
+ChangeAmount:10
+Headers:Enable Low,Disable Low,Enable High,Disable High
+#############################
+ROMLocationX:0x1328C
+Name:Revlimiter
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationX:0x13294
+Name:--Revlimiter 1
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationX:0x1329C
+Name:--Revlimiter 2
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationX:0x132A4
+Name:--Revlimiter 3
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationX:0x132AC
+Name:--Revlimiter 4
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationX:0x132B0
+Name:--Revlimiter 5
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationX:0x132C0
+Name:--Revlimiter 6
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationX:0x132C8
+Name:--Revlimiter 7
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationX:0xBE8A
+Name:Speedlimiter
+Unit2:KPH
+TableSize:1x1
+# MathX:X/1.609
+ValueMax:255
+#############################
+ROMLocationX:0x1D32E
+Name:Injector Voltage Compensation
+Unit1:Volts
+Unit2:ms
+TableSize:5x1
+MathX:X*0.002
+FormatX:0.00
+ValueMin:-1000
+ValueMax:3000
+Headers:6.00,8.00,12.00,14.00,16.00
+#############################
+ROMLocationX:0x10D0E
+ROMLocationY:0x10D8E
+Name:Mass Airflow Conversion Curve
+Unit1:Volts
+Unit2:g/s
+TableSize:64x1
+MathY:X*0.0048828125
+ValueMin:-10000
+ValueMax:30000
+FormatY:0.00
+#############################
+ROMLocationX:0xAF8A
+Name:MAF Load Limit
+Unit1:Mg/Stroke
+TableSize:4x1
+ValueMin:-1000
+ValueMax:4000
+ChangeAmount:50
+#############################
+ROMLocationX:0xC694
+Name:Minimum IPW
+Unit1:Min IPW
+TableSize:1x1
+ValueMin:-6
+ValueMax:5
+ChangeAmount:0.001
+MathX:X*0.002
+FormatX:0.000
+#############################

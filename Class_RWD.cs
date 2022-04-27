@@ -493,6 +493,15 @@ static class Class_RWD
                             .ToArray();
     }
 
+    public static int HexStringToInt(string hex)
+    {
+        byte[] ThisBytes = StringToByteArray(hex);
+        if (ThisBytes.Length == 2) return BitConverter.ToInt16(ThisBytes, 0);
+        if (ThisBytes.Length == 4) return BitConverter.ToInt32(ThisBytes, 0);
+        //if (ThisBytes.Length == 8) return BitConverter.ToInt64(ThisBytes, 0);
+        return 0;
+    }
+
     static byte[] _get_decoder(string key1, string key2, string key3, string op1, string op2, string op3) {
         byte[] decoder = new byte[256];
         List<byte> values = new List<byte> { };

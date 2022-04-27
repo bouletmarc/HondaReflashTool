@@ -59,5 +59,35 @@ namespace FlashToolTest.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Byte[].
+        /// </summary>
+        internal static byte[] _37805_RRB_A140 {
+            get {
+                object obj = ResourceManager.GetObject("_37805_RRB_A140", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Byte[].
+        /// </summary>
+        internal static byte[] _37805_RWC_A620 {
+            get {
+                object obj = ResourceManager.GetObject("_37805_RWC_A620", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Byte[].
+        /// </summary>
+        internal static byte[] _37805_S2K {
+            get {
+                object obj = ResourceManager.GetObject("_37805_S2K", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

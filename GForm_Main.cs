@@ -30,6 +30,7 @@ public class GForm_Main : DarkForm
     private DarkButton darkButton6;
     private DarkButton darkButton3;
     public Editortable Editortable_0;
+    public string Version = "v1.0.8";
 
     public GForm_Main()
     {
@@ -48,6 +49,8 @@ public class GForm_Main : DarkForm
         Editortable_0 = new Editortable(ref GForm_Main_0);
 
         Class_RWD.Load(ref GForm_Main_0);
+
+        this.Text = this.Text + " (" + Version + ")";
     }
 
 
