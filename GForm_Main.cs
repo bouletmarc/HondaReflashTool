@@ -30,13 +30,10 @@ public class GForm_Main : DarkForm
     private DarkButton darkButton6;
     private DarkButton darkButton3;
     public Editortable Editortable_0;
-    public string Version = "v1.0.8";
+    public string Version = "v1.0.9";
 
     public GForm_Main()
     {
-        //Console.WriteLine(379890608U.ToString("X8"));
-        //Console.WriteLine(3219675757U.ToString("X8"));
-        //Console.WriteLine(BitConverter.ToUInt32(new byte[] { 0x23, 0xff, 0x0d, 0xae }, 0).ToString());
 
         this.InitializeComponent();
 
@@ -78,12 +75,16 @@ public class GForm_Main : DarkForm
 
     public void method_1(string string_3)
     {
-        //With newline automaticly added
-        Console.WriteLine(string_3);
-        GForm_Main.Class5 @class = new GForm_Main.Class5();
-        @class.gform0_0 = this;
-        @class.string_0 = string_3;
-        this.darkTextBox_0.BeginInvoke(new MethodInvoker(@class.method_0));
+        try
+        {
+            //With newline automaticly added
+            Console.WriteLine(string_3);
+            GForm_Main.Class5 @class = new GForm_Main.Class5();
+            @class.gform0_0 = this;
+            @class.string_0 = string_3;
+            this.darkTextBox_0.BeginInvoke(new MethodInvoker(@class.method_0));
+        }
+        catch { }
     }
 
 
@@ -129,11 +130,13 @@ public class GForm_Main : DarkForm
         {
             try
             {
-                using (Device device = api.GetDevice(""))
-                {
-                    using (Channel channel = device.GetChannel(Protocol.ISO15765, Baud.CAN, ConnectFlag.CAN_29BIT_ID, false))
-                    {
-                        LoadJ2534Channel(channel);
+                Device device = api.GetDevice("");
+                Channel channel = device.GetChannel(Protocol.ISO15765, Baud.CAN, ConnectFlag.CAN_29BIT_ID, false);
+                //using (Device device = api.GetDevice(""))
+                //{
+                //    using (Channel channel = device.GetChannel(Protocol.ISO15765, Baud.CAN, ConnectFlag.CAN_29BIT_ID, false))
+                //    {
+                        channel = LoadJ2534Channel(channel);
                         /*MessageFilter messageFilter = new MessageFilter();
                         messageFilter.FilterType = Filter.FLOW_CONTROL_FILTER;
                         messageFilter.Mask = new byte[]
@@ -220,8 +223,8 @@ public class GForm_Main : DarkForm
                             this.darkButton_Unlock41.Enabled = true;
                             this.darkButton_Unlock01.Enabled = true;
                         }
-                    }
-                }
+                    //}
+                //}
             }
             catch (Exception ex)
             {
@@ -347,13 +350,16 @@ public class GForm_Main : DarkForm
     {
         ECU_Unlocked = false;
 
-        using (API api = APIFactory.GetAPI(GForm_Main.string_0))
-        {
-            using (Device device = api.GetDevice(""))
-            {
-                using (Channel channel = device.GetChannel(Protocol.ISO15765, Baud.CAN, ConnectFlag.CAN_29BIT_ID, false))
-                {
-                    LoadJ2534Channel(channel);
+        API api = APIFactory.GetAPI(GForm_Main.string_0);
+        //using (API api = APIFactory.GetAPI(GForm_Main.string_0))
+        //{
+            Device device = api.GetDevice("");
+            Channel channel = device.GetChannel(Protocol.ISO15765, Baud.CAN, ConnectFlag.CAN_29BIT_ID, false);
+            //using (Device device = api.GetDevice(""))
+            //{
+            //    using (Channel channel = device.GetChannel(Protocol.ISO15765, Baud.CAN, ConnectFlag.CAN_29BIT_ID, false))
+            //    {
+                    channel = LoadJ2534Channel(channel);
                     /*MessageFilter messageFilter = new MessageFilter();
                     messageFilter.FilterType = Filter.FLOW_CONTROL_FILTER;
                     messageFilter.Mask = new byte[]
@@ -520,9 +526,9 @@ public class GForm_Main : DarkForm
                     {
                         this.method_1("Result NOT OK!!");
                     }
-                }
-            }
-        }
+                //}
+            //}
+        //}
     }
 
     public byte[] SendJ2534Message(Channel channel, byte[] MessageBytes)
@@ -592,15 +598,18 @@ public class GForm_Main : DarkForm
 
     public void method_ReadROM(object sender, DoWorkEventArgs e)
     {
-        using (API api = APIFactory.GetAPI(GForm_Main.string_0))
-        {
+        API api = APIFactory.GetAPI(GForm_Main.string_0);
+        //using (API api = APIFactory.GetAPI(GForm_Main.string_0))
+        //{
             try
             {
-                using (Device device = api.GetDevice(""))
-                {
-                    using (Channel channel = device.GetChannel(Protocol.ISO15765, Baud.CAN, ConnectFlag.CAN_29BIT_ID, false))
-                    {
-                        LoadJ2534Channel(channel);
+                Device device = api.GetDevice("");
+                Channel channel = device.GetChannel(Protocol.ISO15765, Baud.CAN, ConnectFlag.CAN_29BIT_ID, false);
+                //using (Device device = api.GetDevice(""))
+                //{
+                //    using (Channel channel = device.GetChannel(Protocol.ISO15765, Baud.CAN, ConnectFlag.CAN_29BIT_ID, false))
+                //    {
+                        channel = LoadJ2534Channel(channel);
                         /*MessageFilter messageFilter = new MessageFilter();
                         messageFilter.FilterType = Filter.FLOW_CONTROL_FILTER;
                         messageFilter.Mask = new byte[]
@@ -649,14 +658,14 @@ public class GForm_Main : DarkForm
                             this.backgroundWorker_1.ReportProgress(0, "Successfully read " + this.byte_7.Length + "bytes of flash memory in " + timeSpan.Minutes + ":" + timeSpan.Seconds);
                             device.SetProgrammingVoltage(Pin.PIN_12, -1);
                         }
-                    }
-                }
+                    //}
+                //}
             }
             catch (Exception ex)
             {
                 DarkMessageBox.Show(this, ex.Message);
             }
-        }
+        //}
     }
 
 
@@ -1156,7 +1165,7 @@ public class GForm_Main : DarkForm
         }
     }
 
-    private void LoadJ2534Channel(Channel channel)
+    private Channel LoadJ2534Channel(Channel channel)
     {
         MessageFilter messageFilter = new MessageFilter();
         messageFilter.FilterType = Filter.FLOW_CONTROL_FILTER;
@@ -1189,53 +1198,58 @@ public class GForm_Main : DarkForm
             new SConfig(Parameter.DATA_RATE, 500000)
         };
         channel.SetConfig(config);
+
+        return channel;
     }
 
     //private unsafe void backgroundWorker_0_DoWork_1(object sender, DoWorkEventArgs e)
     private void backgroundWorker_0_DoWork_1(object sender, DoWorkEventArgs e)
     {
-        using (API api = APIFactory.GetAPI(GForm_Main.string_0))
+        API api = APIFactory.GetAPI(GForm_Main.string_0);
+        //using (API api = APIFactory.GetAPI(GForm_Main.string_0))
+        //{
+        try
         {
-            try
-            {
-                using (Device device = api.GetDevice(""))
-                {
-                    using (Channel channel = device.GetChannel(Protocol.ISO15765, Baud.CAN, ConnectFlag.CAN_29BIT_ID, false))
+            Device device = api.GetDevice("");
+            Channel channel = device.GetChannel(Protocol.ISO15765, Baud.CAN, ConnectFlag.CAN_29BIT_ID, false);
+            //using (Device device = api.GetDevice(""))
+            //{
+            //    using (Channel channel = device.GetChannel(Protocol.ISO15765, Baud.CAN, ConnectFlag.CAN_29BIT_ID, false))
+            //    {
+                    channel = LoadJ2534Channel(channel);
+                    /*MessageFilter messageFilter = new MessageFilter();
+                    messageFilter.FilterType = Filter.FLOW_CONTROL_FILTER;
+                    messageFilter.Mask = new byte[]
                     {
-                        LoadJ2534Channel(channel);
-                        /*MessageFilter messageFilter = new MessageFilter();
-                        messageFilter.FilterType = Filter.FLOW_CONTROL_FILTER;
-                        messageFilter.Mask = new byte[]
-                        {
-                            byte.MaxValue,
-                            byte.MaxValue,
-                            byte.MaxValue,
-                            byte.MaxValue
-                        };
-                        messageFilter.Pattern = new byte[]
-                        {
-                            24,     //0x18
-                            218,    //0xDA
-                            241,    //0xF1
-                            GForm_Main.byte_3       //0x00
-                        };
-                        messageFilter.FlowControl = new byte[]
-                        {
-                            24,     //0x18
-                            218,    //0xDA
-                            GForm_Main.byte_3,      //0x00  -> 0x10|0x11
-                            241     //0xF1
-                        };
-                        MessageFilter filter = messageFilter;
-                        channel.StartMsgFilter(filter);
-                        SConfig[] config = new SConfig[]
-                        {
-                            new SConfig(Parameter.LOOP_BACK, 1),
-                            new SConfig(Parameter.DATA_RATE, 500000)
-                        };
-                        channel.SetConfig(config);*/
+                        byte.MaxValue,
+                        byte.MaxValue,
+                        byte.MaxValue,
+                        byte.MaxValue
+                    };
+                    messageFilter.Pattern = new byte[]
+                    {
+                        24,     //0x18
+                        218,    //0xDA
+                        241,    //0xF1
+                        GForm_Main.byte_3       //0x00
+                    };
+                    messageFilter.FlowControl = new byte[]
+                    {
+                        24,     //0x18
+                        218,    //0xDA
+                        GForm_Main.byte_3,      //0x00  -> 0x10|0x11
+                        241     //0xF1
+                    };
+                    MessageFilter filter = messageFilter;
+                    channel.StartMsgFilter(filter);
+                    SConfig[] config = new SConfig[]
+                    {
+                        new SConfig(Parameter.LOOP_BACK, 1),
+                        new SConfig(Parameter.DATA_RATE, 500000)
+                    };
+                    channel.SetConfig(config);*/
 
-                        if (!ECU_Unlocked)
+                    if (!ECU_Unlocked)
                         {
                             MessageBox.Show("ECU is NOT Unlocked!");
                         }
@@ -1391,14 +1405,14 @@ public class GForm_Main : DarkForm
                             this.backgroundWorker_0.ReportProgress(0, "Successfully write " + this.byte_7.Length + "bytes of flash memory in " + timeSpan.Minutes + ":" + timeSpan.Seconds);
                             device.SetProgrammingVoltage(Pin.PIN_12, -1);   //Set 0V on Pin12
                         }
-                    }
-                }
+                    //}
+                //}
             }
             catch (Exception ex)
             {
                 DarkMessageBox.Show(this, ex.Message);
             }
-        }
+        //}
     }
 
     public void WriteROMtoECU(Channel channel_0, byte[] byte_5, BackgroundWorker backgroundWorker_X = null)

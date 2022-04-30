@@ -184,63 +184,72 @@ internal class ClassEditor
         int multiplier = 2;
         if (this.IsSingleByteX || this.IsSingleByteY || this.IsSingleByteTable) multiplier = 1; //###############################
 
+
+        Editortable_0.GForm_Main_0.method_1("Checking for differences...");
+
         //Get all Tables values
-        for (int i = 0; i < this.BufferTableSize[1]; i++)
+        double[,] ReadBufferarray = new double[this.BufferTableSize[0], this.BufferTableSize[1]];
+        for (int i = 0; i < this.BufferTableSize[0]; i++)   //10columns
         {
-            for (int k = 0; k < this.BufferTableSize[0]; k++)
+            for (int j = 0; j < this.BufferTableSize[1]; j++)   //20rows
             {
                 //calculate value inversed to make bytes
-                double ThisValue = double.Parse(Editortable_0.dataGridView_0.Rows[i].Cells[k].Value.ToString(), CultureInfo.InvariantCulture);
-                ThisValue = DoMath(ThisValue, BufferMath, true); 
-                
-                if (multiplier == 2)
-                {
-                    byte[] ThisBytesToChange = BitConverter.GetBytes((Int16) ThisValue);
-                    if (ThisBytesToChange.Length <= 2)
-                    {
-                        BufferBytesArray[(i * 2)] = ThisBytesToChange[1];
-                        BufferBytesArray[(i * 2) + 1] = ThisBytesToChange[0];
-                    }
-                    else
-                    {
-                        Editortable_0.GForm_Main_0.method_1("Modified Value doesn't return into '2bytes' format");
-                    }
-                }
-                else
-                {
-                    byte ThisByteToChange = (byte) ThisValue;
-                    BufferBytesArray[i] = ThisByteToChange;
-                }
+                double ThisValue = double.Parse(Editortable_0.dataGridView_0.Rows[j].Cells[i].Value.ToString().Replace(',', '.'), CultureInfo.InvariantCulture);
+                ThisValue = DoMath(ThisValue, BufferMath, true);
+                ReadBufferarray[i, j] = (Int16)ThisValue;
             }
         }
 
+        //#############
+        double[] ValuesBufferarray = new double[this.SelectedTableSize];
+        for (int i = 0; i < this.BufferTableSize[0]; i++)
+        {
+            for (int j = 0; j < this.BufferTableSize[1]; j++)
+            {
+                ValuesBufferarray[i * this.BufferTableSize[1] + j] = ReadBufferarray[i, j];
+            }
+        }
+        //#############
+        byte[] BytesBufferarray = new byte[this.SelectedTableSize * multiplier];
+        for (int i = 0; i < this.SelectedTableSize; i++)
+        {
+            if (multiplier == 2)
+            {
+                byte[] ThisBytesToChange = BitConverter.GetBytes((Int16) ValuesBufferarray[i]);
+                BytesBufferarray[(i * 2)] = ThisBytesToChange[1];
+                BytesBufferarray[(i * 2) + 1] = ThisBytesToChange[0];
+            }
+            else
+            {
+                BytesBufferarray[i] = (byte) ValuesBufferarray[i];
+            }
+        }
+        //#############
         byte[] array = new byte[this.SelectedTableSize * multiplier];
         for (int i = 0; i < this.SelectedTableSize * multiplier; i++)
         {
             array[i] = this.byte_0[num + i];
             //Apply Changes
-            this.byte_0[num + i] = BufferBytesArray[i];
+            this.byte_0[num + i] = BytesBufferarray[i];
         }
-
-        /*Console.WriteLine(BufferBytesArray[0].ToString("X2"));
-        Console.WriteLine(BufferBytesArray[1].ToString("X2"));
-        Console.WriteLine(array[0].ToString("X2"));
-        Console.WriteLine(array[1].ToString("X2"));*/
 
         int num3 = 0;
         string text = null;
-        foreach (int num4 in BufferBytesArray)
+        bool DiffDetected = false;
+        foreach (int num4 in BytesBufferarray)
         {
             //if ((!this.bool_3 || num3 < 200) && num4.ToString() != array[num3].ToString())
             //if (((Is1x20Table && (!this.IsSingleByteX || num3 < 200)) || (!Is1x20Table)) && num4.ToString() != array[num3].ToString())
             if (num4.ToString() != array[num3].ToString())
             {
-                string BufText = "Change at line: " + num3.ToString() + "[" + array[num3].ToString("X2") + "->" + num4.ToString("X2") + "]";
+                string BufText = "Change at line: " + num3.ToString() + "[" + array[num3].ToString("X2") + "->" + num4.ToString("X2") + "] | At: 0x" + (this.SelectedROMLocation + num3).ToString("X");
                 text = text + BufText + Environment.NewLine;
                 Editortable_0.GForm_Main_0.method_1(BufText);
+                DiffDetected = true;
             }
             num3++;
         }
+        if (!DiffDetected) Editortable_0.GForm_Main_0.method_1("No differences detected");
         this.string_3 = this.string_3 + "Address: " + this.SelectedROMLocation.ToString() + Environment.NewLine + text;
         //this.string_3 = this.string_3 + "Table: " + TableSize + Environment.NewLine + "Address: " + this.SelectedROMLocation.ToString() + Environment.NewLine + text;
     }
@@ -269,8 +278,9 @@ internal class ClassEditor
             }
 
             //Fix Checksums
-            if (!this.Editortable_0.IsFullBinary) SavingBytes = this.Editortable_0.GForm_Main_0.VerifyChecksumFWBin(SavingBytes);
-            if (this.Editortable_0.IsFullBinary) SavingBytes = this.Editortable_0.GForm_Main_0.VerifyChecksumFullBin(SavingBytes);
+            FixChecksums();
+            //if (!this.Editortable_0.IsFullBinary) SavingBytes = this.Editortable_0.GForm_Main_0.VerifyChecksumFWBin(SavingBytes);
+            //if (this.Editortable_0.IsFullBinary) SavingBytes = this.Editortable_0.GForm_Main_0.VerifyChecksumFullBin(SavingBytes);
 
             File.Create(string_4).Dispose();
             File.WriteAllBytes(string_4, SavingBytes);
@@ -296,6 +306,13 @@ internal class ClassEditor
         {
             DarkMessageBox.Show("Failed to save file!.", "Fail", MessageBoxButtons.OK, MessageBoxIcon.Hand);
         }
+    }
+
+    public void FixChecksums()
+    {
+        if (!this.Editortable_0.IsFullBinary) this.byte_0 = this.Editortable_0.GForm_Main_0.VerifyChecksumFWBin(this.byte_0);
+        if (this.Editortable_0.IsFullBinary) this.byte_0 = this.Editortable_0.GForm_Main_0.VerifyChecksumFullBin(this.byte_0);
+
     }
 
     public void SetTableValues(int[] TableSize, int ROMLocationX, string TopLeftString, string RowHeaderString, string[] HeaderStringList, string ThisMathX, string ThisFormatX, bool IsInverted, int ROMLocationTable, string ThisMathTable, string ThisTableFormat)
@@ -427,9 +444,6 @@ internal class ClassEditor
             //##############################################
             else
             {
-                if (IsSingleByteX) BufferBytesArray = new byte[SelectedTableSize];
-                else BufferBytesArray = new byte[SelectedTableSize * 2];
-
                 //Normal 'single' table 
                 if (IsInverted)
                 {
@@ -438,17 +452,8 @@ internal class ClassEditor
                     for (int i = 0; i < TableSize[1]; i++)
                     {
                         double num = 0;
-                        if (IsSingleByteX)
-                        {
-                            num = (double)this.GetSingleByteValue(ROMLocationX + i);
-                            BufferBytesArray[i] = byte_0[ROMLocationX + i];
-                        }
-                        else
-                        {
-                            num = (double)this.GetIntValue(ROMLocationX + i * 2);
-                            BufferBytesArray[(i * 2)] = byte_0[ROMLocationX + (i * 2)];
-                            BufferBytesArray[(i * 2) + 1] = byte_0[ROMLocationX + (i * 2) + 1];
-                        }
+                        if (IsSingleByteX) num = (double)this.GetSingleByteValue(ROMLocationX + i);
+                        else num = (double)this.GetIntValue(ROMLocationX + i * 2);
 
                         BufferValuesArray[i] = (int) num;
 
@@ -469,18 +474,11 @@ internal class ClassEditor
                     for (int k = 0; k < TableSize[0]; k++)
                     {
                         double num = 0;
-                        if (IsSingleByteX)
-                        {
-                            num = (double)this.GetSingleByteValue(ROMLocationX + k);
-                            BufferBytesArray[k] = byte_0[ROMLocationX + k];
-                        }
-                        else
-                        {
-                            num = (double)this.GetIntValue(ROMLocationX + k * 2);
-                            BufferBytesArray[(k * 2)] = byte_0[ROMLocationX + (k * 2)];
-                            BufferBytesArray[(k * 2) + 1] = byte_0[ROMLocationX + (k * 2) + 1];
-                        }
+                        if (IsSingleByteX) num = (double)this.GetSingleByteValue(ROMLocationX + k);
+                        else num = (double)this.GetIntValue(ROMLocationX + k * 2);
                         BufferValuesArray[k] = (int) num;
+
+                        //Console.WriteLine("num: " + num);
 
                         if (ThisFormatX == "") list.Add(DoMath(num, ThisMathX, false).ToString());
                         if (ThisFormatX != "") list.Add(DoMath(num, ThisMathX, false).ToString(ThisFormatX));
@@ -528,17 +526,11 @@ internal class ClassEditor
         if (IndexOfMathDiv == 0) return 0;
         if (IndexOfMathMul == 0) return 0;
         if (IndexOfMathAdd == 0) return 0;
-        //if (IndexOfMathSub == 0) return 0;
 
         if (IndexOfMathDiv == -1) IndexOfMathDiv = 99;
         if (IndexOfMathMul == -1) IndexOfMathMul = 99;
         if (IndexOfMathAdd == -1) IndexOfMathAdd = 99;
-        //if (IndexOfMathSub == -1) IndexOfMathSub = 99;
 
-        /*if (IndexOfMathDiv > 0 && IndexOfMathDiv < IndexOfMathMul && IndexOfMathDiv < IndexOfMathAdd && IndexOfMathDiv < IndexOfMathSub) IndexOfNearest = IndexOfMathDiv;
-        if (IndexOfMathMul > 0 && IndexOfMathMul < IndexOfMathDiv && IndexOfMathMul < IndexOfMathAdd && IndexOfMathMul < IndexOfMathSub) IndexOfNearest = IndexOfMathMul;
-        if (IndexOfMathAdd > 0 && IndexOfMathAdd < IndexOfMathMul && IndexOfMathAdd < IndexOfMathDiv && IndexOfMathAdd < IndexOfMathSub) IndexOfNearest = IndexOfMathAdd;
-        if (IndexOfMathSub > 0 && IndexOfMathSub < IndexOfMathMul && IndexOfMathSub < IndexOfMathAdd && IndexOfMathSub < IndexOfMathDiv) IndexOfNearest = IndexOfMathSub;*/
         if (IndexOfMathDiv > 0 && IndexOfMathDiv < IndexOfMathMul && IndexOfMathDiv < IndexOfMathAdd) IndexOfNearest = IndexOfMathDiv;
         if (IndexOfMathMul > 0 && IndexOfMathMul < IndexOfMathDiv && IndexOfMathMul < IndexOfMathAdd) IndexOfNearest = IndexOfMathMul;
         if (IndexOfMathAdd > 0 && IndexOfMathAdd < IndexOfMathMul && IndexOfMathAdd < IndexOfMathDiv) IndexOfNearest = IndexOfMathAdd;
@@ -557,35 +549,19 @@ internal class ClassEditor
     private double GetNextValue(string ThisMath)
     {
         double Value = 0;
-        //bool IsNegative = false;
 
         int Nearestindex = GetNearestMathIndex(ThisMath);
-        if (Nearestindex == 0)
-        {
-            /*if (ThisMath[0] == '-')
-            {
-                IsNegative = true;
-                ThisMath = ThisMath.Substring(1);
-                Nearestindex = GetNearestMathIndex(ThisMath);
-            }
-            else
-            {*/
-                ThisMath = ThisMath.Substring(1);
-            //}
-        }
-        //Nearestindex = GetNearestMathIndex(ThisMath);
+        if (Nearestindex == 0) ThisMath = ThisMath.Substring(1);
 
         if (Nearestindex == -1)
         {
-            Value = double.Parse(ThisMath, CultureInfo.InvariantCulture);
+            Value = double.Parse(ThisMath.Replace(',', '.'), CultureInfo.InvariantCulture);
         }
         else
         {
             string ThisVarStr = ThisMath.Substring(0, Nearestindex);
-            Value = double.Parse(ThisVarStr, CultureInfo.InvariantCulture);
+            Value = double.Parse(ThisVarStr.Replace(',', '.'), CultureInfo.InvariantCulture);
         }
-
-        //if (IsNegative) Value = -Value;
 
         return Value;
     }
@@ -604,11 +580,10 @@ internal class ClassEditor
             ValuesList.Add(GetNextValue(ThisMath));
 
             int NearestIndex = GetNearestMathIndex(ThisMath);
-            if (NearestIndex != -1) ThisMath = ThisMath.Substring(GetNearestMathIndex(ThisMath) + 1);
+            if (NearestIndex != -1) ThisMath = ThisMath.Substring(GetNearestMathIndex(ThisMath));
 
             WeHaveVal1 = true;
 
-            //if (!ThisMath.Contains("/") && !ThisMath.Contains("*") && !ThisMath.Contains("+") && !ThisMath.Contains("-"))
             if (!ThisMath.Contains("/") && !ThisMath.Contains("*") && !ThisMath.Contains("+"))
             {
                 ThisMath = ""; //No remaining maths to perform
@@ -630,31 +605,56 @@ internal class ClassEditor
         return ReturnStr;
     }
 
-    public double DoMath(double ThisValue, string ThisMath, bool Reverse)
+
+    public double DoMath(double ThisValueCheck, string ThisMath, bool Reverse)
+    {
+        double ReturnVal = DoMathFinal(ThisValueCheck, ThisMath, Reverse);
+
+        //Confirm Math function in reverse
+        if (!Reverse)
+        {
+            double ReversedVal = DoMathFinal(ReturnVal, ThisMath, true);
+            if (((int) ReversedVal).ToString() != ((int) ThisValueCheck).ToString()
+                && ((int)ReversedVal + 1).ToString() != ((int)ThisValueCheck).ToString())
+            {
+                Editortable_0.GForm_Main_0.method_1("Problem with math: " + ThisMath + " | Values: " + ((int)ThisValueCheck).ToString() + " != " + ((int)ReversedVal).ToString());
+            }
+        }
+
+        return ReturnVal;
+    }
+
+    //public double DoMath(double ThisValue, string ThisMath, bool Reverse)
+    public double DoMathFinal(double ThisValue, string ThisMath, bool Reverse)
     {
         double ReturnVal = ThisValue;
 
         //No Math found, return value with no math calculation
         if (ThisMath == "X" || ThisMath == "") return ReturnVal;
 
-        //Put X at the end
+        //Put X at the end in reverse
+        bool IsDivXValFirst = false;
         if (Reverse)
         {
+            if (ThisMath.Contains("X/")) IsDivXValFirst = true;
+
             if (ThisMath[ThisMath.Length - 1] != 'X')
             {
                 string XandMath = ThisMath.Substring(ThisMath.IndexOf('X'), 2);
                 ThisMath = ThisMath.Replace(XandMath, "") + XandMath[1].ToString() + XandMath[0].ToString();
             }
         }
+        //Console.WriteLine("Math: " + ThisMath + " (" + Reverse + ")");
 
         ThisMath = ThisMath.Replace("X", ThisValue.ToString());
+        //Console.WriteLine("Math func: " + ThisMath + " (" + Reverse + ")");
 
-        //128/X*14.7
-        //12/34*14.7
-        //---
-        //14.7/X*128
+        //128.0/X*14.7  -->    128/ (X/14.7)            (real order: X/14.7*128
+        //32767/X       -->    32767/X
+        //X/50          -->    X*50
+
         if (Reverse) ThisMath = InvertMathString(ThisMath);
-        //if (Reverse) Console.WriteLine(ThisMath);
+        //Console.WriteLine("Math func: " + ThisMath + " (" + Reverse + ")");
 
         bool WeHaveVal1 = false;
         double Val1 = 0;
@@ -665,13 +665,20 @@ internal class ClassEditor
             ThisMath = ThisMath.Substring(GetNearestMathIndex(ThisMath) + 1);
             double Val2 = GetNextValue(ThisMath);
 
+            //Console.WriteLine("Math: " + Val1 + MathChar.ToString() + Val2 + " (" + Reverse + ")");
+
             if (MathChar == '*') ReturnVal = Val1 * Val2;
             if (MathChar == '/') ReturnVal = Val1 / Val2;
             if (MathChar == '+') ReturnVal = Val1 + Val2;
             if (MathChar == '-') ReturnVal = Val1 - Val2;
 
+            if (Reverse && MathChar == '*' && !IsDivXValFirst) ReturnVal = Val2 / Val1;
+
             int NearestIndex = GetNearestMathIndex(ThisMath);
-            if (NearestIndex != -1) ThisMath = ThisMath.Substring(GetNearestMathIndex(ThisMath) + 1);
+            if (NearestIndex != -1) ThisMath = ThisMath.Substring(GetNearestMathIndex(ThisMath));
+
+            //Console.WriteLine("Math remain: " + ThisMath + " (" + Reverse + ")");
+            //Console.WriteLine("New/End Val1: " + ReturnVal + " (" + Reverse + ")");
 
             WeHaveVal1 = true;
             Val1 = ReturnVal;
@@ -683,7 +690,6 @@ internal class ClassEditor
                 ThisMath = ""; //No remaining maths to perform
             }
         }
-        //if (Reverse) Console.WriteLine(ReturnVal);
         return ReturnVal;
     }
 
@@ -903,6 +909,7 @@ internal class ClassEditor
         return result;
     }
 
+                                //Buffer        10      x       20
     public T[,] smethod_35<T>(T[] gparam_0, int int_232, int int_233)
     {
         T[,] array = new T[int_232, int_233];
@@ -1054,9 +1061,9 @@ internal class ClassEditor
                                     if (Commands[0] == "MathX") CurrentMathX = Commands[1];
                                     if (Commands[0] == "MathY") CurrentMathY = Commands[1];
                                     if (Commands[0] == "MathTable") CurrentMathTable = Commands[1];
-                                    if (Commands[0] == "ValueMin") CurrentValueMin = (float) double.Parse(Commands[1], CultureInfo.InvariantCulture);
-                                    if (Commands[0] == "ValueMax") CurrentValueMax = (float) double.Parse(Commands[1], CultureInfo.InvariantCulture);
-                                    if (Commands[0] == "ChangeAmount") CurrentChangeAmount = double.Parse(Commands[1], CultureInfo.InvariantCulture);
+                                    if (Commands[0] == "ValueMin") CurrentValueMin = (float) double.Parse(Commands[1].Replace(',', '.'), CultureInfo.InvariantCulture);
+                                    if (Commands[0] == "ValueMax") CurrentValueMax = (float) double.Parse(Commands[1].Replace(',', '.'), CultureInfo.InvariantCulture);
+                                    if (Commands[0] == "ChangeAmount") CurrentChangeAmount = double.Parse(Commands[1].Replace(',', '.'), CultureInfo.InvariantCulture);
                                     if (Commands[0] == "IsSingleByteX") CurrentIsSingleByteX = bool.Parse(Commands[1].ToLower());
                                     if (Commands[0] == "IsSingleByteY") CurrentIsSingleByteY = bool.Parse(Commands[1].ToLower());
                                     if (Commands[0] == "IsSingleByteTable") CurrentIsSingleByteTable = bool.Parse(Commands[1].ToLower());
@@ -1155,7 +1162,7 @@ internal class ClassEditor
     public bool IsSingleByteTable = false;
 
     public int[] BufferValuesArray = new int[200];
-    public byte[] BufferBytesArray = new byte[400];
+    //public byte[] BufferBytesArray = new byte[400];
     public int[] BufferTableSize = new int[2];
     public string BufferMath = "";
 

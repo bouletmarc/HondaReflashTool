@@ -17,26 +17,16 @@ public class Editortable : DarkForm
     private IContainer icontainer_1;
     public bool bool_0 = true;
     public static float float_0 = 1f;
-    //private Timer timer_0 = new Timer();
     private List<string> list_0 = new List<string>();
-    public string[] string_0 = new string[] { "6.00", "8.00", "12.00", "14.00", "16.00" };
-    public string[] string_1;
-    public string[] string_2;
-    public string string_3;
-    public string[] string_4;
-    public string[] string_5;
     public static float[] float_1 = new float[2];
     private TableLayoutPanel tableLayoutPanel1;
     private DarkTreeView treeView1;
     private DarkGroupBox groupBox1;
     public DataGridView dataGridView_0;
     internal ClassEditor ClassEditor_0;
-    public string string_8;
+    public string LoadedFilename;
     public bool IsFullBinary = true;
     public static ImageList imageList_0;
-    public int int_0;
-    public int int_1;
-    public int LastPackageChecksum;
     private OpenFileDialog openFileDialog1;
     private SaveFileDialog saveFileDialog1;
     public GForm_Main GForm_Main_0;
@@ -53,29 +43,20 @@ public class Editortable : DarkForm
     private ToolStripSeparator toolStripSeparator2;
     private ToolStripMenuItem increaseSelectionToolStripMenuItem;
     private ToolStripMenuItem decreaseSelectionToolStripMenuItem;
-    public System.Windows.Forms.Timer timer_1 = new System.Windows.Forms.Timer();
 
     internal Editortable(ref GForm_Main GForm_Main_1)
     {
         GForm_Main_0 = GForm_Main_1;
 
-        this.timer_1.Interval = 0xbb8;
-        this.timer_1.Tick += new EventHandler(this.timer_1_Tick);
-
-        //this.string_7_S2K = new string[] { "Fuel Low Cam", "Fuel High Cam", "Ignition Timing Low Cam", "Ignition Timing High Cam", "VTEC Engagement", "Revlimiter", "Injector Voltage Compensation" };
-        //this.string_6_RWC = new string[] { "Mass Airflow Conversion Curve", "VTEC Engagement", "Revlimiter", "--Revlimiter 2", "--Revlimiter 3", "--Revlimiter 4", "--Revlimiter 5", "--Revlimiter 6", "--Revlimiter 7", "Speedlimiter", "Injector Voltage Compensation", "Minimum IPW" };
-        
-        this.int_1 = 1;
         this.InitializeComponent();
 
         Editortable_0 = this;
 
         if (this.ClassEditor_0 != null) this.ClassEditor_0 = null;
         this.ClassEditor_0 = new ClassEditor(ref Editortable_0);
-    }
 
-    private void timer_1_Tick(object sender, EventArgs e)
-    {
+
+        this.Text = this.Text + " (" + this.GForm_Main_0.Version + ")";
     }
 
     private void InitializeComponent()
@@ -85,18 +66,18 @@ public class Editortable : DarkForm
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editortable));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.treeView1 = new DarkUI.Controls.DarkTreeView();
             this.groupBox1 = new DarkUI.Controls.DarkGroupBox();
             this.dataGridView_0 = new System.Windows.Forms.DataGridView();
-            this.treeView1 = new DarkUI.Controls.DarkTreeView();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.darkToolStrip1 = new DarkUI.Controls.DarkToolStrip();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.openbinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.savebinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fixChecksumsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.openDefinitionsFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fixChecksumsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripDropDownButton2 = new System.Windows.Forms.ToolStripDropDownButton();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -122,9 +103,29 @@ public class Editortable : DarkForm
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 186F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 517F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1100, 517);
             this.tableLayoutPanel1.TabIndex = 11;
+            // 
+            // treeView1
+            // 
+            this.treeView1.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView1.EvenNodeColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.treeView1.FocusedNodeColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(110)))), ((int)(((byte)(175)))));
+            this.treeView1.ImageIndex = 0;
+            this.treeView1.ImageList = null;
+            this.treeView1.Location = new System.Drawing.Point(2, 2);
+            this.treeView1.Margin = new System.Windows.Forms.Padding(2);
+            this.treeView1.MaxDragChange = 20;
+            this.treeView1.Name = "treeView1";
+            this.treeView1.NonFocusedNodeColor = System.Drawing.Color.FromArgb(((int)(((byte)(92)))), ((int)(((byte)(92)))), ((int)(((byte)(92)))));
+            this.treeView1.OddNodeColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(60)))), ((int)(((byte)(62)))));
+            this.treeView1.SelectedImageIndex = 0;
+            this.treeView1.SelectWithArrowKeys = false;
+            this.treeView1.Size = new System.Drawing.Size(256, 513);
+            this.treeView1.TabIndex = 2;
+            this.treeView1.SelectedNodesChanged += new System.EventHandler(this.treeView1_AfterSelect);
             // 
             // groupBox1
             // 
@@ -188,26 +189,6 @@ public class Editortable : DarkForm
             this.dataGridView_0.DoubleClick += new System.EventHandler(this.method_3);
             this.dataGridView_0.KeyDown += new System.Windows.Forms.KeyEventHandler(this.method_4);
             // 
-            // treeView1
-            // 
-            this.treeView1.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView1.EvenNodeColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.treeView1.FocusedNodeColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(110)))), ((int)(((byte)(175)))));
-            this.treeView1.ImageIndex = 0;
-            this.treeView1.ImageList = null;
-            this.treeView1.Location = new System.Drawing.Point(2, 2);
-            this.treeView1.Margin = new System.Windows.Forms.Padding(2);
-            this.treeView1.MaxDragChange = 20;
-            this.treeView1.Name = "treeView1";
-            this.treeView1.NonFocusedNodeColor = System.Drawing.Color.FromArgb(((int)(((byte)(92)))), ((int)(((byte)(92)))), ((int)(((byte)(92)))));
-            this.treeView1.OddNodeColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(60)))), ((int)(((byte)(62)))));
-            this.treeView1.SelectedImageIndex = 0;
-            this.treeView1.SelectWithArrowKeys = false;
-            this.treeView1.Size = new System.Drawing.Size(256, 513);
-            this.treeView1.TabIndex = 2;
-            this.treeView1.SelectedNodesChanged += new System.EventHandler(this.treeView1_AfterSelect);
-            // 
             // openFileDialog1
             // 
             this.openFileDialog1.DefaultExt = "*.bin";
@@ -270,6 +251,15 @@ public class Editortable : DarkForm
             this.savebinToolStripMenuItem.Text = "Save .bin";
             this.savebinToolStripMenuItem.Click += new System.EventHandler(this.button2_Click);
             // 
+            // fixChecksumsToolStripMenuItem
+            // 
+            this.fixChecksumsToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.fixChecksumsToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.fixChecksumsToolStripMenuItem.Name = "fixChecksumsToolStripMenuItem";
+            this.fixChecksumsToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.fixChecksumsToolStripMenuItem.Text = "Fix Checksums";
+            this.fixChecksumsToolStripMenuItem.Click += new System.EventHandler(this.fixChecksumsToolStripMenuItem_Click);
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
@@ -286,15 +276,6 @@ public class Editortable : DarkForm
             this.openDefinitionsFolderToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.openDefinitionsFolderToolStripMenuItem.Text = "Open Definitions Folder";
             this.openDefinitionsFolderToolStripMenuItem.Click += new System.EventHandler(this.openDefinitionsFolderToolStripMenuItem_Click);
-            // 
-            // fixChecksumsToolStripMenuItem
-            // 
-            this.fixChecksumsToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.fixChecksumsToolStripMenuItem.Enabled = false;
-            this.fixChecksumsToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(153)))), ((int)(((byte)(153)))));
-            this.fixChecksumsToolStripMenuItem.Name = "fixChecksumsToolStripMenuItem";
-            this.fixChecksumsToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
-            this.fixChecksumsToolStripMenuItem.Text = "Fix Checksums";
             // 
             // toolStripDropDownButton2
             // 
@@ -319,7 +300,7 @@ public class Editortable : DarkForm
             this.undoToolStripMenuItem.Enabled = false;
             this.undoToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(153)))), ((int)(((byte)(153)))));
             this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
-            this.undoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.undoToolStripMenuItem.Text = "Undo";
             // 
             // redoToolStripMenuItem
@@ -328,7 +309,7 @@ public class Editortable : DarkForm
             this.redoToolStripMenuItem.Enabled = false;
             this.redoToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(153)))), ((int)(((byte)(153)))));
             this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
-            this.redoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.redoToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.redoToolStripMenuItem.Text = "Redo";
             // 
             // toolStripSeparator2
@@ -337,14 +318,14 @@ public class Editortable : DarkForm
             this.toolStripSeparator2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.toolStripSeparator2.Margin = new System.Windows.Forms.Padding(0, 0, 0, 1);
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(169, 6);
             // 
             // increaseSelectionToolStripMenuItem
             // 
             this.increaseSelectionToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.increaseSelectionToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.increaseSelectionToolStripMenuItem.Name = "increaseSelectionToolStripMenuItem";
-            this.increaseSelectionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.increaseSelectionToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.increaseSelectionToolStripMenuItem.Text = "Increase Selection";
             this.increaseSelectionToolStripMenuItem.Click += new System.EventHandler(this.increaseSelectionToolStripMenuItem_Click);
             // 
@@ -353,7 +334,7 @@ public class Editortable : DarkForm
             this.decreaseSelectionToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.decreaseSelectionToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.decreaseSelectionToolStripMenuItem.Name = "decreaseSelectionToolStripMenuItem";
-            this.decreaseSelectionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.decreaseSelectionToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.decreaseSelectionToolStripMenuItem.Text = "Decrease Selection";
             this.decreaseSelectionToolStripMenuItem.Click += new System.EventHandler(this.decreaseSelectionToolStripMenuItem_Click);
             // 
@@ -380,10 +361,7 @@ public class Editortable : DarkForm
 
     public void Editortable_Load(object sender, EventArgs e)
     {
-        this.Text = "Honda Rom Tables Editor";
-        //this.timer_0.Interval = 500;
-        //this.timer_0.Tick += new EventHandler(this.timer_0_Tick);
-        this.method_5();
+        this.CreateRightClicMenu();
     }
 
     public bool LoadDefinitionsFor(string string_9)
@@ -410,7 +388,7 @@ public class Editortable : DarkForm
     public void method_1()
     {
         ClassEditor_0.bool_1 = false;
-        if (!ClassEditor_0.LoadROMbytes(string_8))
+        if (!ClassEditor_0.LoadROMbytes(LoadedFilename))
         {
             DarkMessageBox.Show("Failed to open Binary file.");
         }
@@ -427,14 +405,11 @@ public class Editortable : DarkForm
 
     private void CellValueChanged(object sender, DataGridViewCellEventArgs e)
     {
-        ClassEditor_0.bool_2 = true;
-        if (ClassEditor_0.bool_1) ClassEditor_0.SetBackColor(dataGridView_0.Columns.Count, float_1[0], float_1[1]);
-
-        /*this.timer_0.Enabled = false;
-        if (ClassEditor_0.bool_0)
+        if (ClassEditor_0.bool_1)
         {
-            this.timer_0.Enabled = true;
-        }*/
+            ClassEditor_0.bool_2 = true;
+            ClassEditor_0.SetBackColor(dataGridView_0.Columns.Count, float_1[0], float_1[1]);
+        }
     }
 
     public void SetNodesImages()
@@ -458,7 +433,7 @@ public class Editortable : DarkForm
             this.treeView1.Nodes.Add(ThisNode);
         }
 
-        foreach (DarkTreeNode node in this.treeView1.Nodes)
+        /*foreach (DarkTreeNode node in this.treeView1.Nodes)
         {
             if (node.Nodes.Count > 0)
             {
@@ -470,20 +445,6 @@ public class Editortable : DarkForm
                         node2.SelectedImageKey = "Normal";
                         continue;
                     }
-                    if (node.Text.Contains("Fuel"))
-                    {
-                        node2.ImageKey = "Table";
-                        node2.SelectedImageKey = "Table";
-                        continue;
-                    }
-                    if (node.Text.Contains("Target"))
-                    {
-                        node2.ImageKey = "Table";
-                        node2.SelectedImageKey = "Table";
-                        continue;
-                    }
-                    node2.ImageKey = "Degree";
-                    node2.SelectedImageKey = "Degree";
                 }
             }
             if ((node.Text.Contains("Revlimiter") || node.Text.Contains("Speedlimiter")) || node.Text.Contains("Limit"))
@@ -495,63 +456,8 @@ public class Editortable : DarkForm
             {
                 node.ImageKey = "Degree";
                 node.SelectedImageKey = "Degree";
-            }
-            else if (node.Text.Contains("VTC High") || node.Text.Contains("Timing High Cam"))
-            {
-                node.ImageKey = "HighCam";
-                node.SelectedImageKey = "HighCam";
-            }
-            else if (node.Text.Contains("VTC Low") || node.Text.Contains("Timing Low Cam"))
-            {
-                node.ImageKey = "LowCam";
-                node.SelectedImageKey = "LowCam";
-            }
-            else if (node.Text.Contains("Fuel High"))
-            {
-                node.ImageKey = "HighFuel";
-                node.SelectedImageKey = "HighFuel";
-            }
-            else if (node.Text.Contains("Fuel Low"))
-            {
-                node.ImageKey = "LowFuel";
-                node.SelectedImageKey = "LowFuel";
-            }
-            else if (node.Text.Contains("Target High"))
-            {
-                node.ImageKey = "HighFuel";
-                node.SelectedImageKey = "HighFuel";
-            }
-            else if (node.Text.Contains("Target Low"))
-            {
-                node.ImageKey = "LowFuel";
-                node.SelectedImageKey = "LowFuel";
-            }
-            else if (node.Text.Contains("AFM Fuel"))
-            {
-                node.ImageKey = "LowFuel";
-                node.SelectedImageKey = "LowFuel";
-            }
-            else if ((node.Text.Contains("VTEC") || node.Text.Contains("Idle")) || node.Text.Contains("WOT"))
-            {
-                node.ImageKey = "Vtec";
-                node.SelectedImageKey = "Vtec";
-            }
-            else if (node.Text.Contains("Knock"))
-            {
-                node.ImageKey = "Knock";
-                node.SelectedImageKey = "Knock";
-            }
-            else if (node.Text.Contains("Overrun"))
-            {
-                node.ImageKey = "Bang";
-                node.SelectedImageKey = "Bang";
-            }
-            else if ((node.Text.Contains("Compensation") || node.Text.Contains("Conversion")) || node.Text.Contains("LAF"))
-            {
-                node.ImageKey = "Red";
-                node.SelectedImageKey = "Red";
-            }
-        }
+            }//...
+        }*/
     }
 
     private void method_3(object sender, EventArgs e)
@@ -564,7 +470,7 @@ public class Editortable : DarkForm
         ClassEditor_0.ShortcutsCommand(e, 0);
     }
 
-    public void method_5()
+    public void CreateRightClicMenu()
     {
         ContextMenu menu = new ContextMenu {
             MenuItems = { 
@@ -598,12 +504,6 @@ public class Editortable : DarkForm
             this.icontainer_0.Dispose();
         }
         base.Dispose(disposing);
-    }
-
-    private void timer_0_Tick(object sender, EventArgs e)
-    {
-        ClassEditor_0.SetBackColor(dataGridView_0.Columns.Count, float_1[0], float_1[1]);
-        //this.timer_0.Enabled = false;
     }
 
     /*public static ImageList ImageList_0
@@ -767,7 +667,7 @@ public class Editortable : DarkForm
                 byte[] FilesBytes = File.ReadAllBytes(openFileDialog1.FileName);
                 if ((FilesBytes.Length - 1) == 0xFFFFF)
                 {
-                    this.Editortable_0.string_8 = openFileDialog1.FileName;
+                    this.Editortable_0.LoadedFilename = openFileDialog1.FileName;
                     this.IsFullBinary = true;
 
                     //Load Binary into ROM Table Editor
@@ -783,7 +683,7 @@ public class Editortable : DarkForm
                 byte[] FilesBytes = File.ReadAllBytes(openFileDialog1.FileName);
                 if ((FilesBytes.Length - 1) == 0xF7FFF)
                 {
-                    this.Editortable_0.string_8 = openFileDialog1.FileName;
+                    this.Editortable_0.LoadedFilename = openFileDialog1.FileName;
                     this.IsFullBinary = false;
 
                     DarkMessageBox.Show(this, "Since this decompressed firmware .bin file is missing the bootloader section\nSelect the firmware .rwd file from which is as been decompressed from", "MISSING BOOTLOADER SECTION FOR CHECKSUMS VERIFICATIONS", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -849,6 +749,11 @@ public class Editortable : DarkForm
     private void decreaseSelectionToolStripMenuItem_Click(object sender, EventArgs e)
     {
         ClassEditor_0.IncDecreaseSelection(true, false);
+    }
+
+    private void fixChecksumsToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        ClassEditor_0.FixChecksums();
     }
 }
 
