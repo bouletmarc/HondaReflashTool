@@ -1,0 +1,58 @@
+##############################################################
+##############################################################
+#	Supported ECU:
+##############################################################
+#	List all supported ecus by this new definitions file
+#
+#
+#
+##############################################################
+#			GENERAL '3D' TABLE LAYOUT:
+##############################################################
+#
+#	/---------------------------------------
+#	| Unit1 |		 X-Direction	-> X values come from ROMLocationX (if used)
+#	|---------------------------------------
+#	|		|
+#	|   Y	|
+#	|   |	|		Table (Z)-Direction	-> Table values come from: ROMLocationTable
+#	|   D	|
+#	|   i	|
+#	|   r	|
+#	|   e	|
+#	|   c	|
+#	|   t	|
+#	|   i	|	-> Y values can come from: Unit2, Headers or ROMLocationY (if used)
+#	|   o	|
+#	|   n	|
+#	|		|
+#
+##############################################################
+#	AVAILABLES PARAMETERS:				DESCRIPTION:
+##############################################################
+# Name:ANY_NAME						-> Type the title/name of definition you want to add
+# Unit1:UNIT-X/UNIT-Y				-> Type the units used in the top left corner. Units that represent X and Y. (ex: RPM/MAP) (can leave blank)
+# Unit2:UNIT-Y						-> Type the unit used for Y (ex: MAP) (can leave blank)
+# TableSize:4x1						-> Type the table size of the definition (ex: 1x1, 4x1, 10x20)
+# IsInverted:false					-> If true, the table X and Y become inverted
+# IsSingleByteX:false				-> If true, the values shown for X are extracted from a single byte for each value. Else each values are read from 2bytes in the rom
+# IsSingleByteY:false				-> If true, the values shown for Y are extracted from a single byte for each value. Else each values are read from 2bytes in the rom
+# IsSingleByteTable:false			-> If true, the values shown for Z are extracted from a single byte for each value. Else each values are read from 2bytes in the rom
+# ValueMin:0						-> Type the minimum the values of the Table can be (used for coloring)
+# ValueMax:255						-> Type the maximum the values of the Table can be (used for coloring)
+# ChangeAmount:1					-> Type the number we use when 'increasing/decreasing' the selection in the Table
+# Headers:2000,4000,6000,8000		-> Type each 'Headers' name used for Y when you don't use Unit2 or ROMLocationY. (can leave blank)
+# ROMLocationX:0xFFFF				-> Type the ROM location used for the Headers values of X. (can leave blank)
+# ROMLocationY:0xFFFF				-> Type the ROM location used for the Headers values of Y. (can leave blank)
+# ROMLocationTable:0xFFFF			-> Type the ROM location used for the Table values (Z).
+# MathX:X*1							-> Type the mathematical function used to display the values of X Headers
+# MathY:X*1							-> Type the mathematical function used to display the values of Y Headers
+# MathTable:X*1						-> Type the mathematical function used to display the Table values (Z)
+# FormatX:0.00						-> Type the string format for the values of X Headers. The number of 0's after the dot indicate the number of decimals. Format ex: '0' '0.0' '0.00' '0.000'
+# FormatY:0.00						-> Type the string format for the values of Y Headers. The number of 0's after the dot indicate the number of decimals. Format ex: '0' '0.0' '0.00'
+# FormatTable:0.00					-> Type the string format for the Table values (Z). The number of 0's after the dot indicate the number of decimals. Format ex: '0' '0.0' '0.00'
+##############################################################
+#
+#
+#
+#

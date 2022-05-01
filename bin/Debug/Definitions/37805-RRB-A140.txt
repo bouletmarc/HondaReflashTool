@@ -1,32 +1,3 @@
-#
-#
-#
-#
-# Name:ANY_NAME
-# Unit1:KPH
-# Unit2:RPM
-# TableSize:4x1
-# IsInverted:false
-# IsSingleByteX:false
-# IsSingleByteY:false
-# IsSingleByteTable:false
-# ValueMin:0
-# ValueMax:255
-# ChangeAmount:1
-# Headers:2000,4000,6000,8000
-# ROMLocationX:0xFFFF
-# ROMLocationY:0xFFFF
-# ROMLocationTable:0xFFFF
-# MathX:X*1
-# MathY:X*1
-# MathTable:X*1
-# FormatX:0.00
-# FormatY:0.00
-# FormatTable:0.00
-#
-#
-#
-#
 #######################################################################
 #######################################################################
 #######################################################################
@@ -42,98 +13,97 @@
 #######################################################################
 # ROM Parameters Definitions
 #######################################################################
-ROMLocationX:0xB5C2
+ROMLocationTable:0xB5C2
 Name:VTEC Engagement
 Unit2:RPM
-TableSize:1x4
-IsInverted:true
+TableSize:4x1
 ValueMin:-10000
 ValueMax:30000
 ChangeAmount:10
 Headers:Enable Low,Disable Low,Enable High,Disable High
 #############################
-ROMLocationX:0x11680
+ROMLocationTable:0x11680
 Name:Revlimiter
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationX:0x11688
+ROMLocationTable:0x11688
 Name:--Revlimiter 1
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationX:0x11690
+ROMLocationTable:0x11690
 Name:--Revlimiter 2
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationX:0x11698
+ROMLocationTable:0x11698
 Name:--Revlimiter 3
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationX:0x116A0
+ROMLocationTable:0x116A0
 Name:--Revlimiter 4
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationX:0x116A4
+ROMLocationTable:0x116A4
 Name:--Revlimiter 5
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationX:0x116B4
+ROMLocationTable:0x116B4
 Name:--Revlimiter 6
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationX:0x11690
+ROMLocationTable:0x11690
 Name:--Revlimiter 7
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationX:0xB488
+ROMLocationTable:0xB488
 Name:--Revlimiter 8
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationX:0xBA4A
+ROMLocationTable:0xBA4A
 Name:Speedlimiter
 Unit2:KPH
 TableSize:1x1
-# MathX:X/1.609
+# MathTable:X/1.609
 ValueMax:255
 #############################
-ROMLocationX:0x128F4
+ROMLocationTable:0x128F4
 Name:Injector Voltage Compensation
 Unit1:Volts
 Unit2:ms
 TableSize:5x1
-MathX:X*0.002
-FormatX:0.00
+MathTable:X*0.002
+FormatTable:0.00
 ValueMin:-1000
 ValueMax:3000
 Headers:6.00,8.00,12.00,14.00,16.00
 #############################
-ROMLocationX:0x101D2
+ROMLocationTable:0x101D2
 ROMLocationY:0x102D2
 Name:Mass Airflow Conversion Curve
 Unit1:Volts
@@ -436,12 +406,12 @@ FormatTable:0.00
 MathY:X*0.013334
 MathTable:128.0/X*14.7
 #############################
-ROMLocationX:0x11774
+ROMLocationTable:0x11774
 Name:LAF Voltage to Lambda
 Unit1:Volts(V)
 Unit2:λ
-MathX:32767/X
-FormatX:0.00
+MathTable:32767/X
+FormatTable:0.00
 TableSize:15x1
 ValueMax:4
 ChangeAmount:0.01
@@ -645,7 +615,7 @@ MathY:X*0.013334
 MathTable:X*0.1
 IsSingleByteTable:true
 #############################
-ROMLocationX:0xFC6C
+ROMLocationTable:0xFC6C
 ROMLocationY:0xFA70
 Name:Idle Speed
 Unit1:Coolant Temp
@@ -656,7 +626,7 @@ ValueMax:4000
 ChangeAmount:50
 MathY:X/10
 #############################
-ROMLocationX:0xFC7C
+ROMLocationTable:0xFC7C
 ROMLocationY:0xFA70
 Name:Post Start Idle Speed
 Unit1:Coolant Temp
@@ -667,39 +637,39 @@ ValueMax:4000
 ChangeAmount:50
 MathY:X/10
 #############################
-ROMLocationX:0xFE34
+ROMLocationTable:0xFE34
 Name:WOT Determiniation 1(TPS)
 Unit1:RPM
 Unit2:TPS(%)
 TableSize:6x1
 ValueMin:-50
 ValueMax:200
-MathX:X*0.005
-FormatX:0.00
+MathTable:X*0.005
+FormatTable:0.00
 ChangeAmount:1
 Headers:1000,2000,3000,4000,5000,6000
 #############################
-ROMLocationX:0xFE4C
+ROMLocationTable:0xFE4C
 Name:WOT Determiniation 2(TPS)
 Unit1:RPM
 Unit2:TPS(%)
 TableSize:6x1
 ValueMin:-50
 ValueMax:200
-MathX:X*0.005
-FormatX:0.00
+MathTable:X*0.005
+FormatTable:0.00
 ChangeAmount:1
 Headers:1000,2000,3000,4000,5000,6000
 #############################
-ROMLocationX:0x10064
+ROMLocationTable:0x10064
 Name:WOT Determiniation (MAP)
 Unit1:RPM
 Unit2:MAP(kpa)
 TableSize:7x1
 ValueMin:0
 ValueMax:120
-MathX:X*0.01
-FormatX:0.00
+MathTable:X*0.01
+FormatTable:0.00
 ChangeAmount:1
 Headers:1000,2000,3000,4000,5000,6000,7000
 #############################
@@ -730,7 +700,7 @@ FormatTable:0.00
 MathY:X*0.01
 MathTable:X*0.006
 #############################
-ROMLocationX:0x11546
+ROMLocationTable:0x11546
 Name:Overrun Fuel Cut(Gear Determiniation)
 Unit1:Gear
 Unit2:Delay(ms)
@@ -740,7 +710,7 @@ ValueMax:5000
 ChangeAmount:50
 Headers:1,2,3,4,5-6
 #############################
-ROMLocationX:0xAE82
+ROMLocationTable:0xAE82
 Name:MAF Load Limit
 Unit1:Mg/Stroke
 TableSize:4x1
@@ -748,13 +718,13 @@ ValueMin:-1000
 ValueMax:4000
 ChangeAmount:50
 #############################
-ROMLocationX:0xAE82
+ROMLocationTable:0xAE82
 Name:Minimum IPW
 Unit1:Min IPW
 TableSize:1x1
 ValueMin:-6
 ValueMax:5
 ChangeAmount:0.001
-MathX:X*0.002
-FormatX:0.000
+MathTable:X*0.002
+FormatTable:0.000
 #############################

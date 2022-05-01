@@ -1,15 +1,15 @@
 #######################################################################
 #######################################################################
+# THIS FILE AS BEEN GENERATED AUTOMATICLY, ROM LOCATIONS CAN BE WRONG
 #######################################################################
 #######################################################################
 # Supported ECU:
 #######################################################################
-37805-RWC-A620
-37805-RWC-A610
+37805-RWC-A720
 #######################################################################
 #######################################################################
 #######################################################################
-# ROM Parameters Definitions
+# ROM Parameters Definitions:
 #######################################################################
 ROMLocationTable:0xB730
 Name:VTEC Engagement
@@ -80,8 +80,8 @@ ROMLocationTable:0xBE8A
 Name:Speedlimiter
 Unit2:KPH
 TableSize:1x1
-# MathTable:X/1.609
 ValueMax:255
+# MathTable:X/1.609
 #############################
 ROMLocationTable:0x1D32E
 Name:Injector Voltage Compensation
@@ -94,17 +94,6 @@ ValueMin:-1000
 ValueMax:3000
 Headers:6.00,8.00,12.00,14.00,16.00
 #############################
-ROMLocationTable:0x10D0E
-ROMLocationY:0x10D8E
-Name:Mass Airflow Conversion Curve
-Unit1:Volts
-Unit2:g/s
-TableSize:64x1
-MathY:X*0.0048828125
-ValueMin:-10000
-ValueMax:30000
-FormatY:0.00
-#############################
 ROMLocationTable:0xAF8A
 Name:MAF Load Limit
 Unit1:Mg/Stroke
@@ -112,14 +101,4 @@ TableSize:4x1
 ValueMin:-1000
 ValueMax:4000
 ChangeAmount:50
-#############################
-ROMLocationTable:0xC694
-Name:Minimum IPW
-Unit1:Min IPW
-TableSize:1x1
-ValueMin:-6
-ValueMax:5
-ChangeAmount:0.001
-MathTable:X*0.002
-FormatTable:0.000
 #############################

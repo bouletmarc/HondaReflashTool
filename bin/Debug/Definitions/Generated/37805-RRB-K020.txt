@@ -1,17 +1,17 @@
 #######################################################################
 #######################################################################
+# THIS FILE AS BEEN GENERATED AUTOMATICLY, ROM LOCATIONS CAN BE WRONG
 #######################################################################
 #######################################################################
 # Supported ECU:
 #######################################################################
-37805-RWC-A620
-37805-RWC-A610
+37805-RRB-K020
 #######################################################################
 #######################################################################
 #######################################################################
-# ROM Parameters Definitions
+# ROM Parameters Definitions:
 #######################################################################
-ROMLocationTable:0xB730
+ROMLocationTable:0xB5C2
 Name:VTEC Engagement
 Unit2:RPM
 TableSize:4x1
@@ -20,70 +20,70 @@ ValueMax:30000
 ChangeAmount:10
 Headers:Enable Low,Disable Low,Enable High,Disable High
 #############################
-ROMLocationTable:0x1328C
+ROMLocationTable:0x11680
 Name:Revlimiter
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationTable:0x13294
+ROMLocationTable:0x11688
 Name:--Revlimiter 1
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationTable:0x1329C
+ROMLocationTable:0x11690
 Name:--Revlimiter 2
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationTable:0x132A4
+ROMLocationTable:0x11698
 Name:--Revlimiter 3
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationTable:0x132AC
+ROMLocationTable:0x116A0
 Name:--Revlimiter 4
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationTable:0x132B0
+ROMLocationTable:0x116A4
 Name:--Revlimiter 5
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationTable:0x132C0
+ROMLocationTable:0x116B4
 Name:--Revlimiter 6
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationTable:0x132C8
+ROMLocationTable:0x116BC
 Name:--Revlimiter 7
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationTable:0xBE8A
+ROMLocationTable:0xBA4A
 Name:Speedlimiter
 Unit2:KPH
 TableSize:1x1
-# MathTable:X/1.609
 ValueMax:255
+# MathTable:X/1.609
 #############################
-ROMLocationTable:0x1D32E
+ROMLocationTable:0x128F4
 Name:Injector Voltage Compensation
 Unit1:Volts
 Unit2:ms
@@ -94,32 +94,11 @@ ValueMin:-1000
 ValueMax:3000
 Headers:6.00,8.00,12.00,14.00,16.00
 #############################
-ROMLocationTable:0x10D0E
-ROMLocationY:0x10D8E
-Name:Mass Airflow Conversion Curve
-Unit1:Volts
-Unit2:g/s
-TableSize:64x1
-MathY:X*0.0048828125
-ValueMin:-10000
-ValueMax:30000
-FormatY:0.00
-#############################
-ROMLocationTable:0xAF8A
+ROMLocationTable:0xAE82
 Name:MAF Load Limit
 Unit1:Mg/Stroke
 TableSize:4x1
 ValueMin:-1000
 ValueMax:4000
 ChangeAmount:50
-#############################
-ROMLocationTable:0xC694
-Name:Minimum IPW
-Unit1:Min IPW
-TableSize:1x1
-ValueMin:-6
-ValueMax:5
-ChangeAmount:0.001
-MathTable:X*0.002
-FormatTable:0.000
 #############################

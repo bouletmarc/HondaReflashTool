@@ -1,0 +1,41 @@
+#######################################################################
+#######################################################################
+# THIS FILE AS BEEN GENERATED AUTOMATICLY, ROM LOCATIONS CAN BE WRONG
+#######################################################################
+#######################################################################
+# Supported ECU:
+#######################################################################
+37805-RNV-Z020
+#######################################################################
+#######################################################################
+#######################################################################
+# ROM Parameters Definitions:
+#######################################################################
+ROMLocationTable:0xB52E
+Name:VTEC Engagement
+Unit2:RPM
+TableSize:4x1
+ValueMin:-10000
+ValueMax:30000
+ChangeAmount:10
+Headers:Enable Low,Disable Low,Enable High,Disable High
+#############################
+ROMLocationTable:0x13EF4
+Name:Injector Voltage Compensation
+Unit1:Volts
+Unit2:ms
+TableSize:5x1
+MathTable:X*0.002
+FormatTable:0.00
+ValueMin:-1000
+ValueMax:3000
+Headers:6.00,8.00,12.00,14.00,16.00
+#############################
+ROMLocationTable:0xAEFA
+Name:MAF Load Limit
+Unit1:Mg/Stroke
+TableSize:4x1
+ValueMin:-1000
+ValueMax:4000
+ChangeAmount:50
+#############################
