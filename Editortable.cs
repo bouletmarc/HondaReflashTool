@@ -727,6 +727,7 @@ public class Editortable : DarkForm
             File.WriteAllBytes(Paath + @"\37805_RRB_A140.txt", FlashToolTest.Properties.Resources._37805_RRB_A140);
             File.WriteAllBytes(Paath + @"\37805_RWC_A620.txt", FlashToolTest.Properties.Resources._37805_RWC_A620);
             File.WriteAllBytes(Paath + @"\37805_S2K.txt", FlashToolTest.Properties.Resources._37805_S2K);
+            File.WriteAllBytes(Paath + @"\DefinitionsGuide.txt", FlashToolTest.Properties.Resources.DefinitionsGuide);
         }
     }
 

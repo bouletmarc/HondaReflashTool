@@ -30,7 +30,7 @@ public class GForm_Main : DarkForm
     private DarkButton darkButton6;
     private DarkButton darkButton3;
     public Editortable Editortable_0;
-    public string Version = "v1.0.9";
+    public string Version = "v1.1.0";
 
     public GForm_Main()
     {
@@ -48,6 +48,9 @@ public class GForm_Main : DarkForm
         Class_RWD.Load(ref GForm_Main_0);
 
         this.Text = this.Text + " (" + Version + ")";
+
+        Class_DefinitionMaker Class_DefinitionMaker_0 = new Class_DefinitionMaker();
+        Class_DefinitionMaker_0.CreateDefinitionsFiles();
     }
 
 
@@ -1603,8 +1606,8 @@ public class GForm_Main : DarkForm
             this.darkLabel_8 = new DarkUI.Controls.DarkLabel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.DarkgroupBox1 = new DarkUI.Controls.DarkGroupBox();
-            this.darkButton4 = new DarkUI.Controls.DarkButton();
             this.darkButton6 = new DarkUI.Controls.DarkButton();
+            this.darkButton4 = new DarkUI.Controls.DarkButton();
             this.darkGroupBox_0.SuspendLayout();
             this.DarkgroupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -1614,7 +1617,7 @@ public class GForm_Main : DarkForm
             this.darkTextBox_0.Location = new System.Drawing.Point(218, 63);
             this.darkTextBox_0.Multiline = true;
             this.darkTextBox_0.Name = "darkTextBox_0";
-            this.darkTextBox_0.Size = new System.Drawing.Size(461, 443);
+            this.darkTextBox_0.Size = new System.Drawing.Size(399, 443);
             this.darkTextBox_0.TabIndex = 55;
             this.darkTextBox_0.Text = "Honda CANBUS Tools";
             // 
@@ -1852,7 +1855,7 @@ public class GForm_Main : DarkForm
             this.darkLabel_4.AutoSize = true;
             this.darkLabel_4.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.darkLabel_4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.darkLabel_4.Location = new System.Drawing.Point(596, 509);
+            this.darkLabel_4.Location = new System.Drawing.Point(536, 509);
             this.darkLabel_4.Name = "darkLabel_4";
             this.darkLabel_4.Size = new System.Drawing.Size(80, 25);
             this.darkLabel_4.TabIndex = 61;
@@ -1874,7 +1877,7 @@ public class GForm_Main : DarkForm
             this.darkTextBox_1.Location = new System.Drawing.Point(294, 11);
             this.darkTextBox_1.Name = "darkTextBox_1";
             this.darkTextBox_1.ReadOnly = true;
-            this.darkTextBox_1.Size = new System.Drawing.Size(385, 20);
+            this.darkTextBox_1.Size = new System.Drawing.Size(323, 20);
             this.darkTextBox_1.TabIndex = 63;
             // 
             // darkTextBox_2
@@ -1882,14 +1885,14 @@ public class GForm_Main : DarkForm
             this.darkTextBox_2.Location = new System.Drawing.Point(294, 37);
             this.darkTextBox_2.Name = "darkTextBox_2";
             this.darkTextBox_2.ReadOnly = true;
-            this.darkTextBox_2.Size = new System.Drawing.Size(385, 20);
+            this.darkTextBox_2.Size = new System.Drawing.Size(323, 20);
             this.darkTextBox_2.TabIndex = 64;
             // 
             // darkProgressBar_0
             // 
             this.darkProgressBar_0.Location = new System.Drawing.Point(98, 537);
             this.darkProgressBar_0.Name = "darkProgressBar_0";
-            this.darkProgressBar_0.Size = new System.Drawing.Size(581, 23);
+            this.darkProgressBar_0.Size = new System.Drawing.Size(519, 23);
             this.darkProgressBar_0.TabIndex = 67;
             // 
             // darkLabel_7
@@ -1931,16 +1934,6 @@ public class GForm_Main : DarkForm
             this.DarkgroupBox1.TabStop = false;
             this.DarkgroupBox1.Text = "File Controls";
             // 
-            // darkButton4
-            // 
-            this.darkButton4.Checked = false;
-            this.darkButton4.Location = new System.Drawing.Point(6, 77);
-            this.darkButton4.Name = "darkButton4";
-            this.darkButton4.Size = new System.Drawing.Size(192, 23);
-            this.darkButton4.TabIndex = 68;
-            this.darkButton4.Text = "Fix Checksums";
-            this.darkButton4.Click += new System.EventHandler(this.darkButton4_Click);
-            // 
             // darkButton6
             // 
             this.darkButton6.Checked = false;
@@ -1951,11 +1944,21 @@ public class GForm_Main : DarkForm
             this.darkButton6.Text = "Open ROM Editor";
             this.darkButton6.Click += new System.EventHandler(this.darkButton6_Click);
             // 
+            // darkButton4
+            // 
+            this.darkButton4.Checked = false;
+            this.darkButton4.Location = new System.Drawing.Point(6, 77);
+            this.darkButton4.Name = "darkButton4";
+            this.darkButton4.Size = new System.Drawing.Size(192, 23);
+            this.darkButton4.TabIndex = 68;
+            this.darkButton4.Text = "Fix Checksums";
+            this.darkButton4.Click += new System.EventHandler(this.darkButton4_Click);
+            // 
             // GForm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(694, 571);
+            this.ClientSize = new System.Drawing.Size(629, 571);
             this.Controls.Add(this.DarkgroupBox1);
             this.Controls.Add(this.darkLabel_8);
             this.Controls.Add(this.darkLabel_7);
@@ -1975,7 +1978,8 @@ public class GForm_Main : DarkForm
             this.Controls.Add(this.darkLabel_2);
             this.Controls.Add(this.darkButton_0);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(710, 573);
+            this.MaximizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(645, 610);
             this.Name = "GForm_Main";
             this.Text = "Honda CANBUS Tools";
             this.Load += new System.EventHandler(this.GForm_Main_Load);

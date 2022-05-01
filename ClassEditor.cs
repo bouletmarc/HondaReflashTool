@@ -341,9 +341,10 @@ internal class ClassEditor
             }
 
             //Check if table size have more than 1x roms (or 1column if inverted) ... aka if it's a 3D table
-            bool IsMultiTable = false;
+            bool IsMultiTable = true;
+            /*bool IsMultiTable = false;
             if (TableSize[1] > 1 && !IsInverted) IsMultiTable = true;
-            if (TableSize[0] > 1 && IsInverted) IsMultiTable = true;
+            if (TableSize[0] > 1 && IsInverted) IsMultiTable = true;*/
 
             if (IsMultiTable)
             {
@@ -355,14 +356,21 @@ internal class ClassEditor
                 {
                     for (int i = 0; i < TableSize[1]; i++)
                     {
-                        double num = 0;
-                        if (IsSingleByteX) num = (double)this.GetSingleByteValue(ROMLocationX + i);
-                        else num = (double)this.GetIntValue(ROMLocationX + i * 2);
+                        if (ROMLocationX != 0)
+                        {
+                            double num = 0;
+                            if (IsSingleByteX) num = (double)this.GetSingleByteValue(ROMLocationX + i);
+                            else num = (double)this.GetIntValue(ROMLocationX + i * 2);
 
-                        string HeaderStr = "";
-                        if (ThisFormatX != "") HeaderStr = DoMath(num, ThisMathX, false).ToString(ThisFormatX);
-                        if (ThisFormatX == "") HeaderStr = DoMath(num, ThisMathX, false).ToString();
-                        Editortable_0.dataGridView_0.Columns.Add(HeaderStr, HeaderStr);
+                            string HeaderStr = "";
+                            if (ThisFormatX != "") HeaderStr = DoMath(num, ThisMathX, false).ToString(ThisFormatX);
+                            if (ThisFormatX == "") HeaderStr = DoMath(num, ThisMathX, false).ToString();
+                            Editortable_0.dataGridView_0.Columns.Add(HeaderStr, HeaderStr);
+                        }
+                        else
+                        {
+                            Editortable_0.dataGridView_0.Columns.Add(RowHeaderString, RowHeaderString);
+                        }
                     }
                 }
                 else
@@ -393,15 +401,24 @@ internal class ClassEditor
                                     //Rows(X) Math
                                     if (IsInverted)
                                     {
-                                        Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = HeaderStringList[num10];
+                                        string ThisHeaderVal = HeaderStringList[num10];
+                                        if (ThisHeaderVal == "") ThisHeaderVal = RowHeaderString;
+                                        Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = ThisHeaderVal;
                                     }
                                     else
                                     {
-                                        double num = 0;
-                                        if (IsSingleByteX) num = (double)this.GetSingleByteValue(ROMLocationX + num10);
-                                        else num = (double)this.GetIntValue(ROMLocationX + num10 * 2);
-                                        if (ThisFormatX != "") Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = DoMath(num, ThisMathX, false).ToString(ThisFormatX);
-                                        if (ThisFormatX == "") Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = DoMath(num, ThisMathX, false).ToString();
+                                        if (ROMLocationX != 0)
+                                        {
+                                            double num = 0;
+                                            if (IsSingleByteX) num = (double)this.GetSingleByteValue(ROMLocationX + num10);
+                                            else num = (double)this.GetIntValue(ROMLocationX + num10 * 2);
+                                            if (ThisFormatX != "") Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = DoMath(num, ThisMathX, false).ToString(ThisFormatX);
+                                            if (ThisFormatX == "") Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = DoMath(num, ThisMathX, false).ToString();
+                                        }
+                                        else
+                                        {
+                                            Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = RowHeaderString;
+                                        }
                                     }
                                     num10++;
                                 }
@@ -442,7 +459,7 @@ internal class ClassEditor
                 }
             }
             //##############################################
-            else
+            /*else
             {
                 //Normal 'single' table 
                 if (IsInverted)
@@ -493,7 +510,7 @@ internal class ClassEditor
                     }
                     Editortable_0.dataGridView_0.Rows[0].HeaderCell.Value = RowHeaderString;
                 }
-            }
+            }*/
             foreach (object obj in Editortable_0.dataGridView_0.Columns)
             {
                 DataGridViewColumn dataGridViewColumn = (DataGridViewColumn)obj;
@@ -934,7 +951,7 @@ internal class ClassEditor
             string Folderpath = Application.StartupPath + @"\Definitions";
             if (Directory.Exists(Folderpath))
             {
-                string[] AllDefinitionFiles = Directory.GetFiles(Folderpath, "*.txt");
+                string[] AllDefinitionFiles = Directory.GetFiles(Folderpath, "*.txt", SearchOption.AllDirectories);
 
                 Editortable_0.GForm_Main_0.method_1("Loading definitions files...");
                 foreach (string ThisFilePath in AllDefinitionFiles)
@@ -979,7 +996,7 @@ internal class ClassEditor
             string Folderpath = Application.StartupPath + @"\Definitions";
             if (Directory.Exists(Folderpath))
             {
-                string[] AllDefinitionFiles = Directory.GetFiles(Folderpath, "*.txt");
+                string[] AllDefinitionFiles = Directory.GetFiles(Folderpath, "*.txt", SearchOption.AllDirectories);
 
                 DefinitionsLocationsX = new List<string>();
                 DefinitionsLocationsY = new List<string>();

@@ -66,6 +66,7 @@
     <Compile Include="ClassListView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Class_DefinitionMaker.cs" />
     <Compile Include="Class_ODB.cs" />
     <Compile Include="Class_ECUS.cs" />
     <Compile Include="Class_Cypher.cs" />
@@ -156,6 +157,7 @@
     <None Include="bin\Debug\Definitions\37805-RRB-A140.txt" />
     <None Include="bin\Debug\Definitions\37805-RWC-A620.txt" />
     <None Include="bin\Debug\Definitions\37805-S2K.txt" />
+    <None Include="bin\Debug\Definitions\DefinitionsGuide.txt" />
     <Content Include="ECUS_KEYS.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -89,5 +89,15 @@ namespace FlashToolTest.Properties {
                 return ((byte[])(obj));
             }
         }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Byte[].
+        /// </summary>
+        internal static byte[] DefinitionsGuide {
+            get {
+                object obj = ResourceManager.GetObject("DefinitionsGuide", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }
