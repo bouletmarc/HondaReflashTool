@@ -105,6 +105,35 @@ ValueMin:-10000
 ValueMax:30000
 FormatY:0.00
 #############################
+ROMLocationX:0x18354
+ROMLocationY:0x1839A
+ROMLocationTable:0x1C9F0
+Name:Cam Angle VTC High
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-10
+ValueMax:40
+ChangeAmount:0.5
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+#############################	15RPM x 25MAP
+ROMLocationX:0x18322
+ROMLocationY:0x1837C
+ROMLocationTable:0x1C81C
+Name:Cam Angle VTC Low
+Unit1:RPM/MAP
+TableSize:25x15
+ValueMin:-10
+ValueMax:40
+ChangeAmount:0.5
+FormatY:0.0
+FormatTable:0.00
+MathY:X*0.013334
+MathTable:X*0.1
+IsTableInverted:true
+#############################
 ROMLocationTable:0xAF8A
 Name:MAF Load Limit
 Unit1:Mg/Stroke

@@ -34,7 +34,8 @@
 # Unit1:UNIT-X/UNIT-Y				-> Type the units used in the top left corner. Units that represent X and Y. (ex: RPM/MAP) (can leave blank)
 # Unit2:UNIT-Y						-> Type the unit used for Y (ex: MAP) (can leave blank)
 # TableSize:4x1						-> Type the table size of the definition (ex: 1x1, 4x1, 10x20)
-# IsInverted:false					-> If true, the table X and Y become inverted
+# IsXYInverted:false				-> If true, the whole table X and Y become inverted (including the X and Y headers)
+# IsTableInverted:false				-> If true, the values within the Table become inverted on X and Y
 # IsSingleByteX:false				-> If true, the values shown for X are extracted from a single byte for each value. Else each values are read from 2bytes in the rom
 # IsSingleByteY:false				-> If true, the values shown for Y are extracted from a single byte for each value. Else each values are read from 2bytes in the rom
 # IsSingleByteTable:false			-> If true, the values shown for Z are extracted from a single byte for each value. Else each values are read from 2bytes in the rom
