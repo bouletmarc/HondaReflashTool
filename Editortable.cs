@@ -625,7 +625,7 @@ public class Editortable : DarkForm
 
                 //Set Y Headers (normal header mode)
                 int DoingThisSize = TableSizze[0];
-                if (ClassEditor_0.DefinitionsIsInverted[NodeIndex]) DoingThisSize = TableSizze[1];
+                if (ClassEditor_0.DefinitionsIsXYInverted[NodeIndex]) DoingThisSize = TableSizze[1];
 
                 string[] textArray1 = new string[DoingThisSize];
                 if (ClassEditor_0.DefinitionsHeaders[NodeIndex] != "" && ClassEditor_0.DefinitionsHeaders[NodeIndex].Contains(","))
@@ -650,11 +650,68 @@ public class Editortable : DarkForm
                 }
 
                 //Show Value in Datagridview
-                ClassEditor_0.SetTableValues(TableSizze, ParamLocation, ClassEditor_0.DefinitionsUnit1[NodeIndex], ClassEditor_0.DefinitionsUnit2[NodeIndex], textArray1, ClassEditor_0.DefinitionsMathX[NodeIndex], ClassEditor_0.DefinitionsFormatX[NodeIndex], ClassEditor_0.DefinitionsIsInverted[NodeIndex], ClassEditor_0.HexStringToInt(ClassEditor_0.DefinitionsLocationsTable[NodeIndex]), ClassEditor_0.DefinitionsMathTable[NodeIndex], ClassEditor_0.DefinitionsFormatTable[NodeIndex]);
+                ClassEditor_0.SetTableValues(TableSizze, ParamLocation, ClassEditor_0.DefinitionsUnit1[NodeIndex], ClassEditor_0.DefinitionsUnit2[NodeIndex], textArray1, ClassEditor_0.DefinitionsMathX[NodeIndex], ClassEditor_0.DefinitionsFormatX[NodeIndex], ClassEditor_0.DefinitionsIsXYInverted[NodeIndex], ClassEditor_0.HexStringToInt(ClassEditor_0.DefinitionsLocationsTable[NodeIndex]), ClassEditor_0.DefinitionsMathTable[NodeIndex], ClassEditor_0.DefinitionsFormatTable[NodeIndex], ClassEditor_0.DefinitionsIsTableInverted[NodeIndex]);
             }
         }
 
         ClassEditor_0.bool_1 = true;
+    }
+
+    private int CheckForBootLoaderSum(string ThisECUName)
+    {
+        string BLSumPath = Application.StartupPath + @"\BootLoaderSumBytesList.txt";
+        if (File.Exists(BLSumPath))
+        {
+            string[] AllLines = File.ReadAllLines(BLSumPath);
+
+            for (int i = 0; i < AllLines.Length; i++)
+            {
+                if (AllLines[i].Contains("|"))
+                {
+                    string[] SplittedCommands = AllLines[i].Split('|');
+
+                    if (SplittedCommands[0] == ThisECUName)
+                    {
+                        return int.Parse(SplittedCommands[1]);
+                    }
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    public string ExtractECUNameFromThisFile(byte[] ThisFileBytes)
+    {
+        string ECUName = "";
+        for (int i = 0; i < ThisFileBytes.Length; i++)
+        {
+            //37805-
+            if ((char) ThisFileBytes[i] == '3'
+                && (char)ThisFileBytes[i + 1] == '7'
+                && (char)ThisFileBytes[i + 2] == '8'
+                && (char)ThisFileBytes[i + 3] == '0'
+                && (char)ThisFileBytes[i + 4] == '5'
+                && (char)ThisFileBytes[i + 5] == '-')
+            {
+                ECUName = ECUName + ((char)ThisFileBytes[i]).ToString();        //3
+                ECUName = ECUName + ((char)ThisFileBytes[i + 1]).ToString();    //7
+                ECUName = ECUName + ((char)ThisFileBytes[i + 2]).ToString();    //8
+                ECUName = ECUName + ((char)ThisFileBytes[i + 3]).ToString();    //0
+                ECUName = ECUName + ((char)ThisFileBytes[i + 4]).ToString();    //5
+                ECUName = ECUName + ((char)ThisFileBytes[i + 5]).ToString();    //-
+                ECUName = ECUName + ((char)ThisFileBytes[i + 6]).ToString();    //X
+                ECUName = ECUName + ((char)ThisFileBytes[i + 7]).ToString();    //X
+                ECUName = ECUName + ((char)ThisFileBytes[i + 8]).ToString();    //X
+                ECUName = ECUName + ((char)ThisFileBytes[i + 9]).ToString();    //-
+                ECUName = ECUName + ((char)ThisFileBytes[i + 10]).ToString();   //X
+                ECUName = ECUName + ((char)ThisFileBytes[i + 11]).ToString();   //X
+                ECUName = ECUName + ((char)ThisFileBytes[i + 12]).ToString();   //X
+                ECUName = ECUName + ((char)ThisFileBytes[i + 13]).ToString();   //X
+            }
+        }
+
+        return ECUName;
     }
 
     private void button1_Click(object sender, EventArgs e)
@@ -686,15 +743,23 @@ public class Editortable : DarkForm
                     this.Editortable_0.LoadedFilename = openFileDialog1.FileName;
                     this.IsFullBinary = false;
 
-                    DarkMessageBox.Show(this, "Since this decompressed firmware .bin file is missing the bootloader section\nSelect the firmware .rwd file from which is as been decompressed from", "MISSING BOOTLOADER SECTION FOR CHECKSUMS VERIFICATIONS", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
-                    //Open RWD firmware
-                    openFileDialog1.Filter = "Honda Compressed RWD Firmware|*.gz;*.rwd";
-                    openFileDialog1.DefaultExt = "*.gz";
-                    result = openFileDialog1.ShowDialog();
-                    if (result == DialogResult.OK)
+                    int BtSumInt = CheckForBootLoaderSum(ExtractECUNameFromThisFile(FilesBytes));
+                    if (BtSumInt == -1)
                     {
-                        Class_RWD.LoadRWD(openFileDialog1.FileName, true, false);
+                        DarkMessageBox.Show(this, "Since this decompressed firmware .bin file is missing the bootloader section\nSelect the firmware .rwd file from which is as been decompressed from", "MISSING BOOTLOADER SECTION FOR CHECKSUMS VERIFICATIONS", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                        //Open RWD firmware
+                        openFileDialog1.Filter = "Honda Compressed RWD Firmware|*.gz;*.rwd";
+                        openFileDialog1.DefaultExt = "*.gz";
+                        result = openFileDialog1.ShowDialog();
+                        if (result == DialogResult.OK)
+                        {
+                            Class_RWD.LoadRWD(openFileDialog1.FileName, true, false);
+                        }
+                    }
+                    else
+                    {
+                        Class_RWD.BootloaderSum = (byte) BtSumInt;
                     }
 
                     //Load Binary into ROM Table Editor

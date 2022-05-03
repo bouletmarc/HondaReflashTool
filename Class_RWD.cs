@@ -437,10 +437,7 @@ static class Class_RWD
         byte b = 0;
         for (int i = 0; i < byte_1.Length; i++)
         {
-            if (i != 0x400)
-            {
-                b -= byte_1[i];
-            }
+            if (i != 0x400) b -= byte_1[i];
         }
         return b;
     }

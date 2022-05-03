@@ -30,7 +30,7 @@ public class GForm_Main : DarkForm
     private DarkButton darkButton6;
     private DarkButton darkButton3;
     public Editortable Editortable_0;
-    public string Version = "v1.1.0";
+    public string Version = "v1.1.1";
 
     public GForm_Main()
     {
@@ -50,7 +50,9 @@ public class GForm_Main : DarkForm
         this.Text = this.Text + " (" + Version + ")";
 
         Class_DefinitionMaker Class_DefinitionMaker_0 = new Class_DefinitionMaker();
-        Class_DefinitionMaker_0.CreateDefinitionsFiles();
+        //Class_DefinitionMaker_0.CreateDefinitionsFiles();
+        //Class_DefinitionMaker_0.GetFilesDifferenceCount();        //may not be used anymore
+        //Class_DefinitionMaker_0.ExtractAllBootLoaderSum_1Mb();    //may not be used anymore
     }
 
 
@@ -1031,7 +1033,7 @@ public class GForm_Main : DarkForm
         //########################################################
         //########################################################
         //Verify for 0x10400
-        CheckLocation = 0x10400;
+        /*CheckLocation = 0x10400;
         num = BufferBytes[CheckLocation];
         num2 = GetNegativeChecksumArea(BufferBytes, 0x8000, CheckLocation);
         if (num != num2)
@@ -1043,7 +1045,7 @@ public class GForm_Main : DarkForm
         else
         {
             this.method_1("Checksum are good at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
-        }
+        }*/
         //########################################################
         //########################################################
         return BufferBytes;
@@ -1074,7 +1076,7 @@ public class GForm_Main : DarkForm
         //########################################################
         //########################################################
         //Verify for 0x8400 (0x10400 in full bin)
-        CheckLocation = 0x8400;
+        /*CheckLocation = 0x8400;
         num = BufferBytes[CheckLocation];
         num2 = GetNegativeChecksumArea(BufferBytes, 0, CheckLocation);
         if (num != num2)
@@ -1086,7 +1088,7 @@ public class GForm_Main : DarkForm
         else
         {
             this.method_1("Checksum are good at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
-        }
+        }*/
         //########################################################
         //########################################################
         return BufferBytes;

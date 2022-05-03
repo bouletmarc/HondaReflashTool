@@ -158,6 +158,9 @@
     <None Include="bin\Debug\Definitions\37805-RWC-A620.txt" />
     <None Include="bin\Debug\Definitions\37805-S2K.txt" />
     <None Include="bin\Debug\Definitions\DefinitionsGuide.txt" />
+    <Content Include="BootLoaderSumBytesList.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="ECUS_KEYS.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

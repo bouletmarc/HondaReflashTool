@@ -40,7 +40,8 @@ internal class ClassEditor
     public List<float> DefinitionsValueMax = new List<float>();
     public List<double> DefinitionsChangeAmount = new List<double>();
     public List<string> DefinitionsHeaders = new List<string>();
-    public List<bool> DefinitionsIsInverted = new List<bool>();
+    public List<bool> DefinitionsIsXYInverted = new List<bool>();
+    public List<bool> DefinitionsIsTableInverted = new List<bool>();
 
     private Editortable Editortable_0;
 
@@ -238,8 +239,6 @@ internal class ClassEditor
         bool DiffDetected = false;
         foreach (int num4 in BytesBufferarray)
         {
-            //if ((!this.bool_3 || num3 < 200) && num4.ToString() != array[num3].ToString())
-            //if (((Is1x20Table && (!this.IsSingleByteX || num3 < 200)) || (!Is1x20Table)) && num4.ToString() != array[num3].ToString())
             if (num4.ToString() != array[num3].ToString())
             {
                 string BufText = "Change at line: " + num3.ToString() + "[" + array[num3].ToString("X2") + "->" + num4.ToString("X2") + "] | At: 0x" + (this.SelectedROMLocation + num3).ToString("X");
@@ -279,8 +278,6 @@ internal class ClassEditor
 
             //Fix Checksums
             FixChecksums();
-            //if (!this.Editortable_0.IsFullBinary) SavingBytes = this.Editortable_0.GForm_Main_0.VerifyChecksumFWBin(SavingBytes);
-            //if (this.Editortable_0.IsFullBinary) SavingBytes = this.Editortable_0.GForm_Main_0.VerifyChecksumFullBin(SavingBytes);
 
             File.Create(string_4).Dispose();
             File.WriteAllBytes(string_4, SavingBytes);
@@ -315,13 +312,11 @@ internal class ClassEditor
 
     }
 
-    public void SetTableValues(int[] TableSize, int ROMLocationX, string TopLeftString, string RowHeaderString, string[] HeaderStringList, string ThisMathX, string ThisFormatX, bool IsInverted, int ROMLocationTable, string ThisMathTable, string ThisTableFormat)
+    public void SetTableValues(int[] TableSize, int ROMLocationX, string TopLeftString, string RowHeaderString, string[] HeaderStringList, string ThisMathX, string ThisFormatX, bool IsXYInverted, int ROMLocationTable, string ThisMathTable, string ThisTableFormat, bool IsTableInverted)
     {
         try
         {
             this.SelectedTableSize = TableSize[0] * TableSize[1];
-            this.SelectedROMLocation = ROMLocationX;
-            BufferMath = ThisMathX;
             BufferValuesArray = new int[SelectedTableSize];
             BufferTableSize = TableSize;
 
@@ -332,185 +327,152 @@ internal class ClassEditor
             Editortable_0.dataGridView_0.AllowUserToAddRows = false;
 
             //Correct the Table Orientation if Bad
-            if ((TableSize[1] == 1 && IsInverted) || (TableSize[0] == 1 && !IsInverted))
+            /*if ((TableSize[1] == 1 && IsInverted) || (TableSize[0] == 1 && !IsInverted))
             {
                 int Buf0 = TableSize[1];
                 int Buf1 = TableSize[0];
                 TableSize[0] = Buf0;
                 TableSize[1] = Buf1;
-            }
+            }*/
 
-            //Check if table size have more than 1x roms (or 1column if inverted) ... aka if it's a 3D table
-            bool IsMultiTable = true;
-            /*bool IsMultiTable = false;
-            if (TableSize[1] > 1 && !IsInverted) IsMultiTable = true;
-            if (TableSize[0] > 1 && IsInverted) IsMultiTable = true;*/
+            SelectedROMLocation = ROMLocationTable;
+            BufferMath = ThisMathTable;
 
-            if (IsMultiTable)
+            //Apply Columns(Y)
+            if (IsXYInverted)
             {
-                SelectedROMLocation = ROMLocationTable;
-                BufferMath = ThisMathTable;
-
-                //Apply Columns(Y)
-                if (IsInverted)
+                for (int i = 0; i < TableSize[1]; i++)
                 {
-                    for (int i = 0; i < TableSize[1]; i++)
-                    {
-                        if (ROMLocationX != 0)
-                        {
-                            double num = 0;
-                            if (IsSingleByteX) num = (double)this.GetSingleByteValue(ROMLocationX + i);
-                            else num = (double)this.GetIntValue(ROMLocationX + i * 2);
-
-                            string HeaderStr = "";
-                            if (ThisFormatX != "") HeaderStr = DoMath(num, ThisMathX, false).ToString(ThisFormatX);
-                            if (ThisFormatX == "") HeaderStr = DoMath(num, ThisMathX, false).ToString();
-                            Editortable_0.dataGridView_0.Columns.Add(HeaderStr, HeaderStr);
-                        }
-                        else
-                        {
-                            Editortable_0.dataGridView_0.Columns.Add(RowHeaderString, RowHeaderString);
-                        }
-                    }
-                }
-                else
-                {
-                    for (int j = 0; j < TableSize[0]; j++) Editortable_0.dataGridView_0.Columns.Add(HeaderStringList[j], HeaderStringList[j]);
-                }
-
-                int index = 0;
-                while (true)
-                {
-                    if (index >= SelectedTableSize) // More than TableSize (ex: 10x20.. more than 200)
-                    {
-                        int[,] numArray2 = smethod_35<int>(BufferValuesArray, TableSize[0], TableSize[1]);
-                        int rowIndex = 0;
-                        while (true)
-                        {
-                            if ((rowIndex >= TableSize[1] && !IsInverted) || (rowIndex >= TableSize[0] && IsInverted))   //More than Y (make the 3D table)
-                            {
-                                int num10 = 0;
-                                while (true)
-                                {
-                                    if ((num10 >= TableSize[1] && !IsInverted) || (num10 >= TableSize[0] && IsInverted))   //Another More than Y (set X Header)
-                                    {
-                                        if (!IsInverted) SetBackColor(TableSize[0], Editortable.float_1[0], Editortable.float_1[1]);
-                                        if (IsInverted) SetBackColor(TableSize[1], Editortable.float_1[0], Editortable.float_1[1]);
-                                        break;
-                                    }
-                                    //Rows(X) Math
-                                    if (IsInverted)
-                                    {
-                                        string ThisHeaderVal = HeaderStringList[num10];
-                                        if (ThisHeaderVal == "") ThisHeaderVal = RowHeaderString;
-                                        Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = ThisHeaderVal;
-                                    }
-                                    else
-                                    {
-                                        if (ROMLocationX != 0)
-                                        {
-                                            double num = 0;
-                                            if (IsSingleByteX) num = (double)this.GetSingleByteValue(ROMLocationX + num10);
-                                            else num = (double)this.GetIntValue(ROMLocationX + num10 * 2);
-                                            if (ThisFormatX != "") Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = DoMath(num, ThisMathX, false).ToString(ThisFormatX);
-                                            if (ThisFormatX == "") Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = DoMath(num, ThisMathX, false).ToString();
-                                        }
-                                        else
-                                        {
-                                            Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = RowHeaderString;
-                                        }
-                                    }
-                                    num10++;
-                                }
-                                break;
-                            }
-
-                            //TableMath (Get full 1full row of value at a time)
-                            object[] values = new object[0];
-                            if (IsInverted)
-                            {
-                                values = new object[TableSize[1]];
-                                for (int i = 0; i < TableSize[1]; i++)
-                                {
-                                    if (ThisTableFormat != "") values[i] = DoMath((double)numArray2[rowIndex, i], ThisMathTable, false).ToString(ThisTableFormat);
-                                    if (ThisTableFormat == "") values[i] = DoMath((double)numArray2[rowIndex, i], ThisMathTable, false).ToString();
-                                }
-                            }
-                            else
-                            {
-                                values = new object[TableSize[0]];
-                                for (int i = 0; i < TableSize[0]; i++)
-                                {
-                                    if (ThisTableFormat != "") values[i] = DoMath((double)numArray2[i, rowIndex], ThisMathTable, false).ToString(ThisTableFormat);
-                                    if (ThisTableFormat == "") values[i] = DoMath((double)numArray2[i, rowIndex], ThisMathTable, false).ToString();
-                                }
-                            }
-                            Editortable_0.dataGridView_0.Rows.Insert(rowIndex, values);
-                            rowIndex++;
-                        }
-                        break;
-                    }
-
-                    //Math perfomed just above
-                    if (IsSingleByteTable) BufferValuesArray[index] = GetSingleByteValue(SelectedROMLocation + index);
-                    else BufferValuesArray[index] = GetIntValue(SelectedROMLocation + (index * 2));
-
-                    index++;
-                }
-            }
-            //##############################################
-            /*else
-            {
-                //Normal 'single' table 
-                if (IsInverted)
-                {
-                    for (int i = 0; i < TableSize[0]; i++) Editortable_0.dataGridView_0.Columns.Add(RowHeaderString, RowHeaderString);
-
-                    for (int i = 0; i < TableSize[1]; i++)
+                    if (ROMLocationX != 0)
                     {
                         double num = 0;
                         if (IsSingleByteX) num = (double)this.GetSingleByteValue(ROMLocationX + i);
                         else num = (double)this.GetIntValue(ROMLocationX + i * 2);
 
-                        BufferValuesArray[i] = (int) num;
-
-                        double FinalValue = DoMath(num, ThisMathX, false);
-
-                        if (ThisFormatX == "") Editortable_0.dataGridView_0.Rows.Add(new object[] { FinalValue.ToString() });
-                        if (ThisFormatX != "") Editortable_0.dataGridView_0.Rows.Add(new object[] { FinalValue.ToString(ThisFormatX) });
-
-                        Editortable_0.dataGridView_0.Rows[i].HeaderCell.Value = HeaderStringList[i];
+                        string HeaderStr = "";
+                        if (ThisFormatX != "") HeaderStr = DoMath(num, ThisMathX, false).ToString(ThisFormatX);
+                        if (ThisFormatX == "") HeaderStr = DoMath(num, ThisMathX, false).ToString();
+                        Editortable_0.dataGridView_0.Columns.Add(HeaderStr, HeaderStr);
+                    }
+                    else
+                    {
+                        Editortable_0.dataGridView_0.Columns.Add(RowHeaderString, RowHeaderString);
                     }
                 }
-                if (!IsInverted)
+            }
+            else
+            {
+                for (int j = 0; j < TableSize[0]; j++) Editortable_0.dataGridView_0.Columns.Add(HeaderStringList[j], HeaderStringList[j]);
+            }
+
+            int index = 0;
+            while (true)
+            {
+                if (index >= SelectedTableSize) // More than TableSize (ex: 10x20.. more than 200)
                 {
-                    for (int j = 0; j < TableSize[0]; j++) Editortable_0.dataGridView_0.Columns.Add(HeaderStringList[j], HeaderStringList[j]);
-                    List<string> list = new List<string>();
-
-                    //################################################################################################################
-                    for (int k = 0; k < TableSize[0]; k++)
+                    int[,] numArray2 = smethod_35<int>(BufferValuesArray, TableSize[0], TableSize[1]);
+                    int rowIndex = 0;
+                    while (true)
                     {
-                        double num = 0;
-                        if (IsSingleByteX) num = (double)this.GetSingleByteValue(ROMLocationX + k);
-                        else num = (double)this.GetIntValue(ROMLocationX + k * 2);
-                        BufferValuesArray[k] = (int) num;
+                        if ((rowIndex >= TableSize[1] && !IsXYInverted) || (rowIndex >= TableSize[0] && IsXYInverted))   //More than Y (make the 3D table)
+                        {
+                            int num10 = 0;
+                            while (true)
+                            {
+                                if ((num10 >= TableSize[1] && !IsXYInverted) || (num10 >= TableSize[0] && IsXYInverted))   //Another More than Y (set X Header)
+                                {
+                                    if (!IsXYInverted) SetBackColor(TableSize[0], Editortable.float_1[0], Editortable.float_1[1]);
+                                    if (IsXYInverted) SetBackColor(TableSize[1], Editortable.float_1[0], Editortable.float_1[1]);
+                                    break;
+                                }
+                                //Rows(X) Math
+                                if (IsXYInverted)
+                                {
+                                    string ThisHeaderVal = HeaderStringList[num10];
+                                    if (ThisHeaderVal == "") ThisHeaderVal = RowHeaderString;
+                                    Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = ThisHeaderVal;
+                                }
+                                else
+                                {
+                                    if (ROMLocationX != 0)
+                                    {
+                                        double num = 0;
+                                        if (IsSingleByteX) num = (double)this.GetSingleByteValue(ROMLocationX + num10);
+                                        else num = (double)this.GetIntValue(ROMLocationX + num10 * 2);
+                                        if (ThisFormatX != "") Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = DoMath(num, ThisMathX, false).ToString(ThisFormatX);
+                                        if (ThisFormatX == "") Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = DoMath(num, ThisMathX, false).ToString();
+                                    }
+                                    else
+                                    {
+                                        Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = RowHeaderString;
+                                    }
+                                }
+                                num10++;
+                            }
+                            break;
+                        }
 
-                        //Console.WriteLine("num: " + num);
-
-                        if (ThisFormatX == "") list.Add(DoMath(num, ThisMathX, false).ToString());
-                        if (ThisFormatX != "") list.Add(DoMath(num, ThisMathX, false).ToString(ThisFormatX));
+                        //TableMath (Get full 1full row of value at a time)
+                        object[] values = new object[0];
+                        if (IsXYInverted)
+                        {
+                            values = new object[TableSize[1]];
+                            for (int i = 0; i < TableSize[1]; i++)
+                            {
+                                if (ThisTableFormat != "") values[i] = DoMath((double)numArray2[rowIndex, i], ThisMathTable, false).ToString(ThisTableFormat);
+                                if (ThisTableFormat == "") values[i] = DoMath((double)numArray2[rowIndex, i], ThisMathTable, false).ToString();
+                            }
+                        }
+                        else
+                        {
+                            values = new object[TableSize[0]];
+                            for (int i = 0; i < TableSize[0]; i++)
+                            {
+                                if (ThisTableFormat != "") values[i] = DoMath((double)numArray2[i, rowIndex], ThisMathTable, false).ToString(ThisTableFormat);
+                                if (ThisTableFormat == "") values[i] = DoMath((double)numArray2[i, rowIndex], ThisMathTable, false).ToString();
+                            }
+                        }
+                        Editortable_0.dataGridView_0.Rows.Insert(rowIndex, values);
+                        rowIndex++;
                     }
-                    //################################################################################################################
-
-                    Editortable_0.dataGridView_0.Rows.Add();
-                    for (int num6 = 0; num6 < TableSize[0]; num6++)
-                    {
-                        DataGridViewRow dataGridViewRow = Editortable_0.dataGridView_0.Rows[0];
-                        dataGridViewRow.Cells[num6].Value = list[num6];
-                    }
-                    Editortable_0.dataGridView_0.Rows[0].HeaderCell.Value = RowHeaderString;
+                    break;
                 }
-            }*/
+
+                //Math perfomed just above
+                if (IsSingleByteTable) BufferValuesArray[index] = GetSingleByteValue(SelectedROMLocation + index);
+                else BufferValuesArray[index] = GetIntValue(SelectedROMLocation + (index * 2));
+
+                index++;
+            }
+
+            //##############################################################################################################
+            //Invert inner tables values X and Y
+            if (IsTableInverted)
+            {
+                int[,] numArray2 = smethod_35<int>(BufferValuesArray, TableSize[1], TableSize[0]);
+
+                for (int i = 0; i < Editortable_0.dataGridView_0.ColumnCount; i++)
+                {
+                    for (int i2 = 0; i2 < Editortable_0.dataGridView_0.RowCount; i2++)
+                    {
+                        string valueinner = "";
+                        if (IsXYInverted)
+                        {
+                            if (ThisTableFormat != "") valueinner = DoMath((double)numArray2[i, i2], ThisMathTable, false).ToString(ThisTableFormat);
+                            if (ThisTableFormat == "") valueinner = DoMath((double)numArray2[i, i2], ThisMathTable, false).ToString();
+                        }
+                        else
+                        {
+                            if (ThisTableFormat != "") valueinner = DoMath((double)numArray2[i2, i], ThisMathTable, false).ToString(ThisTableFormat);
+                            if (ThisTableFormat == "") valueinner = DoMath((double)numArray2[i2, i], ThisMathTable, false).ToString();
+                        }
+
+                        Editortable_0.dataGridView_0.Rows[i2].Cells[i].Value = valueinner;
+                    }
+                }
+            }
+            //##############################################################################################################
+
             foreach (object obj in Editortable_0.dataGridView_0.Columns)
             {
                 DataGridViewColumn dataGridViewColumn = (DataGridViewColumn)obj;
@@ -632,7 +594,8 @@ internal class ClassEditor
         {
             double ReversedVal = DoMathFinal(ReturnVal, ThisMath, true);
             if (((int) ReversedVal).ToString() != ((int) ThisValueCheck).ToString()
-                && ((int)ReversedVal + 1).ToString() != ((int)ThisValueCheck).ToString())
+                && ((int)ReversedVal + 1).ToString() != ((int)ThisValueCheck).ToString()
+                && ((int)ReversedVal - 1).ToString() != ((int)ThisValueCheck).ToString())
             {
                 Editortable_0.GForm_Main_0.method_1("Problem with math: " + ThisMath + " | Values: " + ((int)ThisValueCheck).ToString() + " != " + ((int)ReversedVal).ToString());
             }
@@ -661,17 +624,10 @@ internal class ClassEditor
                 ThisMath = ThisMath.Replace(XandMath, "") + XandMath[1].ToString() + XandMath[0].ToString();
             }
         }
-        //Console.WriteLine("Math: " + ThisMath + " (" + Reverse + ")");
 
         ThisMath = ThisMath.Replace("X", ThisValue.ToString());
-        //Console.WriteLine("Math func: " + ThisMath + " (" + Reverse + ")");
-
-        //128.0/X*14.7  -->    128/ (X/14.7)            (real order: X/14.7*128
-        //32767/X       -->    32767/X
-        //X/50          -->    X*50
 
         if (Reverse) ThisMath = InvertMathString(ThisMath);
-        //Console.WriteLine("Math func: " + ThisMath + " (" + Reverse + ")");
 
         bool WeHaveVal1 = false;
         double Val1 = 0;
@@ -682,8 +638,6 @@ internal class ClassEditor
             ThisMath = ThisMath.Substring(GetNearestMathIndex(ThisMath) + 1);
             double Val2 = GetNextValue(ThisMath);
 
-            //Console.WriteLine("Math: " + Val1 + MathChar.ToString() + Val2 + " (" + Reverse + ")");
-
             if (MathChar == '*') ReturnVal = Val1 * Val2;
             if (MathChar == '/') ReturnVal = Val1 / Val2;
             if (MathChar == '+') ReturnVal = Val1 + Val2;
@@ -693,9 +647,6 @@ internal class ClassEditor
 
             int NearestIndex = GetNearestMathIndex(ThisMath);
             if (NearestIndex != -1) ThisMath = ThisMath.Substring(GetNearestMathIndex(ThisMath));
-
-            //Console.WriteLine("Math remain: " + ThisMath + " (" + Reverse + ")");
-            //Console.WriteLine("New/End Val1: " + ReturnVal + " (" + Reverse + ")");
 
             WeHaveVal1 = true;
             Val1 = ReturnVal;
@@ -1016,7 +967,8 @@ internal class ClassEditor
                 DefinitionsFormatX = new List<string>();
                 DefinitionsHeaders = new List<string>();
                 DefinitionsFormatY = new List<string>();
-                DefinitionsIsInverted = new List<bool>();
+                DefinitionsIsXYInverted = new List<bool>();
+                DefinitionsIsTableInverted = new List<bool>();
 
                 Editortable_0.GForm_Main_0.method_1("Loading ECU definitions for: " + ThisECU);
                 bool ECUFound = false;
@@ -1045,12 +997,15 @@ internal class ClassEditor
                     string CurrentFormatY = "";
                     string CurrentFormatTable = "";
                     string CurrentHeaders = "";
-                    bool CurrentIsInverted = false;
+                    bool CurrentIsXYInverted = false;
+                    bool CurrentIsTableInverted = false;
 
                     for (int i = 0; i < AllLines.Length; i++)
                     {
                         string Thisline = AllLines[i];
                         if (Thisline.Contains("ROM Parameters")) GettingEcuList = false; //make sure we are not reading false contents
+
+                        if (Thisline.Contains("THIS FILE AS BEEN GENERATED")) DarkMessageBox.Show("This Definitions file as been generated to get the ROM Locations.\nThe ROM Locations can possibly be wrong and\nthe tables can display corrupted values!");
 
                         //Get supported ecu list from file and check if it's match
                         if (Thisline[0] != '#' && Thisline != "")
@@ -1088,7 +1043,8 @@ internal class ClassEditor
                                     if (Commands[0] == "FormatY") CurrentFormatY = Commands[1];
                                     if (Commands[0] == "FormatTable") CurrentFormatTable = Commands[1];
                                     if (Commands[0] == "Headers") CurrentHeaders = Commands[1];
-                                    if (Commands[0] == "IsInverted") CurrentIsInverted = bool.Parse(Commands[1].ToLower());
+                                    if (Commands[0] == "IsXYInverted") CurrentIsXYInverted = bool.Parse(Commands[1].ToLower());
+                                    if (Commands[0] == "IsTableInverted") CurrentIsTableInverted = bool.Parse(Commands[1].ToLower());
                                 }
                             }
 
@@ -1119,7 +1075,8 @@ internal class ClassEditor
                                     DefinitionsFormatY.Add(CurrentFormatY);
                                     DefinitionsFormatTable.Add(CurrentFormatTable);
                                     DefinitionsHeaders.Add(CurrentHeaders);
-                                    DefinitionsIsInverted.Add(CurrentIsInverted);
+                                    DefinitionsIsXYInverted.Add(CurrentIsXYInverted);
+                                    DefinitionsIsTableInverted.Add(CurrentIsTableInverted);
 
                                     //Reset values to default
                                     CurrentLocationX = "";
@@ -1142,7 +1099,8 @@ internal class ClassEditor
                                     CurrentHeaders = "";
                                     CurrentFormatY = "";
                                     CurrentFormatTable = "";
-                                    CurrentIsInverted = false;
+                                    CurrentIsXYInverted = false;
+                                    CurrentIsTableInverted = false;
                                 }
                             }
                         }
