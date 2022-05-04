@@ -11,65 +11,56 @@
 #######################################################################
 # ROM Parameters Definitions:
 #######################################################################
-ROMLocationTable:0x10000F
-Name:VTEC Engagement
-Unit2:RPM
-TableSize:4x1
-ValueMin:-10000
-ValueMax:30000
-ChangeAmount:10
-Headers:Enable Low,Disable Low,Enable High,Disable High
-#############################
-ROMLocationTable:0x100046
+ROMLocationTable:0x17DB2
 Name:Revlimiter
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationTable:0x10004E
+ROMLocationTable:0x17DBA
 Name:--Revlimiter 1
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationTable:0x100056
+ROMLocationTable:0x17DC2
 Name:--Revlimiter 2
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationTable:0x10005E
+ROMLocationTable:0x17DCA
 Name:--Revlimiter 3
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationTable:0x100066
+ROMLocationTable:0x17DD2
 Name:--Revlimiter 4
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationTable:0x10006A
+ROMLocationTable:0x17DD6
 Name:--Revlimiter 5
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationTable:0x10007A
+ROMLocationTable:0x17DE6
 Name:--Revlimiter 6
 Unit2:RPM
 TableSize:2x1
 ValueMax:10000
 ChangeAmount:50
 #############################
-ROMLocationTable:0x100082
+ROMLocationTable:0x17DEE
 Name:--Revlimiter 7
 Unit2:RPM
 TableSize:2x1
@@ -83,7 +74,7 @@ TableSize:1x1
 ValueMax:255
 # MathTable:X/1.609
 #############################
-ROMLocationTable:0x100007
+ROMLocationTable:0x185C2
 Name:Injector Voltage Compensation
 Unit1:Volts
 Unit2:ms
@@ -94,15 +85,7 @@ ValueMin:-1000
 ValueMax:3000
 Headers:6.00,8.00,12.00,14.00,16.00
 #############################
-ROMLocationTable:0xFFFF7
-Name:MAF Load Limit
-Unit1:Mg/Stroke
-TableSize:4x1
-ValueMin:-1000
-ValueMax:4000
-ChangeAmount:50
-#############################
-ROMLocationTable:0x1000B4
+ROMLocationTable:0xCEE8
 Name:Minimum IPW
 Unit1:Min IPW
 TableSize:1x1
@@ -113,6 +96,7 @@ MathTable:X*0.002
 FormatTable:0.000
 #############################
 ROMLocationTable:0x17DB2
+ROMLocationY:0x11EF4
 Name:Idle Speed
 Unit1:Coolant Temp
 Unit2:RPM
@@ -120,4 +104,16 @@ TableSize:8x1
 ValueMin:-1000
 ValueMax:4000
 ChangeAmount:50
+MathY:X/10
+#############################
+ROMLocationTable:0x17DC2
+ROMLocationY:0x11EF4
+Name:Post Start Idle Speed
+Unit1:Coolant Temp
+Unit2:RPM
+TableSize:8x1
+ValueMin:-1000
+ValueMax:4000
+ChangeAmount:50
+MathY:X/10
 #############################

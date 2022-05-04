@@ -102,7 +102,7 @@ ValueMin:-1000
 ValueMax:4000
 ChangeAmount:50
 #############################
-ROMLocationTable:0xC693
+ROMLocationTable:0xC694
 Name:Minimum IPW
 Unit1:Min IPW
 TableSize:1x1
@@ -112,7 +112,8 @@ ChangeAmount:0.001
 MathTable:X*0.002
 FormatTable:0.000
 #############################
-ROMLocationTable:0x10000F
+ROMLocationTable:0x10588
+ROMLocationY:0x10350
 Name:Idle Speed
 Unit1:Coolant Temp
 Unit2:RPM
@@ -120,4 +121,40 @@ TableSize:8x1
 ValueMin:-1000
 ValueMax:4000
 ChangeAmount:50
+MathY:X/10
+#############################
+ROMLocationTable:0x10598
+ROMLocationY:0x10350
+Name:Post Start Idle Speed
+Unit1:Coolant Temp
+Unit2:RPM
+TableSize:8x1
+ValueMin:-1000
+ValueMax:4000
+ChangeAmount:50
+MathY:X/10
+#############################
+ROMLocationTable:0x10918
+Name:WOT Determiniation 1(TPS)
+Unit1:RPM
+Unit2:TPS(%)
+TableSize:6x1
+ValueMin:-50
+ValueMax:200
+MathTable:X*0.005
+FormatTable:0.00
+ChangeAmount:1
+Headers:1000,2000,3000,4000,5000,6000
+#############################
+ROMLocationTable:0x10930
+Name:WOT Determiniation 2(TPS)
+Unit1:RPM
+Unit2:TPS(%)
+TableSize:6x1
+ValueMin:-50
+ValueMax:200
+MathTable:X*0.005
+FormatTable:0.00
+ChangeAmount:1
+Headers:1000,2000,3000,4000,5000,6000
 #############################
