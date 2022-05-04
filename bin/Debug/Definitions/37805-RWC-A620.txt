@@ -4,6 +4,7 @@
 #######################################################################
 # Supported ECU:
 #######################################################################
+37805-RWC-A720
 37805-RWC-A620
 37805-RWC-A610
 #######################################################################
@@ -11,80 +12,580 @@
 #######################################################################
 # ROM Parameters Definitions
 #######################################################################
-ROMLocationTable:0xB730
-Name:VTEC Engagement
-Unit2:RPM
-TableSize:4x1
-ValueMin:-10000
-ValueMax:30000
-ChangeAmount:10
-Headers:Enable Low,Disable Low,Enable High,Disable High
+Name:Rev limiters
 #############################
-ROMLocationTable:0x1328C
-Name:Revlimiter
-Unit2:RPM
-TableSize:2x1
-ValueMax:10000
-ChangeAmount:50
+# ROMLocationTable:0x1328C
+# Name:--Revlimiter
+# Unit2:RPM
+# TableSize:2x1
+# ValueMax:10000
+# ChangeAmount:50
 #############################
-ROMLocationTable:0x13294
-Name:--Revlimiter 1
-Unit2:RPM
-TableSize:2x1
-ValueMax:10000
-ChangeAmount:50
+# ROMLocationTable:0x13294
+# Name:--Revlimiter 1
+# Unit2:RPM
+# TableSize:2x1
+# ValueMax:10000
+# ChangeAmount:50
 #############################
-ROMLocationTable:0x1329C
-Name:--Revlimiter 2
-Unit2:RPM
-TableSize:2x1
-ValueMax:10000
-ChangeAmount:50
+# ROMLocationTable:0x1329C
+# Name:--Revlimiter 2
+# Unit2:RPM
+# TableSize:2x1
+# ValueMax:10000
+# ChangeAmount:50
 #############################
-ROMLocationTable:0x132A4
-Name:--Revlimiter 3
-Unit2:RPM
-TableSize:2x1
-ValueMax:10000
-ChangeAmount:50
+# ROMLocationTable:0x132A4
+# Name:--Revlimiter 3
+# Unit2:RPM
+# TableSize:2x1
+# ValueMax:10000
+# ChangeAmount:50
 #############################
-ROMLocationTable:0x132AC
-Name:--Revlimiter 4
-Unit2:RPM
-TableSize:2x1
-ValueMax:10000
-ChangeAmount:50
+# ROMLocationTable:0x132AC
+# Name:--Revlimiter 4
+# Unit2:RPM
+# TableSize:2x1
+# ValueMax:10000
+# ChangeAmount:50
 #############################
-ROMLocationTable:0x132B0
-Name:--Revlimiter 5
-Unit2:RPM
-TableSize:2x1
-ValueMax:10000
-ChangeAmount:50
+# ROMLocationTable:0x132B0
+# Name:--Revlimiter 5
+# Unit2:RPM
+# TableSize:2x1
+# ValueMax:10000
+# ChangeAmount:50
 #############################
-ROMLocationTable:0x132C0
-Name:--Revlimiter 6
-Unit2:RPM
-TableSize:2x1
-ValueMax:10000
-ChangeAmount:50
+# ROMLocationTable:0x132C0
+# Name:--Revlimiter 6
+# Unit2:RPM
+# TableSize:2x1
+# ValueMax:10000
+# ChangeAmount:50
 #############################
-ROMLocationTable:0x132C8
-Name:--Revlimiter 7
-Unit2:RPM
-TableSize:2x1
-ValueMax:10000
-ChangeAmount:50
+# ROMLocationTable:0x132C8
+# Name:--Revlimiter 7
+# Unit2:RPM
+# TableSize:2x1
+# ValueMax:10000
+# ChangeAmount:50
 #############################
 ROMLocationTable:0xBE8A
-Name:Speedlimiter
+Name:--Speed limiter(km/h)
 Unit2:KPH
 TableSize:1x1
 # MathTable:X/1.609
 ValueMax:255
 #############################
+ROMLocationTable:0x0BE88
+Name:--Speed limiter rpm
+Unit2:RPM
+TableSize:1x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x132A6
+Name:--Rev limiter recover
+Unit2:RPM
+TableSize:1x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x13296
+Name:--Rev limiter
+Unit2:RPM
+TableSize:1x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x132BE
+Name:--Launch rpm disengage speed
+TableSize:1x1
+#############################
+ROMLocationTable:0x132B0
+Name:--Launch rpm
+Unit2:RPM
+TableSize:1x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x132AC
+Name:--Launch recover rpm
+Unit2:RPM
+TableSize:1x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x10550
+Name:--Idle speed (normal)
+Unit1:Coolant Temp
+Unit2:RPM
+TableSize:8x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x10560
+Name:--Idle speed (after start)
+Unit1:Coolant Temp
+Unit2:RPM
+TableSize:8x1
+ValueMin:-32768
+ValueMax:32768
+##########################################################################################################
+Name:Sensors
+#############################
+ROMLocationTable:0x0AAC1
+Name:--AFM enabled
+TableSize:1x1
+IsSingleByteTable:true
+Unit2:Enabled
+#############################
+ROMLocationTable:0x0AAC3
+Name:--EGR enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsUntested:true
+Unit2:Enabled
+#############################
+ROMLocationTable:0x0AAC4
+Name:--ELD enabled
+TableSize:1x1
+IsSingleByteTable:true
+Unit2:Enabled
+#############################
+ROMLocationTable:0x0AAC5
+Name:--EPS enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsUntested:true
+Unit2:Enabled
+#############################
+ROMLocationTable:0x0AAC7
+Name:--Knock sensor enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsUntested:true
+Unit2:Enabled
+#############################
+ROMLocationTable:0x0AAC8
+Name:--PA sensor enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsUntested:true
+Unit2:Enabled
+#############################
+ROMLocationTable:0x0AAC9
+Name:--Primary oxygen sensor enabled
+TableSize:1x1
+IsSingleByteTable:true
+Unit2:Enabled
+#############################
+ROMLocationTable:0x0AACB
+Name:--Purge/EVAP enabled
+TableSize:1x1
+IsSingleByteTable:true
+Unit2:Enabled
+#############################
+ROMLocationTable:0x0AACD
+Name:--Secondary oxygen sensor enabled
+TableSize:1x1
+IsSingleByteTable:true
+Unit2:Enabled
+#############################
+ROMLocationTable:0x0AAD0
+Name:--Forced induction enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsUntested:true
+Unit2:Enabled
+#############################
+ROMLocationTable:0x0AAD1
+Name:--Second ECT sensor enabled
+TableSize:1x1
+IsSingleByteTable:true
+Unit2:Enabled
+#############################
+ROMLocationTable:0x0AAD2
+Name:--VSA enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsReadOnly:true
+IsUntested:true
+Unit2:Enabled
+#############################
+ROMLocationTable:0x0AAD3
+Name:--VTC enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsUntested:true
+Unit2:Enabled
+#############################
+ROMLocationTable:0x0AAD5
+Name:--VTEC oil pressure switch enabled
+TableSize:1x1
+IsSingleByteTable:true
+Unit2:Enabled
+#############################
+ROMLocationTable:0x0AADA
+Name:--Immobilizer enabled
+TableSize:1x1
+IsSingleByteTable:true
+Unit2:Enabled
+#############################
+ROMLocationTable:0x920C6
+Name:--Boost cut enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsUntested:true
+Unit2:Enabled
+#############################
+ROMLocationTable:0x0CDB4
+Name:--Warm up ignition retard enabled
+TableSize:1x1
+IsSingleByteTable:true
+Unit2:Enabled
+#############################
+ROMLocationTable:0x0B0C0
+Name:--Use MAP to determine WOT
+TableSize:1x1
+IsSingleByteTable:true
+Unit2:Enabled
+##########################################################################################################
+Name:VTEC
+#############################
+ROMLocationTable:0xB730
+Name:--VTEC Engagement
+Unit2:RPM
+TableSize:4x1
+ValueMax:12000
+ChangeAmount:10
+Headers:Enable Low,Disable Low,Enable High,Disable High
+#############################
+ROMLocationTable:0x0B726
+Name:--VTEC engage minimum speed
+Unit2:KM/H
+TableSize:1x1
+ValueMax:255
+#############################
+ROMLocationTable:0x0B728
+Name:--VTEC disengage minimum speed
+Unit2:KM/H
+TableSize:1x1
+ValueMax:255
+#############################
+ROMLocationTable:0x0B72C
+Name:--VTEC minimum coolant temperature
+TableSize:1x1
+Unit2:\x00b0C
+ValueMax:255
+MathTable:X/10
+##########################################################################################################
+Name:VTC
+##########################################################################################################
+# ROMLocationX:0x18318
+# ROMLocationY:0x1839A
+ROMLocationTable:0x1C820
+Name:--Cam Angle VTC High
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-10
+ValueMax:40
+ChangeAmount:0.5
+# FormatY:0.0
+FormatTable:0.00
+# MathY:X*0.013334
+MathTable:X*0.1
+#############################
+# ROMLocationX:0x18322
+# ROMLocationY:0x1837C
+ROMLocationTable:0x1C9B0
+Name:--Cam Angle VTC Low
+Unit1:RPM/MAP
+TableSize:10x20
+ValueMin:-10
+ValueMax:40
+ChangeAmount:0.5
+# FormatY:0.0
+FormatTable:0.00
+# MathY:X*0.013334
+MathTable:X*0.1
+#############################
+ROMLocationTable:0x18318
+Name:--Cam angle index low
+TableSize:5x1
+ValueMin:-32768
+ValueMax:32768
+IsUntested:true
+#############################
+ROMLocationTable:0x18322
+Name:--Cam angle index high
+TableSize:5x1
+ValueMin:-32768
+ValueMax:32768
+IsUntested:true
+##########################################################################################################
+Name:Knock Control
+##########################################################################################################
+ROMLocationTable:0x18B0E
+Name:--Knock sensitivity high
+Unit1:RPM/MAP
+TableSize:15x20
+ValueMin:-5
+ValueMax:205
+ChangeAmount:0.1
+FormatTable:0.00
+MathTable:X*0.1
+#############################
+ROMLocationTable:0x18D8E
+Name:--Knock sensitivity low
+Unit1:RPM/MAP
+TableSize:15x20
+ValueMin:-5
+ValueMax:205
+ChangeAmount:0.1
+FormatTable:0.00
+MathTable:X*0.1
+#############################
+ROMLocationTable:0x14B60
+Name:--Knock retard high
+Unit1:RPM/MAP
+TableSize:15x20
+ValueMin:-5
+ValueMax:20
+ChangeAmount:0.1
+FormatTable:0.00
+MathTable:X*0.1
+IsSingleByteTable:true
+#############################
+ROMLocationTable:0x14C8C
+Name:--Knock retard low
+Unit1:RPM/MAP
+TableSize:15x20
+ValueMin:-5
+ValueMax:20
+ChangeAmount:0.1
+FormatTable:0.00
+MathTable:X*0.1
+IsSingleByteTable:true
+#############################
+ROMLocationTable:0x14DB8
+Name:--Knock ignition limit high
+Unit1:RPM/MAP
+TableSize:15x20
+ValueMin:-25
+ValueMax:60
+ChangeAmount:0.1
+FormatTable:0.00
+MathTable:X*0.1
+#############################
+ROMLocationTable:0x15970
+Name:--Knock ignition limit low
+Unit1:RPM/MAP
+TableSize:15x20
+ValueMin:-25
+ValueMax:60
+ChangeAmount:0.1
+FormatTable:0.00
+MathTable:X*0.1
+##########################################################################################################
+Name:Fuel
+##########################################################################################################
+ROMLocationTable:0x10F5A
+Name:--Injector flow for fuel economy calc
+TableSize:1x1
+IsSingleByteTable:true
+IsUntested:true
+#############################
+ROMLocationTable:0x10F5E
+Name:--Injector flow for fuel economy calc index
+TableSize:1x1
+IsSingleByteTable:true
+#############################
+ROMLocationTable:0x92090
+Name:--Cranking fuel trim
+TableSize:1x1
+# IsSingleByteTable:true
+#############################
+ROMLocationTable:0x9208C
+Name:--Overall fuel trim
+TableSize:1x1
+# IsSingleByteTable:true
+#############################
+ROMLocationTable:0x92204
+Name:--Fuel Pressure
+TableSize:1x1
+IsSingleByteTable:true
+#############################
+ROMLocationTable:0x13808
+Name:--Purge fuel
+TableSize:8x1
+ValueMin:-32768
+ValueMax:32768
+IsUntested:true
+#############################
+ROMLocationTable:0x1471C
+Name:--Injector phase (high load)
+TableSize:5x1
+ValueMin:-32768
+ValueMax:32768
+IsUntested:true
+#############################
+ROMLocationTable:0x14726
+Name:--Injector phase (WOT)
+TableSize:5x1
+ValueMin:-32768
+ValueMax:32768
+IsUntested:true
+#############################
+ROMLocationTable:0x147F8
+Name:--Cranking fuel
+TableSize:5x20
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x14834
+Name:--Injector opening time
+TableSize:5x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x16BA0
+Name:--Individual cylinder ignition trim
+TableSize:4x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x147D4
+Name:--AFM fuel
+Unit1:AirMass (mg)
+Unit2:Injector/IPW (ms)
+TableSize:8x1
+ValueMin:0
+ValueMax:25
+FormatTable:0.00
+ChangeAmount:0.1
+MathTable:X*0.002
+Headers:0,50,200,500,750,900,1100,1500
+#############################
+ROMLocationTable:0x13DFE
+ROMLocationX:0x14056
+ROMLocationY:0x142AE
+Name:--WOT lambda adjustment high
+TableSize:15x20
+ValueMin:9.5
+ValueMax:14.8
+ChangeAmount:0.1
+IsSingleByteTable:true
+FormatTable:0.00
+MathTable:128.0/X*14.7
+FormatY:0.0
+MathY:X*0.013334
+#############################
+ROMLocationTable:0x13F2A
+ROMLocationX:0x14182
+ROMLocationY:0x143DA
+Name:--WOT lambda adjustment low
+TableSize:15x20
+ValueMin:9.5
+ValueMax:14.8
+ChangeAmount:0.1
+IsSingleByteTable:true
+FormatTable:0.00
+MathTable:128.0/X*14.7
+FormatY:0.0
+MathY:X*0.013334
+#############################
+ROMLocationTable:0xA0064
+Name:--Fuel low
+TableSize:15x20
+Unit1:RPM/MAP
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0xA0C80
+Name:--Fuel high
+TableSize:15x20
+Unit1:RPM/MAP
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x92258
+Name:--Air temperature fuel compensation
+TableSize:10x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x10D0E
+Name:--AFM flow
+TableSize:64x1
+Unit1:Volts
+Unit2:g/s
+TableSize:64x1
+ValueMin:-10000
+ValueMax:30000
+#############################
+ROMLocationTable:0x13C92
+Name:--Air temperature fuel compensation low flow
+TableSize:5x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x13C9C
+Name:--Air temperature fuel compensation medium flow
+TableSize:5x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x13CA6
+Name:--Air temperature fuel compensation high flow
+TableSize:5x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x13CB0
+Name:--Air temperature fuel compensation cranking
+TableSize:9x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x13D9A
+Name:--Water temperature fuel compensation low
+TableSize:8x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x13DAA
+Name:--Water temperature fuel compensation high
+TableSize:8x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x13DBA
+Name:--Water temperature fuel compensation cranking
+TableSize:9x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x13D8E
+Name:--Individual cylinder fuel trim
+TableSize:4x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x0C690
+Name:--Idle fuel table rpm high
+TableSize:1x1
+IsSingleByteTable:true
+IsUntested:true
+#############################
+ROMLocationTable:0x0C692
+Name:--Idle fuel table rpm low
+TableSize:1x1
+IsSingleByteTable:true
+IsUntested:true
+#############################
 ROMLocationTable:0x1D32E
-Name:Injector Voltage Compensation
+Name:--Injector Voltage Compensation
 Unit1:Volts
 Unit2:ms
 TableSize:5x1
@@ -96,7 +597,7 @@ Headers:6.00,8.00,12.00,14.00,16.00
 #############################
 ROMLocationTable:0x10D0E
 ROMLocationY:0x10D8E
-Name:Mass Airflow Conversion Curve
+Name:--Mass Airflow Conversion Curve
 Unit1:Volts
 Unit2:g/s
 TableSize:64x1
@@ -105,37 +606,8 @@ ValueMin:-10000
 ValueMax:30000
 FormatY:0.00
 #############################
-ROMLocationX:0x18354
-ROMLocationY:0x1839A
-ROMLocationTable:0x1C9F0
-Name:Cam Angle VTC High
-Unit1:RPM/MAP
-TableSize:10x20
-ValueMin:-10
-ValueMax:40
-ChangeAmount:0.5
-FormatY:0.0
-FormatTable:0.00
-MathY:X*0.013334
-MathTable:X*0.1
-#############################	15RPM x 25MAP
-ROMLocationX:0x18322
-ROMLocationY:0x1837C
-ROMLocationTable:0x1C81C
-Name:Cam Angle VTC Low
-Unit1:RPM/MAP
-TableSize:25x15
-ValueMin:-10
-ValueMax:40
-ChangeAmount:0.5
-FormatY:0.0
-FormatTable:0.00
-MathY:X*0.013334
-MathTable:X*0.1
-IsTableInverted:true
-#############################
 ROMLocationTable:0xAF8A
-Name:MAF Load Limit
+Name:--MAF Load Limit
 Unit1:Mg/Stroke
 TableSize:4x1
 ValueMin:-1000
@@ -143,7 +615,7 @@ ValueMax:4000
 ChangeAmount:50
 #############################
 ROMLocationTable:0xC694
-Name:Minimum IPW
+Name:--Minimum IPW
 Unit1:Min IPW
 TableSize:1x1
 ValueMin:-6
@@ -151,4 +623,285 @@ ValueMax:5
 ChangeAmount:0.001
 MathTable:X*0.002
 FormatTable:0.000
+#############################
+ROMLocationTable:0x0A66C
+Name:--Maximum MAP voltage
+TableSize:1x1
+IsSingleByteTable:true
+IsUntested:true
+#############################
+ROMLocationTable:0x0A66E
+Name:--Minimum MAP voltage
+TableSize:1x1
+IsSingleByteTable:true
+IsUntested:true
+##########################################################################################################
+Name:Ignition
+##########################################################################################################
+ROMLocationTable:0x187E0
+Name:--Air temperature ignition compensation high (MAP>40 kPa)
+TableSize:5x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x187EA
+Name:--Air temperature ignition compensation low (MAP<40 kPa)
+TableSize:5x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x18812
+Name:--Water temperature ignition compensation hot high
+TableSize:5x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x18826
+Name:--Water temperature ignition compensation hot low
+TableSize:5x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x1883A
+Name:--Water temperature ignition compensation cold high
+TableSize:5x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x1884E
+Name:--Water temperature ignition compensation cold low
+TableSize:5x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x1886A
+Name:--Water temperature ignition retard
+TableSize:5x20
+ValueMin:-32768
+ValueMax:32768
+IsUntested:true
+#############################
+ROMLocationTable:0x16BA8
+Name:--Ignition High
+Unit1:RPM/MAP
+TableSize:15x20
+ValueMin:-10
+ValueMax:60
+ChangeAmount:0.5
+FormatTable:0.00
+MathTable:X*0.1
+#############################
+ROMLocationTable:0x17760
+Name:--Ignition low
+TableSize:15x20
+ValueMin:-10
+ValueMax:60
+ChangeAmount:0.5
+FormatTable:0.00
+MathTable:X*0.1
+#############################
+ROMLocationTable:0x16B00
+Name:--Minimum ignition low
+TableSize:20x1
+ValueMin:-32768
+ValueMax:32768
+IsUntested:true
+#############################
+ROMLocationTable:0x16B28
+Name:--Minimum ignition high
+TableSize:20x1
+ValueMin:-32768
+ValueMax:32768
+IsUntested:true
+##########################################################################################################
+Name:Boost Control
+##########################################################################################################
+ROMLocationTable:0x920C4
+Name:--Boost cut pressure
+TableSize:1x1
+IsSingleByteTable:true
+IsUntested:true
+#############################
+ROMLocationTable:0x115C0
+Name:--Target boost
+Unit2:PSI/RPM
+Unit2:PSI
+TableSize:10x1
+ValueMin:0
+ValueMax:30
+MathTable:X/1000
+FormatTable:0.00
+Headers:1900,2500,3000,4000,4500,5000,5500,6000,6500,6800
+##########################################################################################################
+Name:Closeloop/Wideband
+##########################################################################################################
+ROMLocationTable:0x0BFD6
+Name:--Short term fuel trim maximum
+TableSize:1x1
+IsSingleByteTable:true
+#############################
+ROMLocationTable:0x0BFD8
+Name:--Short term fuel trim minimum
+TableSize:1x1
+IsSingleByteTable:true
+#############################
+ROMLocationTable:0x0C0E0
+Name:--Closed loop target lambda
+TableSize:1x1
+IsSingleByteTable:true
+#############################
+ROMLocationTable:0x0C2C4
+Name:--AF learned value minimum ECT
+TableSize:1x1
+IsSingleByteTable:true
+IsUntested:true
+#############################
+ROMLocationTable:0x0C2DA
+Name:--AF learned value maximum
+TableSize:1x1
+IsSingleByteTable:true
+#############################
+ROMLocationTable:0x0C2DC
+Name:--AF learned value minimum
+TableSize:1x1
+IsSingleByteTable:true
+#############################
+ROMLocationTable:0x0D036
+Name:--Long term fuel trim maximum
+TableSize:1x1
+IsSingleByteTable:true
+#############################
+ROMLocationTable:0x0D038
+Name:--Long term fuel trim minimum
+TableSize:1x1
+IsSingleByteTable:true
+#############################
+ROMLocationTable:0x92094
+Name:--Wideband input
+TableSize:1x1
+IsSingleByteTable:true
+#############################
+ROMLocationTable:0x92096
+Name:--Wideband voltage offset
+TableSize:1x1
+IsSingleByteTable:true
+#############################
+ROMLocationTable:0x134AC
+Name:--LAF voltage to lambda
+TableSize:15x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x13698
+Name:--Closed loop target lambda low load
+TableSize:8x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x136B8
+Name:--Closed loop target lambda high load
+TableSize:8x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x136D8
+Name:--Closed loop target lambda limit
+TableSize:8x1
+ValueMin:-32768
+ValueMax:32768
+##########################################################################################################
+Name:Throttle Plate
+##########################################################################################################
+ROMLocationTable:0x11BEC
+Name:--TPlate Normal
+TableSize:15x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x1347C
+Name:--Tip in fuel ECT compensation
+TableSize:3x1
+ValueMin:-32768
+ValueMax:32768
+IsUntested:true
+#############################
+ROMLocationTable:0x13488
+Name:--Tip in fuel throttle compensation
+TableSize:3x1
+ValueMin:-32768
+ValueMax:32768
+#############################
+ROMLocationTable:0x13160
+Name:--Overrun injector restart rpm (cut)
+Unit2:RPM
+TableSize:5x1
+ValueMin:0
+ValueMax:11000
+#############################
+ROMLocationTable:0x1316A
+Name:--Overrun injector restart rpm (recover)
+Unit2:RPM
+TableSize:5x1
+ValueMin:0
+ValueMax:11000
+##########################################################################################################
+Name:Misc
+##########################################################################################################
+ROMLocationTable:0x0B550
+Name:--Radiator fan on
+Unit2:\x00b0C
+TableSize:1x1
+MathTable:X/10
+#############################
+ROMLocationTable:0x0B552
+Name:--Radiator fan off
+Unit2:\x00b0C
+TableSize:1x1
+MathTable:X/10
+#############################
+ROMLocationTable:0x0BFD0
+Name:--Derivative for PID
+TableSize:1x1
+IsSingleByteTable:true
+IsUntested:true
+#############################
+ROMLocationTable:0x0BFD2
+Name:--Integral for PID
+TableSize:1x1
+IsSingleByteTable:true
+IsUntested:true
+#############################
+ROMLocationTable:0x0BFD4
+Name:--Proportion for PID
+TableSize:1x1
+IsSingleByteTable:true
+IsUntested:true
+#############################
+ROMLocationTable:0x0E754
+Name:--Write security word #1
+Unit2:HEX
+TableSize:1x1
+IsReadOnly:true
+FormatTable:X4
+#############################
+ROMLocationTable:0x0E756
+Name:--Write security word #2
+Unit2:HEX
+TableSize:1x1
+IsReadOnly:true
+FormatTable:X4
+#############################
+ROMLocationTable:0x0E758
+Name:--Write security word #3
+Unit2:HEX
+TableSize:1x1
+IsReadOnly:true
+FormatTable:X4
+#############################
+ROMLocationTable:0x0A65A
+Name:--Default PA value
+TableSize:1x1
+IsSingleByteTable:true
+IsReadOnly:true
+IsUntested:true
 #############################
