@@ -1,6 +1,6 @@
 # HondaReflashTool
 
-CanBUS J2534 Honda Reflash Tool (Work in Progress)
+Open Source CanBUS J2534 Honda/Acura Reflash Tool (Work in Progress)
 
 You can download the Tool and **use at Your Own Risk!**
 
