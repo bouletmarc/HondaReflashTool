@@ -11,72 +11,7 @@
 #######################################################################
 # ROM Parameters Definitions:
 #######################################################################
-ROMLocationTable:0x10000F
-Name:VTEC Engagement
-Unit2:RPM
-TableSize:4x1
-ValueMin:-10000
-ValueMax:30000
-ChangeAmount:10
-Headers:Enable Low,Disable Low,Enable High,Disable High
-#############################
-ROMLocationTable:0x100046
-Name:Revlimiter
-Unit2:RPM
-TableSize:2x1
-ValueMax:10000
-ChangeAmount:50
-#############################
-ROMLocationTable:0x10004E
-Name:--Revlimiter 1
-Unit2:RPM
-TableSize:2x1
-ValueMax:10000
-ChangeAmount:50
-#############################
-ROMLocationTable:0x100056
-Name:--Revlimiter 2
-Unit2:RPM
-TableSize:2x1
-ValueMax:10000
-ChangeAmount:50
-#############################
-ROMLocationTable:0x10005E
-Name:--Revlimiter 3
-Unit2:RPM
-TableSize:2x1
-ValueMax:10000
-ChangeAmount:50
-#############################
-ROMLocationTable:0x100066
-Name:--Revlimiter 4
-Unit2:RPM
-TableSize:2x1
-ValueMax:10000
-ChangeAmount:50
-#############################
-ROMLocationTable:0x10006A
-Name:--Revlimiter 5
-Unit2:RPM
-TableSize:2x1
-ValueMax:10000
-ChangeAmount:50
-#############################
-ROMLocationTable:0x10007A
-Name:--Revlimiter 6
-Unit2:RPM
-TableSize:2x1
-ValueMax:10000
-ChangeAmount:50
-#############################
-ROMLocationTable:0x100082
-Name:--Revlimiter 7
-Unit2:RPM
-TableSize:2x1
-ValueMax:10000
-ChangeAmount:50
-#############################
-ROMLocationTable:0xFFFFD
+ROMLocationTable:0xAC6A
 Name:Speedlimiter
 Unit2:KPH
 TableSize:1x1
@@ -94,15 +29,7 @@ ValueMin:-1000
 ValueMax:3000
 Headers:6.00,8.00,12.00,14.00,16.00
 #############################
-ROMLocationTable:0xFFFF7
-Name:MAF Load Limit
-Unit1:Mg/Stroke
-TableSize:4x1
-ValueMin:-1000
-ValueMax:4000
-ChangeAmount:50
-#############################
-ROMLocationTable:0x1000B4
+ROMLocationTable:0xC694
 Name:Minimum IPW
 Unit1:Min IPW
 TableSize:1x1
@@ -112,7 +39,8 @@ ChangeAmount:0.001
 MathTable:X*0.002
 FormatTable:0.000
 #############################
-ROMLocationTable:0x10000F
+ROMLocationTable:0xFD1C
+ROMLocationY:0xFB80
 Name:Idle Speed
 Unit1:Coolant Temp
 Unit2:RPM
@@ -120,4 +48,40 @@ TableSize:8x1
 ValueMin:-1000
 ValueMax:4000
 ChangeAmount:50
+MathY:X/10
+#############################
+ROMLocationTable:0xFD2C
+ROMLocationY:0xFB80
+Name:Post Start Idle Speed
+Unit1:Coolant Temp
+Unit2:RPM
+TableSize:8x1
+ValueMin:-1000
+ValueMax:4000
+ChangeAmount:50
+MathY:X/10
+#############################
+ROMLocationTable:0xFEE8
+Name:WOT Determiniation 1(TPS)
+Unit1:RPM
+Unit2:TPS(%)
+TableSize:6x1
+ValueMin:-50
+ValueMax:200
+MathTable:X*0.005
+FormatTable:0.00
+ChangeAmount:1
+Headers:1000,2000,3000,4000,5000,6000
+#############################
+ROMLocationTable:0xFF00
+Name:WOT Determiniation 2(TPS)
+Unit1:RPM
+Unit2:TPS(%)
+TableSize:6x1
+ValueMin:-50
+ValueMax:200
+MathTable:X*0.005
+FormatTable:0.00
+ChangeAmount:1
+Headers:1000,2000,3000,4000,5000,6000
 #############################
