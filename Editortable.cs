@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using DarkUI.Controls;
 using DarkUI.Forms;
+using System.Runtime.CompilerServices;
 
 public class Editortable : DarkForm
 {
@@ -17,9 +18,7 @@ public class Editortable : DarkForm
     private IContainer icontainer_1;
     public bool bool_0 = true;
     public static float float_0 = 1f;
-    private List<string> list_0 = new List<string>();
     public static float[] float_1 = new float[2];
-    private TableLayoutPanel tableLayoutPanel1;
     private DarkTreeView treeView1;
     private DarkGroupBox groupBox1;
     public DataGridView dataGridView_0;
@@ -39,9 +38,22 @@ public class Editortable : DarkForm
     private ToolStripMenuItem openDefinitionsFolderToolStripMenuItem;
     private ToolStripDropDownButton toolStripDropDownButton2;
     private ToolStripMenuItem undoToolStripMenuItem;
-    private ToolStripMenuItem redoToolStripMenuItem;
+    public ToolStripMenuItem redoToolStripMenuItem;
     private ToolStripSeparator toolStripSeparator2;
     private ToolStripMenuItem increaseSelectionToolStripMenuItem;
+    private SplitContainer splitContainer1;
+    private SplitContainer splitContainer2;
+    private DarkTextBox darkTextBox_0;
+    private ToolStripDropDownButton toolStripDropDownButton3;
+    private ToolStripMenuItem developpersToolsToolStripMenuItem;
+    private ToolStripMenuItem generateDefinitionsFilesToolStripMenuItem;
+    private ToolStripMenuItem getDifferencesInAllFirmwaresFilesToolStripMenuItem;
+    private ToolStripMenuItem extractAllBootloadersumByteFromAllFirmwaresFilesToolStripMenuItem;
+    private ToolStripMenuItem extractDefinitionToolStripMenuItem;
+    private FolderBrowserDialog folderBrowserDialog1;
+    private ToolStripMenuItem removeBootloaderInbinToolStripMenuItem;
+    private ToolStripSeparator toolStripSeparator3;
+    private ToolStripMenuItem generateDefinitionFileFromExtractedDefinitionToolStripMenuItem;
     private ToolStripMenuItem decreaseSelectionToolStripMenuItem;
 
     internal Editortable(ref GForm_Main GForm_Main_1)
@@ -55,17 +67,48 @@ public class Editortable : DarkForm
         if (this.ClassEditor_0 != null) this.ClassEditor_0 = null;
         this.ClassEditor_0 = new ClassEditor(ref Editortable_0);
 
+        this.Text = "Honda Rom Tables Editor (" + this.GForm_Main_0.Version + ")";
+    }
 
-        this.Text = this.Text + " (" + this.GForm_Main_0.Version + ")";
+    public void Loadingg() 
+    {
+        string LastOpenFilePath = Application.StartupPath + @"\LastFileOpened.txt";
+        if (File.Exists(LastOpenFilePath))
+        {
+            DialogResult result = DarkMessageBox.Show(this, "Do you want to reopen the last file you have worked on?", "Reopen last file used", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+            if (result == DialogResult.Yes)
+            {
+                LoadThisFile(File.ReadAllText(LastOpenFilePath));
+            }
+        }
+    }
+
+    public void method_Log(string string_3)
+    {
+        this.darkTextBox_0.Text += string_3;
+        //Console.Write(string_3);
+    }
+
+    public void method_1(string string_3)
+    {
+        try
+        {
+            //With newline automaticly added
+            //Console.WriteLine(string_3);
+            Editortable.Class5 @class = new Editortable.Class5();
+            @class.Editortable_0 = this;
+            @class.string_0 = string_3;
+            this.darkTextBox_0.BeginInvoke(new MethodInvoker(@class.method_0));
+        }
+        catch { }
     }
 
     private void InitializeComponent()
     {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editortable));
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.treeView1 = new DarkUI.Controls.DarkTreeView();
             this.groupBox1 = new DarkUI.Controls.DarkGroupBox();
             this.dataGridView_0 = new System.Windows.Forms.DataGridView();
@@ -84,38 +127,41 @@ public class Editortable : DarkForm
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.increaseSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.decreaseSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.toolStripDropDownButton3 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.developpersToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateDefinitionsFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.getDifferencesInAllFirmwaresFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.extractAllBootloadersumByteFromAllFirmwaresFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.extractDefinitionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.darkTextBox_0 = new DarkUI.Controls.DarkTextBox();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.removeBootloaderInbinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_0)).BeginInit();
             this.darkToolStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 260F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.treeView1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.groupBox1, 1, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 28);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 517F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1100, 517);
-            this.tableLayoutPanel1.TabIndex = 11;
             // 
             // treeView1
             // 
-            this.treeView1.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.treeView1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.EvenNodeColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.treeView1.FocusedNodeColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(110)))), ((int)(((byte)(175)))));
             this.treeView1.ImageIndex = 0;
             this.treeView1.ImageList = null;
-            this.treeView1.Location = new System.Drawing.Point(2, 2);
+            this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Margin = new System.Windows.Forms.Padding(2);
             this.treeView1.MaxDragChange = 20;
             this.treeView1.Name = "treeView1";
@@ -123,7 +169,7 @@ public class Editortable : DarkForm
             this.treeView1.OddNodeColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(60)))), ((int)(((byte)(62)))));
             this.treeView1.SelectedImageIndex = 0;
             this.treeView1.SelectWithArrowKeys = false;
-            this.treeView1.Size = new System.Drawing.Size(256, 513);
+            this.treeView1.Size = new System.Drawing.Size(297, 517);
             this.treeView1.TabIndex = 2;
             this.treeView1.SelectedNodesChanged += new System.EventHandler(this.treeView1_AfterSelect);
             // 
@@ -132,11 +178,11 @@ public class Editortable : DarkForm
             this.groupBox1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.groupBox1.Controls.Add(this.dataGridView_0);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(262, 2);
+            this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Size = new System.Drawing.Size(836, 513);
+            this.groupBox1.Size = new System.Drawing.Size(799, 361);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Table:";
@@ -147,52 +193,50 @@ public class Editortable : DarkForm
             this.dataGridView_0.AllowUserToDeleteRows = false;
             this.dataGridView_0.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView_0.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView_0.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView_0.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
             this.dataGridView_0.ColumnHeadersHeight = 20;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView_0.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView_0.DefaultCellStyle = dataGridViewCellStyle8;
             this.dataGridView_0.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView_0.EnableHeadersVisualStyles = false;
             this.dataGridView_0.GridColor = System.Drawing.SystemColors.ControlDarkDark;
             this.dataGridView_0.Location = new System.Drawing.Point(2, 15);
             this.dataGridView_0.Margin = new System.Windows.Forms.Padding(2);
             this.dataGridView_0.Name = "dataGridView_0";
-            this.dataGridView_0.ReadOnly = true;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView_0.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView_0.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.dataGridView_0.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             this.dataGridView_0.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             this.dataGridView_0.RowTemplate.Height = 31;
-            this.dataGridView_0.Size = new System.Drawing.Size(832, 496);
+            this.dataGridView_0.Size = new System.Drawing.Size(795, 344);
             this.dataGridView_0.TabIndex = 4;
             this.dataGridView_0.TabStop = false;
             this.dataGridView_0.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.CellValueChanged);
-            this.dataGridView_0.DoubleClick += new System.EventHandler(this.method_3);
             this.dataGridView_0.KeyDown += new System.Windows.Forms.KeyEventHandler(this.method_4);
             // 
             // openFileDialog1
             // 
             this.openFileDialog1.DefaultExt = "*.bin";
-            this.openFileDialog1.Filter = "Honda full binary rom file|*.bin|Honda decompressed firmware binary|*.bin";
+            this.openFileDialog1.Filter = "Honda binary rom file|*.bin";
             this.openFileDialog1.Title = "Open File";
             // 
             // saveFileDialog1
@@ -208,7 +252,8 @@ public class Editortable : DarkForm
             this.darkToolStrip1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.darkToolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripDropDownButton1,
-            this.toolStripDropDownButton2});
+            this.toolStripDropDownButton2,
+            this.toolStripDropDownButton3});
             this.darkToolStrip1.Location = new System.Drawing.Point(0, 0);
             this.darkToolStrip1.Name = "darkToolStrip1";
             this.darkToolStrip1.Padding = new System.Windows.Forms.Padding(5, 0, 1, 0);
@@ -297,11 +342,11 @@ public class Editortable : DarkForm
             // undoToolStripMenuItem
             // 
             this.undoToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.undoToolStripMenuItem.Enabled = false;
-            this.undoToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(153)))), ((int)(((byte)(153)))));
+            this.undoToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
             this.undoToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.undoToolStripMenuItem.Text = "Undo";
+            this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
             // 
             // redoToolStripMenuItem
             // 
@@ -311,6 +356,7 @@ public class Editortable : DarkForm
             this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
             this.redoToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.redoToolStripMenuItem.Text = "Redo";
+            this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -338,23 +384,168 @@ public class Editortable : DarkForm
             this.decreaseSelectionToolStripMenuItem.Text = "Decrease Selection";
             this.decreaseSelectionToolStripMenuItem.Click += new System.EventHandler(this.decreaseSelectionToolStripMenuItem_Click);
             // 
+            // toolStripDropDownButton3
+            // 
+            this.toolStripDropDownButton3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.toolStripDropDownButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripDropDownButton3.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.removeBootloaderInbinToolStripMenuItem,
+            this.toolStripSeparator3,
+            this.developpersToolsToolStripMenuItem});
+            this.toolStripDropDownButton3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.toolStripDropDownButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton3.Image")));
+            this.toolStripDropDownButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButton3.Name = "toolStripDropDownButton3";
+            this.toolStripDropDownButton3.Size = new System.Drawing.Size(47, 25);
+            this.toolStripDropDownButton3.Text = "Tools";
+            // 
+            // developpersToolsToolStripMenuItem
+            // 
+            this.developpersToolsToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.developpersToolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.generateDefinitionsFilesToolStripMenuItem,
+            this.getDifferencesInAllFirmwaresFilesToolStripMenuItem,
+            this.extractAllBootloadersumByteFromAllFirmwaresFilesToolStripMenuItem,
+            this.extractDefinitionToolStripMenuItem,
+            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem});
+            this.developpersToolsToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.developpersToolsToolStripMenuItem.Name = "developpersToolsToolStripMenuItem";
+            this.developpersToolsToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.developpersToolsToolStripMenuItem.Text = "Developpers Tools";
+            // 
+            // generateDefinitionsFilesToolStripMenuItem
+            // 
+            this.generateDefinitionsFilesToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.generateDefinitionsFilesToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.generateDefinitionsFilesToolStripMenuItem.Name = "generateDefinitionsFilesToolStripMenuItem";
+            this.generateDefinitionsFilesToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.generateDefinitionsFilesToolStripMenuItem.Text = "Generate Definitions files from all firmwares files";
+            this.generateDefinitionsFilesToolStripMenuItem.Click += new System.EventHandler(this.generateDefinitionsFilesToolStripMenuItem_Click);
+            // 
+            // getDifferencesInAllFirmwaresFilesToolStripMenuItem
+            // 
+            this.getDifferencesInAllFirmwaresFilesToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.getDifferencesInAllFirmwaresFilesToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.getDifferencesInAllFirmwaresFilesToolStripMenuItem.Name = "getDifferencesInAllFirmwaresFilesToolStripMenuItem";
+            this.getDifferencesInAllFirmwaresFilesToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.getDifferencesInAllFirmwaresFilesToolStripMenuItem.Text = "Get differences count in all firmwares files";
+            this.getDifferencesInAllFirmwaresFilesToolStripMenuItem.Click += new System.EventHandler(this.getDifferencesInAllFirmwaresFilesToolStripMenuItem_Click);
+            // 
+            // extractAllBootloadersumByteFromAllFirmwaresFilesToolStripMenuItem
+            // 
+            this.extractAllBootloadersumByteFromAllFirmwaresFilesToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.extractAllBootloadersumByteFromAllFirmwaresFilesToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.extractAllBootloadersumByteFromAllFirmwaresFilesToolStripMenuItem.Name = "extractAllBootloadersumByteFromAllFirmwaresFilesToolStripMenuItem";
+            this.extractAllBootloadersumByteFromAllFirmwaresFilesToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.extractAllBootloadersumByteFromAllFirmwaresFilesToolStripMenuItem.Text = "Extract all bootloader \'sum\' byte from all firmwares files";
+            this.extractAllBootloadersumByteFromAllFirmwaresFilesToolStripMenuItem.Click += new System.EventHandler(this.extractAllBootloadersumByteFromAllFirmwaresFilesToolStripMenuItem_Click);
+            // 
+            // extractDefinitionToolStripMenuItem
+            // 
+            this.extractDefinitionToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.extractDefinitionToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.extractDefinitionToolStripMenuItem.Name = "extractDefinitionToolStripMenuItem";
+            this.extractDefinitionToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.extractDefinitionToolStripMenuItem.Text = "Extract Definition file";
+            this.extractDefinitionToolStripMenuItem.Click += new System.EventHandler(this.extractDefinitionToolStripMenuItem_Click);
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 28);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.treeView1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
+            this.splitContainer1.Size = new System.Drawing.Size(1100, 517);
+            this.splitContainer1.SplitterDistance = 297;
+            this.splitContainer1.TabIndex = 4;
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.groupBox1);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.darkTextBox_0);
+            this.splitContainer2.Size = new System.Drawing.Size(799, 517);
+            this.splitContainer2.SplitterDistance = 361;
+            this.splitContainer2.TabIndex = 0;
+            // 
+            // darkTextBox_0
+            // 
+            this.darkTextBox_0.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.darkTextBox_0.Location = new System.Drawing.Point(0, 0);
+            this.darkTextBox_0.Multiline = true;
+            this.darkTextBox_0.Name = "darkTextBox_0";
+            this.darkTextBox_0.Size = new System.Drawing.Size(799, 152);
+            this.darkTextBox_0.TabIndex = 56;
+            this.darkTextBox_0.Text = "Honda CANBUS Tools";
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.toolStripSeparator3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.toolStripSeparator3.Margin = new System.Windows.Forms.Padding(0, 0, 0, 1);
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(211, 6);
+            // 
+            // removeBootloaderInbinToolStripMenuItem
+            // 
+            this.removeBootloaderInbinToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.removeBootloaderInbinToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.removeBootloaderInbinToolStripMenuItem.Name = "removeBootloaderInbinToolStripMenuItem";
+            this.removeBootloaderInbinToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.removeBootloaderInbinToolStripMenuItem.Text = "Remove Bootloader in .bin";
+            this.removeBootloaderInbinToolStripMenuItem.Click += new System.EventHandler(this.removeBootloaderInbinToolStripMenuItem_Click);
+            // 
+            // generateDefinitionFileFromExtractedDefinitionToolStripMenuItem
+            // 
+            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.Name = "generateDefinitionFileFromExtractedDefinitionToolStripMenuItem";
+            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.Text = "Generate Definition file from Extracted Definition";
+            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.Click += new System.EventHandler(this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem_Click);
+            // 
             // Editortable
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1100, 545);
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.darkToolStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Editortable";
             this.Text = "Honda Rom Tables Editor";
             this.Load += new System.EventHandler(this.Editortable_Load);
-            this.tableLayoutPanel1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_0)).EndInit();
             this.darkToolStrip1.ResumeLayout(false);
             this.darkToolStrip1.PerformLayout();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            this.splitContainer2.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+            this.splitContainer2.ResumeLayout(false);
             this.ResumeLayout(false);
 
     }
@@ -374,10 +565,7 @@ public class Editortable : DarkForm
             {
                 ClassEditor_0.LoadThisECUDefinitions(string_9);
 
-                foreach (string str2 in ClassEditor_0.DefinitionsName)
-                {
-                    this.list_0.Add(str2);
-                }
+                //foreach (string str2 in ClassEditor_0.DefinitionsName) this.NodesNameList.Add(str2);
                 return true;
             }
         }
@@ -387,7 +575,7 @@ public class Editortable : DarkForm
 
     public void method_1()
     {
-        ClassEditor_0.bool_1 = false;
+        ClassEditor_0.CanReloadTablesValues = false;
         if (!ClassEditor_0.LoadROMbytes(LoadedFilename))
         {
             DarkMessageBox.Show("Failed to open Binary file.");
@@ -398,41 +586,134 @@ public class Editortable : DarkForm
         }
         else
         {
-            this.SetNodesImages();
+            this.CreateNodes();
         }
-        ClassEditor_0.bool_1 = true;
+        ClassEditor_0.CanReloadTablesValues = true;
     }
 
     private void CellValueChanged(object sender, DataGridViewCellEventArgs e)
     {
-        if (ClassEditor_0.bool_1)
+        if (ClassEditor_0.CanReloadTablesValues)
         {
-            ClassEditor_0.bool_2 = true;
+            ClassEditor_0.ValuesChanged = true;
             ClassEditor_0.SetBackColor(dataGridView_0.Columns.Count, float_1[0], float_1[1]);
         }
     }
 
-    public void SetNodesImages()
+    public void CreateNodes()
     {
         this.treeView1.Nodes.Clear();
         int num = 0;
 
+        List<string> AllUndefininedNodes = new List<string>();
+        List<string> AllUntestedNodes = new List<string>();
+        List<string> AllReadOnlyNodes = new List<string>();
+
         //Makes Nodes
-        foreach (string str in this.list_0)
+        for (int i = 0; i < ClassEditor_0.DefinitionsName.Count; i++)
         {
+            //#############################################
+            if (ClassEditor_0.DefinitionsIsReadOnly[i])
+            {
+                AllReadOnlyNodes.Add(ClassEditor_0.DefinitionsName[i]);
+            }
+            if (ClassEditor_0.DefinitionsIsUntested[i] && !ClassEditor_0.DefinitionsIsReadOnly[i])
+            {
+                AllUntestedNodes.Add(ClassEditor_0.DefinitionsName[i]);
+            }
+            if (ClassEditor_0.DefinitionsIsNotDefined[i] && !ClassEditor_0.DefinitionsIsUntested[i] && !ClassEditor_0.DefinitionsIsReadOnly[i])
+            {
+                AllUndefininedNodes.Add(ClassEditor_0.DefinitionsName[i]);
+            }
+            //#############################################
+
+            if (!ClassEditor_0.DefinitionsIsNotDefined[i] && !ClassEditor_0.DefinitionsIsUntested[i] && !ClassEditor_0.DefinitionsIsReadOnly[i])
+            {
+                string str = ClassEditor_0.DefinitionsName[i];
+                DarkTreeNode ThisNode = new DarkTreeNode();
+                if (str.ToString().Contains("----"))
+                {
+                    ThisNode.Text = str.Replace("----", "");
+                    this.treeView1.Nodes[this.treeView1.Nodes.Count - 1].Nodes[this.treeView1.Nodes[this.treeView1.Nodes.Count - 1].Nodes.Count - 1].Nodes.Add(ThisNode);
+                    continue;
+                }
+                if (str.ToString().Contains("--"))
+                {
+                    ThisNode.Text = str.Replace("--", "");
+                    this.treeView1.Nodes[this.treeView1.Nodes.Count - 1].Nodes.Add(ThisNode);
+                    continue;
+                }
+                num++;
+
+                ThisNode.Text = str;
+                this.treeView1.Nodes.Add(ThisNode);
+            }
+        }
+
+        //Make Undefined Nodes
+        DarkTreeNode ThisNodeUnDefined = new DarkTreeNode();
+        ThisNodeUnDefined.Text = "Undefined parameters";
+        if (AllUndefininedNodes.Count > 0) this.treeView1.Nodes.Add(ThisNodeUnDefined);
+        for (int i = 0; i < AllUndefininedNodes.Count; i++)
+        {
+            string str = AllUndefininedNodes[i];
             DarkTreeNode ThisNode = new DarkTreeNode();
             if (str.ToString().Contains("--"))
             {
                 ThisNode.Text = str.Replace("--", "");
                 this.treeView1.Nodes[this.treeView1.Nodes.Count - 1].Nodes.Add(ThisNode);
+                //this.treeView1.Nodes[this.treeView1.Nodes.Count - 1].Nodes[this.treeView1.Nodes[this.treeView1.Nodes.Count - 1].Nodes.Count - 1].Nodes.Add(ThisNode);
                 continue;
             }
             num++;
 
             ThisNode.Text = str;
-            this.treeView1.Nodes.Add(ThisNode);
+            this.treeView1.Nodes[this.treeView1.Nodes.Count - 1].Nodes.Add(ThisNode);
         }
 
+        //Make Untested Nodes
+        DarkTreeNode ThisNodeUnTested = new DarkTreeNode();
+        ThisNodeUnTested.Text = "Untested parameters";
+        if (AllUntestedNodes.Count > 0) this.treeView1.Nodes.Add(ThisNodeUnTested);
+        for (int i = 0; i < AllUntestedNodes.Count; i++)
+        {
+            string str = AllUntestedNodes[i];
+            DarkTreeNode ThisNode = new DarkTreeNode();
+            if (str.ToString().Contains("--"))
+            {
+                ThisNode.Text = str.Replace("--", "");
+                this.treeView1.Nodes[this.treeView1.Nodes.Count - 1].Nodes.Add(ThisNode);
+                //this.treeView1.Nodes[this.treeView1.Nodes.Count - 1].Nodes[this.treeView1.Nodes[this.treeView1.Nodes.Count - 1].Nodes.Count - 1].Nodes.Add(ThisNode);
+                continue;
+            }
+            num++;
+
+            ThisNode.Text = str;
+            this.treeView1.Nodes[this.treeView1.Nodes.Count - 1].Nodes.Add(ThisNode);
+        }
+
+        //Make ReadOnly Nodes
+        DarkTreeNode ThisNodeReadOnly = new DarkTreeNode();
+        ThisNodeReadOnly.Text = "ReadOnly parameters";
+        if (AllUntestedNodes.Count > 0) this.treeView1.Nodes.Add(ThisNodeReadOnly);
+        for (int i = 0; i < AllReadOnlyNodes.Count; i++)
+        {
+            string str = AllReadOnlyNodes[i];
+            DarkTreeNode ThisNode = new DarkTreeNode();
+            if (str.ToString().Contains("--"))
+            {
+                ThisNode.Text = str.Replace("--", "");
+                this.treeView1.Nodes[this.treeView1.Nodes.Count - 1].Nodes.Add(ThisNode);
+                //this.treeView1.Nodes[this.treeView1.Nodes.Count - 1].Nodes[this.treeView1.Nodes[this.treeView1.Nodes.Count - 1].Nodes.Count - 1].Nodes.Add(ThisNode);
+                continue;
+            }
+            num++;
+
+            ThisNode.Text = str;
+            this.treeView1.Nodes[this.treeView1.Nodes.Count - 1].Nodes.Add(ThisNode);
+        }
+
+        //####################################################################################
         /*foreach (DarkTreeNode node in this.treeView1.Nodes)
         {
             if (node.Nodes.Count > 0)
@@ -458,11 +739,7 @@ public class Editortable : DarkForm
                 node.SelectedImageKey = "Degree";
             }//...
         }*/
-    }
-
-    private void method_3(object sender, EventArgs e)
-    {
-        dataGridView_0.ReadOnly = false;
+        //####################################################################################
     }
 
     private void method_4(object sender, KeyEventArgs e)
@@ -569,16 +846,15 @@ public class Editortable : DarkForm
     {
         if (this.treeView1.SelectedNodes.Count == 0) return;
 
-        if ((this.treeView1.SelectedNode != null) && ClassEditor_0.bool_1)
+        if ((this.treeView1.SelectedNode != null) && ClassEditor_0.CanReloadTablesValues)
         {
-            ClassEditor_0.bool_1 = false;
+            ClassEditor_0.CanReloadTablesValues = false;
             //##################################################################################
-            if (ClassEditor_0.bool_2 && ClassEditor_0.SelectedTableSize != 0 && ClassEditor_0.SelectedROMLocation != 0)
+            if (ClassEditor_0.ValuesChanged && ClassEditor_0.SelectedTableSize != 0 && ClassEditor_0.SelectedROMLocation != 0)
             {
                 ClassEditor_0.GetChanges();
-                ClassEditor_0.string_2 = ClassEditor_0.string_2 + ClassEditor_0.string_3 + Environment.NewLine;
             }
-            ClassEditor_0.bool_2 = false;
+            ClassEditor_0.ValuesChanged = false;
             //##################################################################################
 
             this.groupBox1.Text = "Table: " + this.treeView1.SelectedNode.Text;
@@ -592,7 +868,7 @@ public class Editortable : DarkForm
                 if (NodeIndex == -1)
                 {
                     Editortable_0.GForm_Main_0.method_1("ROM Indexing error with Nodes!");
-                    ClassEditor_0.bool_1 = true;
+                    ClassEditor_0.CanReloadTablesValues = true;
                     return;
                 }
 
@@ -601,7 +877,7 @@ public class Editortable : DarkForm
                 {
                     try
                     {
-                        ClassEditor_0.bool_1 = true;
+                        ClassEditor_0.CanReloadTablesValues = true;
                         this.treeView1.SelectNode(this.treeView1.SelectedNode.Nodes[0]);
                     }
                     catch { }
@@ -649,15 +925,29 @@ public class Editortable : DarkForm
                     textArray1 = ClassEditor_0.GetAdvancedHeader(TableSizze[0], ParamHeaderLocation, ClassEditor_0.DefinitionsMathY[NodeIndex], ClassEditor_0.DefinitionsFormatY[NodeIndex]);
                 }
 
+                this.groupBox1.Text = "Table: " + this.treeView1.SelectedNode.Text + " (" + ClassEditor_0.DefinitionsLocationsTable[NodeIndex] + ")";
+
+                ClassEditor_0.SelectedTableIndexInDefinitions = NodeIndex;
+
                 //Show Value in Datagridview
-                ClassEditor_0.SetTableValues(TableSizze, ParamLocation, ClassEditor_0.DefinitionsUnit1[NodeIndex], ClassEditor_0.DefinitionsUnit2[NodeIndex], textArray1, ClassEditor_0.DefinitionsMathX[NodeIndex], ClassEditor_0.DefinitionsFormatX[NodeIndex], ClassEditor_0.DefinitionsIsXYInverted[NodeIndex], ClassEditor_0.HexStringToInt(ClassEditor_0.DefinitionsLocationsTable[NodeIndex]), ClassEditor_0.DefinitionsMathTable[NodeIndex], ClassEditor_0.DefinitionsFormatTable[NodeIndex], ClassEditor_0.DefinitionsIsTableInverted[NodeIndex]);
+                ClassEditor_0.SetTableValues(TableSizze,
+                                            ParamLocation,
+                                            ClassEditor_0.DefinitionsUnit1[NodeIndex],
+                                            ClassEditor_0.DefinitionsUnit2[NodeIndex],
+                                            textArray1, ClassEditor_0.DefinitionsMathX[NodeIndex],
+                                            ClassEditor_0.DefinitionsFormatX[NodeIndex],
+                                            ClassEditor_0.DefinitionsIsXYInverted[NodeIndex],
+                                            ClassEditor_0.HexStringToInt(ClassEditor_0.DefinitionsLocationsTable[NodeIndex]),
+                                            ClassEditor_0.DefinitionsMathTable[NodeIndex], ClassEditor_0.DefinitionsFormatTable[NodeIndex],
+                                            ClassEditor_0.DefinitionsIsTableInverted[NodeIndex],
+                                            ClassEditor_0.DefinitionsIsReadOnly[NodeIndex]);
             }
         }
 
-        ClassEditor_0.bool_1 = true;
+        ClassEditor_0.CanReloadTablesValues = true;
     }
 
-    private int CheckForBootLoaderSum(string ThisECUName)
+    public int CheckForBootLoaderSum(string ThisECUName)
     {
         string BLSumPath = Application.StartupPath + @"\BootLoaderSumBytesList.txt";
         if (File.Exists(BLSumPath))
@@ -714,63 +1004,62 @@ public class Editortable : DarkForm
         return ECUName;
     }
 
+    public void LoadThisFile(string ThisFilePath)
+    {
+        this.Text = "Honda Rom Tables Editor (" + this.GForm_Main_0.Version + ") | " + Path.GetFileName(ThisFilePath);
+
+        string LastOpenFilePath = Application.StartupPath + @"\LastFileOpened.txt";
+        File.Create(LastOpenFilePath).Dispose();
+        File.WriteAllText(LastOpenFilePath, ThisFilePath);
+
+        byte[] FilesBytes = File.ReadAllBytes(ThisFilePath);
+        this.Editortable_0.LoadedFilename = ThisFilePath;
+        if ((FilesBytes.Length - 1) == 0xFFFFF) this.IsFullBinary = true;
+
+        //Load BootLoader Sum byte for decrypted firmware (not a full binary rom)    
+        if ((FilesBytes.Length - 1) == 0xF7FFF)
+        {
+            this.IsFullBinary = false;
+
+            int BtSumInt = CheckForBootLoaderSum(ExtractECUNameFromThisFile(FilesBytes));
+            if (BtSumInt == -1)
+            {
+                DarkMessageBox.Show(this, "Since this decompressed firmware .bin file is missing the bootloader section\nSelect the firmware .rwd file from which is as been decompressed from", "MISSING BOOTLOADER SECTION FOR CHECKSUMS VERIFICATIONS", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                //Open RWD firmware
+                openFileDialog1.Filter = "Honda Compressed RWD Firmware|*.gz;*.rwd";
+                openFileDialog1.DefaultExt = "*.gz";
+                DialogResult result = openFileDialog1.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    Class_RWD.LoadRWD(openFileDialog1.FileName, true, false);
+                }
+            }
+            else
+            {
+                Class_RWD.BootloaderSum = (byte)BtSumInt;
+            }
+        }
+
+        //Load File
+        if ((FilesBytes.Length - 1) == 0xF7FFF || (FilesBytes.Length - 1) == 0xFFFFF)
+        {
+            //Load Binary into ROM Table Editor
+            this.Editortable_0.method_1();
+        }
+        else
+        {
+            Console.WriteLine((FilesBytes.Length - 1).ToString("X"));
+            DarkMessageBox.Show(this, "This file is not compatible!");
+        }
+    }
+
     private void button1_Click(object sender, EventArgs e)
     {
         DialogResult result = openFileDialog1.ShowDialog();
         if (result == DialogResult.OK)
         {
-            if (openFileDialog1.FilterIndex == 1)
-            {
-                byte[] FilesBytes = File.ReadAllBytes(openFileDialog1.FileName);
-                if ((FilesBytes.Length - 1) == 0xFFFFF)
-                {
-                    this.Editortable_0.LoadedFilename = openFileDialog1.FileName;
-                    this.IsFullBinary = true;
-
-                    //Load Binary into ROM Table Editor
-                    this.Editortable_0.method_1();
-                }
-                else
-                {
-                    DarkMessageBox.Show(this, "This file is not compatible!");
-                }
-            }
-            if (openFileDialog1.FilterIndex == 2)
-            {
-                byte[] FilesBytes = File.ReadAllBytes(openFileDialog1.FileName);
-                if ((FilesBytes.Length - 1) == 0xF7FFF)
-                {
-                    this.Editortable_0.LoadedFilename = openFileDialog1.FileName;
-                    this.IsFullBinary = false;
-
-                    int BtSumInt = CheckForBootLoaderSum(ExtractECUNameFromThisFile(FilesBytes));
-                    if (BtSumInt == -1)
-                    {
-                        DarkMessageBox.Show(this, "Since this decompressed firmware .bin file is missing the bootloader section\nSelect the firmware .rwd file from which is as been decompressed from", "MISSING BOOTLOADER SECTION FOR CHECKSUMS VERIFICATIONS", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
-                        //Open RWD firmware
-                        openFileDialog1.Filter = "Honda Compressed RWD Firmware|*.gz;*.rwd";
-                        openFileDialog1.DefaultExt = "*.gz";
-                        result = openFileDialog1.ShowDialog();
-                        if (result == DialogResult.OK)
-                        {
-                            Class_RWD.LoadRWD(openFileDialog1.FileName, true, false);
-                        }
-                    }
-                    else
-                    {
-                        Class_RWD.BootloaderSum = (byte) BtSumInt;
-                    }
-
-                    //Load Binary into ROM Table Editor
-                    this.Editortable_0.method_1();
-                }
-                else
-                {
-                    Console.WriteLine((FilesBytes.Length - 1).ToString("X"));
-                    DarkMessageBox.Show(this, "This file is not compatible!");
-                }
-            }
+            LoadThisFile(openFileDialog1.FileName);
         }
     }
 
@@ -820,6 +1109,208 @@ public class Editortable : DarkForm
     private void fixChecksumsToolStripMenuItem_Click(object sender, EventArgs e)
     {
         ClassEditor_0.FixChecksums();
+    }
+
+
+
+    private void generateDefinitionsFilesToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        DarkMessageBox.Show(this, "Select the folder where all decrypted firmwares .bin are located.", "Select firmwares folder", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+        DialogResult result = folderBrowserDialog1.ShowDialog();
+        if (result == DialogResult.OK)
+        {
+            GForm_Main_0.Class_DefinitionMaker_0.FirmwareFolder = folderBrowserDialog1.SelectedPath;
+            GForm_Main_0.Class_DefinitionMaker_0.CreateDefinitionsFiles();
+        }
+    }
+
+    private void getDifferencesInAllFirmwaresFilesToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        DarkMessageBox.Show(this, "Select the folder where all decrypted firmwares .bin are located.", "Select firmwares folder", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+        DialogResult result = folderBrowserDialog1.ShowDialog();
+        if (result == DialogResult.OK)
+        {
+            GForm_Main_0.Class_DefinitionMaker_0.FirmwareFolder = folderBrowserDialog1.SelectedPath;
+            GForm_Main_0.Class_DefinitionMaker_0.GetFilesDifferenceCount();
+        }
+    }
+
+    private void extractAllBootloadersumByteFromAllFirmwaresFilesToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        DarkMessageBox.Show(this, "Select the folder where all decrypted firmwares .bin are located.", "Select firmwares folder", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+        DialogResult result = folderBrowserDialog1.ShowDialog();
+        if (result == DialogResult.OK)
+        {
+            GForm_Main_0.Class_DefinitionMaker_0.FirmwareFolder = folderBrowserDialog1.SelectedPath;
+            GForm_Main_0.Class_DefinitionMaker_0.ExtractAllBootLoaderSum_1Mb();
+        }
+    }
+
+    private void extractDefinitionToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        GForm_Main_0.Class_DefinitionMaker_0.Extract();
+        if (GForm_Main_0.Class_DefinitionMaker_0.CurrentExtractedDumps > 1) GForm_Main_0.Class_DefinitionMaker_0.CreateExtractedDefinition();
+    }
+
+    [CompilerGenerated]
+    private sealed class Class5
+    {
+
+        public Class5()
+        {
+        }
+
+
+        internal void method_0()
+        {
+            this.Editortable_0.darkTextBox_0.AppendText(this.string_0 + Environment.NewLine);
+        }
+
+
+        public Editortable Editortable_0;
+
+
+        public string string_0;
+    }
+
+    private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        //this.ClassEditor_0.AllROMDifferences.Contains(Environment.NewLine)
+        if (this.ClassEditor_0.AllROMDifferences != "")
+        {
+            string[] lines = this.ClassEditor_0.AllROMDifferences.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+            if (lines.Length > 0)
+            {
+                for (int i = lines.Length - 1; i >= 0; i--)
+                {
+                    if (lines[i] != "")
+                    {
+                        string CommandsLine = lines[i].Replace(" ", "");
+                        if (CommandsLine.Contains(":"))
+                        {
+                            string[] CmdsSpli1 = CommandsLine.Split(':');
+                            int Index = int.Parse(CmdsSpli1[1].Split('[')[0]);
+                            string RemainingCmds = CmdsSpli1[1].Split('[')[1].Replace("->", ";");
+                            int num1 = int.Parse(RemainingCmds.Split(';')[0]);
+                            int num2 = int.Parse(RemainingCmds.Split(';')[1].Split(']')[0]);
+                            int intLocationnValue = int.Parse(CmdsSpli1[2].Replace("0x", ""), System.Globalization.NumberStyles.HexNumber);
+
+                            //Apply Changes
+                            this.ClassEditor_0.ROM_Bytes[intLocationnValue] = (byte)num1;
+
+                            //Send Logs
+                            string BufText = "Undo change at line: " + Index.ToString() + "[" + num2.ToString("X2") + "->" + num1.ToString("X2") + "] | At: 0x" + (intLocationnValue).ToString("X") + Environment.NewLine;
+                            GForm_Main_0.method_1(BufText);
+
+                            //Remove from rom differences (string list)
+                            string BufferROMDiff = "";
+                            if (i > 0)
+                            {
+                                for (int i2 = 0; i2 < i; i2++) BufferROMDiff = BufferROMDiff + lines[i2];
+                                this.ClassEditor_0.AllROMDifferences = BufferROMDiff;
+                            }
+
+                            //add to Redo list
+                            this.ClassEditor_0.AllROMDifferencesRedo = this.ClassEditor_0.AllROMDifferencesRedo + lines[i] + Environment.NewLine;
+                            redoToolStripMenuItem.Enabled = true;
+
+                            //return
+                            i = -1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void redoToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        if (this.ClassEditor_0.AllROMDifferencesRedo != "")
+        {
+            string[] lines = this.ClassEditor_0.AllROMDifferencesRedo.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+            if (lines.Length > 0)
+            {
+                for (int i = lines.Length - 1; i >= 0; i--)
+                {
+                    if (lines[i] != "")
+                    {
+                        string CommandsLine = lines[i].Replace(" ", "");
+                        if (CommandsLine.Contains(":"))
+                        {
+                            string[] CmdsSpli1 = CommandsLine.Split(':');
+                            int Index = int.Parse(CmdsSpli1[1].Split('[')[0]);
+                            string RemainingCmds = CmdsSpli1[1].Split('[')[1].Replace("->", ";");
+                            int num1 = int.Parse(RemainingCmds.Split(';')[0]);
+                            int num2 = int.Parse(RemainingCmds.Split(';')[1].Split(']')[0]);
+                            int intLocationnValue = int.Parse(CmdsSpli1[2].Replace("0x", ""), System.Globalization.NumberStyles.HexNumber);
+
+                            //Apply Changes
+                            this.ClassEditor_0.ROM_Bytes[intLocationnValue] = (byte)num2;
+
+                            //Send Logs
+                            string BufText = "Redo change at line: " + Index.ToString() + "[" + num1.ToString("X2") + "->" + num2.ToString("X2") + "] | At: 0x" + (intLocationnValue).ToString("X") + Environment.NewLine;
+                            GForm_Main_0.method_1(BufText);
+
+                            //Remove from Redo list
+                            string BufferROMDiff = "";
+                            if (i > 0)
+                            {
+                                for (int i2 = 0; i2 < i; i2++) BufferROMDiff = BufferROMDiff + lines[i2];
+                                this.ClassEditor_0.AllROMDifferencesRedo = BufferROMDiff;
+                            }
+
+                            //add to rom differences (string list)
+                            this.ClassEditor_0.AllROMDifferences = this.ClassEditor_0.AllROMDifferences + lines[i] + Environment.NewLine;
+
+                            if (this.ClassEditor_0.AllROMDifferencesRedo == "") redoToolStripMenuItem.Enabled = false;
+
+                            //return
+                            i = -1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void removeBootloaderInbinToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        DarkMessageBox.Show(this, "Select the file to remove the Bootloader(Start) section from\nThe created .bin with removed bootloader can now be used as a 'decrypted firmware .bin'\nYou can also remake a firmware .rwd update file from this .bin and use it to flash on the ECU!", "Select full binary rom .bin", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+        DialogResult result = openFileDialog1.ShowDialog();
+        if (result == DialogResult.OK)
+        {
+            byte[] FilesBytes = File.ReadAllBytes(openFileDialog1.FileName);
+            if ((FilesBytes.Length - 1) == 0xFFFFF)
+            {
+                //remove 0x0000 to 0x8000
+                byte[] FilesBytesRWD = new byte[FilesBytes.Length - 0x8000];
+                for (int i = 0; i < FilesBytesRWD.Length; i++)
+                {
+                    FilesBytesRWD[i] = FilesBytes[i + 0x8000];
+                }
+
+                string SaveeePath = Path.GetDirectoryName(openFileDialog1.FileName) + @"\" + Path.GetFileNameWithoutExtension(openFileDialog1.FileName) + "_NoBootloader.bin";
+                File.Create(SaveeePath).Dispose();
+                File.WriteAllBytes(SaveeePath, FilesBytesRWD);
+
+                GForm_Main_0.method_1("Removed Bootloader file created: " + SaveeePath);
+            }
+            else
+            {
+                Console.WriteLine((FilesBytes.Length - 1).ToString("X"));
+                DarkMessageBox.Show(this, "This file is not compatible!");
+            }
+        }
+    }
+
+    private void generateDefinitionFileFromExtractedDefinitionToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        GForm_Main_0.Class_DefinitionMaker_0.CurrentExtractedDumps = 2;
+        GForm_Main_0.Class_DefinitionMaker_0.CreateExtractedDefinition();
     }
 }
 

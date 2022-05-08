@@ -13,3 +13,10 @@ C:\Users\boule\Documents\Visual Studio 2019\Projects\FlashToolTest\bin\Debug\ECU
 C:\Users\boule\Documents\Visual Studio 2019\Projects\FlashToolTest\obj\Debug\GForm_Main.resources
 C:\Users\boule\Documents\Visual Studio 2019\Projects\FlashToolTest\obj\Debug\GForm_PlatformSelect.resources
 C:\Users\boule\Documents\Visual Studio 2019\Projects\FlashToolTest\obj\Debug\GForm_J2534Select.resources
+C:\Users\boule\Documents\Visual Studio 2019\Projects\FlashToolTest\obj\Debug\GForm_ConvertBIN.resources
+C:\Users\boule\Documents\Visual Studio 2019\Projects\FlashToolTest\obj\Debug\GForm_FWChkSum.resources
+C:\Users\boule\Documents\Visual Studio 2019\Projects\FlashToolTest\bin\Debug\OBD2.txt
+C:\Users\boule\Documents\Visual Studio 2019\Projects\FlashToolTest\obj\Debug\FlashToolTest.frmOBD2Scan.resources
+C:\Users\boule\Documents\Visual Studio 2019\Projects\FlashToolTest\obj\Debug\GForm_Credits.resources
+C:\Users\boule\Documents\Visual Studio 2019\Projects\FlashToolTest\obj\Debug\Editortable.resources
+C:\Users\boule\Documents\Visual Studio 2019\Projects\FlashToolTest\bin\Debug\BootLoaderSumBytesList.txt

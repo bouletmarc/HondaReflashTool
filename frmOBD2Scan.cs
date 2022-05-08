@@ -3398,230 +3398,202 @@ public class frmOBD2Scan : DarkForm
             string text = this.listViewLive.Items[num].SubItems[0].Text;
             if (text != null)
             {
-                uint num2 = ClassDecryptString.DecryptThisString(text);
-                if (num2 <= 0x1ded6c01)
+                if (text == "06")
                 {
-                    if (num2 <= 0x1bed68db)
+                    try
                     {
-                        if (num2 != 0x17eb23f8)
+                        this.listViewLive.Items[num].SubItems[2].Text = this.string_17;
+                        if ((this.listViewLive.Items[num].SubItems[3].Text == "000") || (this.listViewLive.Items[num].SubItems[3].Text == ""))
                         {
-                            if ((num2 == 0x1bed68db) && (text == "06"))
-                            {
-                                try
-                                {
-                                    this.listViewLive.Items[num].SubItems[2].Text = this.string_17;
-                                    if ((this.listViewLive.Items[num].SubItems[3].Text == "000") || (this.listViewLive.Items[num].SubItems[3].Text == ""))
-                                    {
-                                        this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                                    }
-                                    if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) <= int.Parse(this.listViewLive.Items[num].SubItems[3].Text))
-                                    {
-                                        this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                                    }
-                                    if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) >= int.Parse(this.listViewLive.Items[num].SubItems[4].Text))
-                                    {
-                                        this.listViewLive.Items[num].SubItems[4].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                                    }
-                                }
-                                catch
-                                {
-                                }
-                            }
+                            this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
                         }
-                        else if (text == "14")
+                        if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) <= int.Parse(this.listViewLive.Items[num].SubItems[3].Text))
                         {
-                            try
-                            {
-                                this.listViewLive.Items[num].SubItems[2].Text = this.string_12;
-                                if ((this.listViewLive.Items[num].SubItems[3].Text == "000") || (this.listViewLive.Items[num].SubItems[3].Text == ""))
-                                {
-                                    this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                                }
-                                if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) <= int.Parse(this.listViewLive.Items[num].SubItems[3].Text))
-                                {
-                                    this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                                }
-                                if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) >= int.Parse(this.listViewLive.Items[num].SubItems[4].Text))
-                                {
-                                    this.listViewLive.Items[num].SubItems[4].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                                }
-                            }
-                            catch
-                            {
-                            }
+                            this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
+                        }
+                        if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) >= int.Parse(this.listViewLive.Items[num].SubItems[4].Text))
+                        {
+                            this.listViewLive.Items[num].SubItems[4].Text = this.listViewLive.Items[num].SubItems[2].Text;
                         }
                     }
-                    else if (num2 == 0x1ceb2bd7)
+                    catch
                     {
-                        if (text == "11")
-                        {
-                            try
-                            {
-                                this.listViewLive.Items[num].SubItems[2].Text = this.string_9;
-                                if ((this.listViewLive.Items[num].SubItems[3].Text == "000") || (this.listViewLive.Items[num].SubItems[3].Text == ""))
-                                {
-                                    this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                                }
-                                if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) <= int.Parse(this.listViewLive.Items[num].SubItems[3].Text))
-                                {
-                                    this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                                }
-                                if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) >= int.Parse(this.listViewLive.Items[num].SubItems[4].Text))
-                                {
-                                    this.listViewLive.Items[num].SubItems[4].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                                }
-                            }
-                            catch
-                            {
-                            }
-                        }
-                    }
-                    else if (num2 != 0x1ced6a6e)
-                    {
-                        if ((num2 == 0x1ded6c01) && (text == "04"))
-                        {
-                            try
-                            {
-                                this.listViewLive.Items[num].SubItems[2].Text = this.string_16;
-                                if ((this.listViewLive.Items[num].SubItems[3].Text == "000") || (this.listViewLive.Items[num].SubItems[3].Text == ""))
-                                {
-                                    this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                                }
-                                if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) <= int.Parse(this.listViewLive.Items[num].SubItems[3].Text))
-                                {
-                                    this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                                }
-                                if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) >= int.Parse(this.listViewLive.Items[num].SubItems[4].Text))
-                                {
-                                    this.listViewLive.Items[num].SubItems[4].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                                }
-                            }
-                            catch
-                            {
-                            }
-                        }
-                    }
-                    else if (text == "05")
-                    {
-                        try
-                        {
-                            this.listViewLive.Items[num].SubItems[2].Text = this.string_14;
-                            if ((this.listViewLive.Items[num].SubItems[3].Text == "000") || (this.listViewLive.Items[num].SubItems[3].Text == ""))
-                            {
-                                this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                            }
-                            if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) <= int.Parse(this.listViewLive.Items[num].SubItems[3].Text))
-                            {
-                                this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                            }
-                            if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) >= int.Parse(this.listViewLive.Items[num].SubItems[4].Text))
-                            {
-                                this.listViewLive.Items[num].SubItems[4].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                            }
-                        }
-                        catch
-                        {
-                        }
                     }
                 }
-                else if (num2 <= 0x6cede85e)
+                else if (text == "14")
                 {
-                    if (num2 != 0x6bede6cb)
+                    try
                     {
-                        if ((num2 == 0x6cede85e) && (text == "0E"))
+                        this.listViewLive.Items[num].SubItems[2].Text = this.string_12;
+                        if ((this.listViewLive.Items[num].SubItems[3].Text == "000") || (this.listViewLive.Items[num].SubItems[3].Text == ""))
                         {
-                            try
-                            {
-                                this.listViewLive.Items[num].SubItems[2].Text = this.string_15;
-                                if ((this.listViewLive.Items[num].SubItems[3].Text == "000") || (this.listViewLive.Items[num].SubItems[3].Text == ""))
-                                {
-                                    this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                                }
-                                if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) <= int.Parse(this.listViewLive.Items[num].SubItems[3].Text))
-                                {
-                                    this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                                }
-                                if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) >= int.Parse(this.listViewLive.Items[num].SubItems[4].Text))
-                                {
-                                    this.listViewLive.Items[num].SubItems[4].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                                }
-                            }
-                            catch
-                            {
-                            }
+                            this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
+                        }
+                        if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) <= int.Parse(this.listViewLive.Items[num].SubItems[3].Text))
+                        {
+                            this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
+                        }
+                        if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) >= int.Parse(this.listViewLive.Items[num].SubItems[4].Text))
+                        {
+                            this.listViewLive.Items[num].SubItems[4].Text = this.listViewLive.Items[num].SubItems[2].Text;
                         }
                     }
-                    else if (text == "0F")
+                    catch
                     {
-                        try
-                        {
-                            this.listViewLive.Items[num].SubItems[2].Text = this.string_13;
-                            if ((this.listViewLive.Items[num].SubItems[3].Text == "000") || (this.listViewLive.Items[num].SubItems[3].Text == ""))
-                            {
-                                this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                            }
-                            if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) <= int.Parse(this.listViewLive.Items[num].SubItems[3].Text))
-                            {
-                                this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                            }
-                            if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) >= int.Parse(this.listViewLive.Items[num].SubItems[4].Text))
-                            {
-                                this.listViewLive.Items[num].SubItems[4].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                            }
-                        }
-                        catch
-                        {
-                        }
                     }
                 }
-                else if (num2 == 0x6dede9f1)
+                else if (text == "11")
                 {
-                    if (text == "0D")
+                    try
                     {
-                        try
+                        this.listViewLive.Items[num].SubItems[2].Text = this.string_9;
+                        if ((this.listViewLive.Items[num].SubItems[3].Text == "000") || (this.listViewLive.Items[num].SubItems[3].Text == ""))
                         {
-                            this.listViewLive.Items[num].SubItems[2].Text = this.string_10;
-                            if ((this.listViewLive.Items[num].SubItems[3].Text == "000") || (this.listViewLive.Items[num].SubItems[3].Text == ""))
-                            {
-                                this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                            }
-                            if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) <= int.Parse(this.listViewLive.Items[num].SubItems[3].Text))
-                            {
-                                this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                            }
-                            if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) >= int.Parse(this.listViewLive.Items[num].SubItems[4].Text))
-                            {
-                                this.listViewLive.Items[num].SubItems[4].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                            }
+                            this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
                         }
-                        catch
+                        if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) <= int.Parse(this.listViewLive.Items[num].SubItems[3].Text))
                         {
+                            this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
+                        }
+                        if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) >= int.Parse(this.listViewLive.Items[num].SubItems[4].Text))
+                        {
+                            this.listViewLive.Items[num].SubItems[4].Text = this.listViewLive.Items[num].SubItems[2].Text;
                         }
                     }
-                }
-                else if (num2 != 0x6eedeb84)
-                {
-                    if ((num2 == 0x6feded17) && (text == "0B"))
+                    catch
                     {
-                        try
+                    }
+                }
+                else if (text == "04")
+                {
+                    try
+                    {
+                        this.listViewLive.Items[num].SubItems[2].Text = this.string_16;
+                        if ((this.listViewLive.Items[num].SubItems[3].Text == "000") || (this.listViewLive.Items[num].SubItems[3].Text == ""))
                         {
-                            this.listViewLive.Items[num].SubItems[2].Text = this.string_7;
-                            if ((this.listViewLive.Items[num].SubItems[3].Text == "000") || (this.listViewLive.Items[num].SubItems[3].Text == ""))
-                            {
-                                this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                            }
-                            if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) <= int.Parse(this.listViewLive.Items[num].SubItems[3].Text))
-                            {
-                                this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                            }
-                            if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) >= int.Parse(this.listViewLive.Items[num].SubItems[4].Text))
-                            {
-                                this.listViewLive.Items[num].SubItems[4].Text = this.listViewLive.Items[num].SubItems[2].Text;
-                            }
+                            this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
                         }
-                        catch
+                        if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) <= int.Parse(this.listViewLive.Items[num].SubItems[3].Text))
                         {
+                            this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
                         }
+                        if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) >= int.Parse(this.listViewLive.Items[num].SubItems[4].Text))
+                        {
+                            this.listViewLive.Items[num].SubItems[4].Text = this.listViewLive.Items[num].SubItems[2].Text;
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+                else if (text == "05")
+                {
+                    try
+                    {
+                        this.listViewLive.Items[num].SubItems[2].Text = this.string_14;
+                        if ((this.listViewLive.Items[num].SubItems[3].Text == "000") || (this.listViewLive.Items[num].SubItems[3].Text == ""))
+                        {
+                            this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
+                        }
+                        if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) <= int.Parse(this.listViewLive.Items[num].SubItems[3].Text))
+                        {
+                            this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
+                        }
+                        if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) >= int.Parse(this.listViewLive.Items[num].SubItems[4].Text))
+                        {
+                            this.listViewLive.Items[num].SubItems[4].Text = this.listViewLive.Items[num].SubItems[2].Text;
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+                else if (text == "0E")
+                {
+                    try
+                    {
+                        this.listViewLive.Items[num].SubItems[2].Text = this.string_15;
+                        if ((this.listViewLive.Items[num].SubItems[3].Text == "000") || (this.listViewLive.Items[num].SubItems[3].Text == ""))
+                        {
+                            this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
+                        }
+                        if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) <= int.Parse(this.listViewLive.Items[num].SubItems[3].Text))
+                        {
+                            this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
+                        }
+                        if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) >= int.Parse(this.listViewLive.Items[num].SubItems[4].Text))
+                        {
+                            this.listViewLive.Items[num].SubItems[4].Text = this.listViewLive.Items[num].SubItems[2].Text;
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+                else if (text == "0F")
+                {
+                    try
+                    {
+                        this.listViewLive.Items[num].SubItems[2].Text = this.string_13;
+                        if ((this.listViewLive.Items[num].SubItems[3].Text == "000") || (this.listViewLive.Items[num].SubItems[3].Text == ""))
+                        {
+                            this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
+                        }
+                        if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) <= int.Parse(this.listViewLive.Items[num].SubItems[3].Text))
+                        {
+                            this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
+                        }
+                        if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) >= int.Parse(this.listViewLive.Items[num].SubItems[4].Text))
+                        {
+                            this.listViewLive.Items[num].SubItems[4].Text = this.listViewLive.Items[num].SubItems[2].Text;
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+                else if (text == "0D")
+                {
+                    try
+                    {
+                        this.listViewLive.Items[num].SubItems[2].Text = this.string_10;
+                        if ((this.listViewLive.Items[num].SubItems[3].Text == "000") || (this.listViewLive.Items[num].SubItems[3].Text == ""))
+                        {
+                            this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
+                        }
+                        if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) <= int.Parse(this.listViewLive.Items[num].SubItems[3].Text))
+                        {
+                            this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
+                        }
+                        if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) >= int.Parse(this.listViewLive.Items[num].SubItems[4].Text))
+                        {
+                            this.listViewLive.Items[num].SubItems[4].Text = this.listViewLive.Items[num].SubItems[2].Text;
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+                else if (text == "0B")
+                {
+                    try
+                    {
+                        this.listViewLive.Items[num].SubItems[2].Text = this.string_7;
+                        if ((this.listViewLive.Items[num].SubItems[3].Text == "000") || (this.listViewLive.Items[num].SubItems[3].Text == ""))
+                        {
+                            this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
+                        }
+                        if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) <= int.Parse(this.listViewLive.Items[num].SubItems[3].Text))
+                        {
+                            this.listViewLive.Items[num].SubItems[3].Text = this.listViewLive.Items[num].SubItems[2].Text;
+                        }
+                        if (int.Parse(this.listViewLive.Items[num].SubItems[2].Text) >= int.Parse(this.listViewLive.Items[num].SubItems[4].Text))
+                        {
+                            this.listViewLive.Items[num].SubItems[4].Text = this.listViewLive.Items[num].SubItems[2].Text;
+                        }
+                    }
+                    catch
+                    {
                     }
                 }
                 else if (text == "0C")
@@ -4689,99 +4661,59 @@ public class frmOBD2Scan : DarkForm
             }
             else
             {
-                uint num2 = ClassDecryptString.DecryptThisString(string_21);
-                if (num2 > 0x44a7f051)
+                if (string_21 == "Load%")
                 {
-                    if (num2 > 0xce8f3e48)
-                    {
-                        if (num2 > 0xeef6e76e)
-                        {
-                            if (num2 == 0xf87c4b44)
-                            {
-                                if (string_21 == "Load%")
-                                {
-                                    return (double.TryParse(this.string_16, out result) ? result : 0.0);
-                                }
-                            }
-                            else if ((num2 == 0xfd283657) && (string_21 == "ECT"))
-                            {
-                                return (double.TryParse(this.string_14, out result) ? result : 0.0);
-                            }
-                        }
-                        else if (num2 == 0xd0b33ab6)
-                        {
-                            if (string_21 == "RPM")
-                            {
-                                return (double.TryParse(this.string_8, out result) ? result : 0.0);
-                            }
-                        }
-                        else if ((num2 == 0xeef6e76e) && (string_21 == "BATTERY"))
-                        {
-                            return (double.TryParse(this.string_11, out result) ? result : 0.0);
-                        }
-                    }
-                    else if (num2 == 0x670409f2)
-                    {
-                        if (string_21 == "BTDC")
-                        {
-                            return (double.TryParse(this.string_15, out result) ? result : 0.0);
-                        }
-                    }
-                    else if (num2 == 0x840ae12e)
-                    {
-                        if (string_21 == "Battery")
-                        {
-                            return (double.TryParse(this.string_11, out result) ? result : 0.0);
-                        }
-                    }
-                    else if ((num2 == 0xce8f3e48) && (string_21 == "STFT"))
-                    {
-                        return (double.TryParse(this.string_17, out result) ? result : 0.0);
-                    }
+                    return (double.TryParse(this.string_16, out result) ? result : 0.0);
                 }
-                else if (num2 > 0x1ce412e4)
+                else if (string_21 == "ECT")
                 {
-                    if (num2 > 0x2f6e59dd)
-                    {
-                        if (num2 == 0x345d4ece)
-                        {
-                            if (string_21 == "TPS")
-                            {
-                                goto TR_000C;
-                            }
-                        }
-                        else if ((num2 == 0x44a7f051) && (string_21 == "Map"))
-                        {
-                            goto TR_000F;
-                        }
-                    }
-                    else if (num2 == 0x24599f11)
-                    {
-                        if (string_21 == "MAP")
-                        {
-                            goto TR_000F;
-                        }
-                    }
-                    else if ((num2 == 0x2f6e59dd) && (string_21 == "TPlate"))
-                    {
-                        goto TR_000C;
-                    }
+                    return (double.TryParse(this.string_14, out result) ? result : 0.0);
                 }
-                else if (num2 == 0xa6b8020)
+                else if (string_21 == "RPM")
                 {
-                    if (string_21 == "Speed")
-                    {
-                        return (double.TryParse(this.string_10, out result) ? result : 0.0);
-                    }
+                    return (double.TryParse(this.string_8, out result) ? result : 0.0);
                 }
-                else if (num2 == 0x1ab73171)
+                else if (string_21 == "BATTERY")
                 {
-                    if (string_21 == "IAT")
-                    {
-                        return (double.TryParse(this.string_13, out result) ? result : 0.0);
-                    }
+                    return (double.TryParse(this.string_11, out result) ? result : 0.0);
                 }
-                else if ((num2 == 0x1ce412e4) && (string_21 == "O2"))
+                else if (string_21 == "BTDC")
+                {
+                    return (double.TryParse(this.string_15, out result) ? result : 0.0);
+                }
+                else if (string_21 == "Battery")
+                {
+                    return (double.TryParse(this.string_11, out result) ? result : 0.0);
+                }
+                else if (string_21 == "STFT")
+                {
+                    return (double.TryParse(this.string_17, out result) ? result : 0.0);
+                }
+                else if (string_21 == "TPS")
+                {
+                    goto TR_000C;
+                }
+                else if (string_21 == "Map")
+                {
+                    goto TR_000F;
+                }
+                else if (string_21 == "MAP")
+                {
+                    goto TR_000F;
+                }
+                else if (string_21 == "TPlate")
+                {
+                    goto TR_000C;
+                }
+                else if (string_21 == "Speed")
+                {
+                    return (double.TryParse(this.string_10, out result) ? result : 0.0);
+                }
+                else if (string_21 == "IAT")
+                {
+                    return (double.TryParse(this.string_13, out result) ? result : 0.0);
+                }
+                else if (string_21 == "O2")
                 {
                     return (double.TryParse(this.string_12, out result) ? result : 0.0);
                 }

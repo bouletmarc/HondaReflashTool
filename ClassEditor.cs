@@ -25,6 +25,9 @@ internal class ClassEditor
     public List<string> DefinitionsMathX = new List<string>();
     public List<string> DefinitionsMathY = new List<string>();
     public List<string> DefinitionsMathTable = new List<string>();
+    public List<string> DefinitionsMathXInverted = new List<string>();
+    public List<string> DefinitionsMathYInverted = new List<string>();
+    public List<string> DefinitionsMathTableInverted = new List<string>();
     public List<string> DefinitionsFormatX = new List<string>();
     public List<string> DefinitionsFormatY = new List<string>();
     public List<string> DefinitionsFormatTable = new List<string>();
@@ -42,6 +45,28 @@ internal class ClassEditor
     public List<string> DefinitionsHeaders = new List<string>();
     public List<bool> DefinitionsIsXYInverted = new List<bool>();
     public List<bool> DefinitionsIsTableInverted = new List<bool>();
+    public List<bool> DefinitionsIsReadOnly = new List<bool>();
+    public List<bool> DefinitionsIsUntested = new List<bool>();
+    public List<bool> DefinitionsIsNotDefined = new List<bool>();
+
+    public int SelectedROMLocation;
+    public int SelectedTableSize;
+    public int SelectedTableIndexInDefinitions;
+    public bool IsTableLoadedCorrectly = false;
+    public bool CanReloadTablesValues = false;
+    public string string_ECU_Name;
+    public byte[] ROM_Bytes;
+    public string AllROMDifferences;
+    public string AllROMDifferencesRedo;
+    public bool ValuesChanged = false;
+    public bool IsSingleByteX = false;
+    public bool IsSingleByteY = false;
+    public bool IsSingleByteTable = false;
+
+    public int[] BufferValuesArray = new int[200];
+    public int[] BufferTableSize = new int[2];
+    public string BufferMath = "";
+    private string LastMathDoneCheck = "";
 
     private Editortable Editortable_0;
 
@@ -60,9 +85,18 @@ internal class ClassEditor
         float num = this.smethod_1();
         string format = "0";
         string text = Editortable_0.dataGridView_0.Rows[RowIndex].Cells[CellIndex].Value.ToString();
-        if (text.Contains("."))
+        if (text.Contains(".") || text.Contains(","))
         {
-            format = "0.000";
+            string[] SplittedCmd = new string[0];
+            if (text.Contains(".")) SplittedCmd = text.Split('.');
+            if (text.Contains(",")) SplittedCmd = text.Split(',');
+            int FormatLenght = SplittedCmd[1].Length;
+            
+            if (FormatLenght == 0) format = "0.0";
+            if (FormatLenght == 1) format = "0.0";
+            if (FormatLenght == 2) format = "0.00";
+            if (FormatLenght == 3) format = "0.000";
+            if (FormatLenght == 4) format = "0.0000";
         }
         if (Multiply4x)
         {
@@ -166,9 +200,9 @@ internal class ClassEditor
         {
             IncDecreaseSelection(true, bool_);
         }
-        Class40 class40_0 = new Class40();
+        //Class40 class40_0 = new Class40();
         //this.smethod_4(200).ContinueWith(new Action<Task>(this.<> c.<> 9.method_0));
-        this.smethod_4(200, class40_0).ContinueWith(new Action<Task>(class40_0.method_0));
+        //this.smethod_4(200, class40_0).ContinueWith(new Action<Task>(class40_0.method_0));
     }
 
     private Task smethod_4(int int_232, Class40 class40_0)
@@ -196,7 +230,7 @@ internal class ClassEditor
             {
                 //calculate value inversed to make bytes
                 double ThisValue = double.Parse(Editortable_0.dataGridView_0.Rows[j].Cells[i].Value.ToString().Replace(',', '.'), CultureInfo.InvariantCulture);
-                ThisValue = DoMath(ThisValue, BufferMath, true);
+                ThisValue = DoMath(ThisValue, BufferMath, true, "Table");
                 ReadBufferarray[i, j] = (Int16)ThisValue;
             }
         }
@@ -229,9 +263,9 @@ internal class ClassEditor
         byte[] array = new byte[this.SelectedTableSize * multiplier];
         for (int i = 0; i < this.SelectedTableSize * multiplier; i++)
         {
-            array[i] = this.byte_0[num + i];
+            array[i] = this.ROM_Bytes[num + i];
             //Apply Changes
-            this.byte_0[num + i] = BytesBufferarray[i];
+            this.ROM_Bytes[num + i] = BytesBufferarray[i];
         }
 
         int num3 = 0;
@@ -249,7 +283,13 @@ internal class ClassEditor
             num3++;
         }
         if (!DiffDetected) Editortable_0.GForm_Main_0.method_1("No differences detected");
-        this.string_3 = this.string_3 + "Address: " + this.SelectedROMLocation.ToString() + Environment.NewLine + text;
+        if (DiffDetected)
+        {
+            this.AllROMDifferencesRedo = "";
+            this.Editortable_0.redoToolStripMenuItem.Enabled = false;
+        }
+        this.AllROMDifferences = this.AllROMDifferences + text;
+        //this.string_3 = this.string_3 + "Address: " + this.SelectedROMLocation.ToString() + Environment.NewLine + text;
         //this.string_3 = this.string_3 + "Table: " + TableSize + Environment.NewLine + "Address: " + this.SelectedROMLocation.ToString() + Environment.NewLine + text;
     }
 
@@ -257,15 +297,14 @@ internal class ClassEditor
     {
         try
         {
-            if (this.bool_2 && this.SelectedTableSize != 0 && this.SelectedROMLocation != 0)
+            if (this.ValuesChanged && this.SelectedTableSize != 0 && this.SelectedROMLocation != 0)
             {
                 this.GetChanges();
-                this.string_2 = this.string_2 + this.string_3 + Environment.NewLine;
             }
-            this.bool_2 = false;
+            this.ValuesChanged = false;
 
             //################################################
-            byte[] SavingBytes = this.byte_0;
+            byte[] SavingBytes = this.ROM_Bytes;
 
             //Remove fake bootloader section if it's a partial firmware .bin file
             if (!this.Editortable_0.IsFullBinary)
@@ -281,6 +320,16 @@ internal class ClassEditor
 
             File.Create(string_4).Dispose();
             File.WriteAllBytes(string_4, SavingBytes);
+
+            //Set LastFileOpened
+            string LastOpenFilePath = Application.StartupPath + @"\LastFileOpened.txt";
+            File.Create(LastOpenFilePath).Dispose();
+            File.WriteAllText(LastOpenFilePath, string_4);
+            //################################################
+            //Save rom differences changes to logs
+            string text = string_4 + "-logs.txt";
+            File.Create(text).Dispose();
+            File.WriteAllText(text, AllROMDifferences);
             //################################################
             //string text = string_4 + "~temp";
             //string text2 = string_4 + "~temp2";
@@ -307,12 +356,12 @@ internal class ClassEditor
 
     public void FixChecksums()
     {
-        if (!this.Editortable_0.IsFullBinary) this.byte_0 = this.Editortable_0.GForm_Main_0.VerifyChecksumFWBin(this.byte_0);
-        if (this.Editortable_0.IsFullBinary) this.byte_0 = this.Editortable_0.GForm_Main_0.VerifyChecksumFullBin(this.byte_0);
+        if (!this.Editortable_0.IsFullBinary) this.ROM_Bytes = this.Editortable_0.GForm_Main_0.VerifyChecksumFWBin(this.ROM_Bytes);
+        if (this.Editortable_0.IsFullBinary) this.ROM_Bytes = this.Editortable_0.GForm_Main_0.VerifyChecksumFullBin(this.ROM_Bytes);
 
     }
 
-    public void SetTableValues(int[] TableSize, int ROMLocationX, string TopLeftString, string RowHeaderString, string[] HeaderStringList, string ThisMathX, string ThisFormatX, bool IsXYInverted, int ROMLocationTable, string ThisMathTable, string ThisTableFormat, bool IsTableInverted)
+    public void SetTableValues(int[] TableSize, int ROMLocationX, string TopLeftString, string RowHeaderString, string[] HeaderStringList, string ThisMathX, string ThisFormatX, bool IsXYInverted, int ROMLocationTable, string ThisMathTable, string ThisTableFormat, bool IsTableInverted, bool IsReadOnly)
     {
         try
         {
@@ -350,8 +399,8 @@ internal class ClassEditor
                         else num = (double)this.GetIntValue(ROMLocationX + i * 2);
 
                         string HeaderStr = "";
-                        if (ThisFormatX != "") HeaderStr = DoMath(num, ThisMathX, false).ToString(ThisFormatX);
-                        if (ThisFormatX == "") HeaderStr = DoMath(num, ThisMathX, false).ToString();
+                        if (ThisFormatX != "") HeaderStr = DoMath(num, ThisMathX, false, "X").ToString(ThisFormatX);
+                        if (ThisFormatX == "") HeaderStr = DoMath(num, ThisMathX, false, "X").ToString();
                         Editortable_0.dataGridView_0.Columns.Add(HeaderStr, HeaderStr);
                     }
                     else
@@ -399,8 +448,8 @@ internal class ClassEditor
                                         double num = 0;
                                         if (IsSingleByteX) num = (double)this.GetSingleByteValue(ROMLocationX + num10);
                                         else num = (double)this.GetIntValue(ROMLocationX + num10 * 2);
-                                        if (ThisFormatX != "") Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = DoMath(num, ThisMathX, false).ToString(ThisFormatX);
-                                        if (ThisFormatX == "") Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = DoMath(num, ThisMathX, false).ToString();
+                                        if (ThisFormatX != "") Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = DoMath(num, ThisMathX, false, "X").ToString(ThisFormatX);
+                                        if (ThisFormatX == "") Editortable_0.dataGridView_0.Rows[num10].HeaderCell.Value = DoMath(num, ThisMathX, false, "X").ToString();
                                     }
                                     else
                                     {
@@ -413,23 +462,61 @@ internal class ClassEditor
                         }
 
                         //TableMath (Get full 1full row of value at a time)
-                        object[] values = new object[0];
+                        string[] values = new string[0];
                         if (IsXYInverted)
                         {
-                            values = new object[TableSize[1]];
+                            values = new string[TableSize[1]];
                             for (int i = 0; i < TableSize[1]; i++)
                             {
-                                if (ThisTableFormat != "") values[i] = DoMath((double)numArray2[rowIndex, i], ThisMathTable, false).ToString(ThisTableFormat);
-                                if (ThisTableFormat == "") values[i] = DoMath((double)numArray2[rowIndex, i], ThisMathTable, false).ToString();
+                                if (ThisTableFormat.Contains("X"))
+                                {
+                                    //Display Values in Hexadecimals
+                                    string Mathhh = DoMath((double)numArray2[rowIndex, i], ThisMathTable, false, "Table").ToString();
+                                    try
+                                    {
+                                        if (ThisTableFormat == "X4") values[i] = Int16.Parse(Mathhh).ToString(ThisTableFormat);
+                                        else if (ThisTableFormat == "X8") values[i] = Int32.Parse(Mathhh).ToString(ThisTableFormat);
+                                        else values[i] = int.Parse(Mathhh).ToString(ThisTableFormat);
+                                    }
+                                    catch
+                                    {
+                                        values[i] = Mathhh;
+                                    }
+                                }
+                                else
+                                {
+                                    //Display Values in double/int
+                                    if (ThisTableFormat != "") values[i] = DoMath((double)numArray2[rowIndex, i], ThisMathTable, false, "Table").ToString(ThisTableFormat);
+                                    if (ThisTableFormat == "") values[i] = DoMath((double)numArray2[rowIndex, i], ThisMathTable, false, "Table").ToString();
+                                }
                             }
                         }
                         else
                         {
-                            values = new object[TableSize[0]];
+                            values = new string[TableSize[0]];
                             for (int i = 0; i < TableSize[0]; i++)
                             {
-                                if (ThisTableFormat != "") values[i] = DoMath((double)numArray2[i, rowIndex], ThisMathTable, false).ToString(ThisTableFormat);
-                                if (ThisTableFormat == "") values[i] = DoMath((double)numArray2[i, rowIndex], ThisMathTable, false).ToString();
+                                if (ThisTableFormat.Contains("X"))
+                                {
+                                    //Display Values in Hexadecimals
+                                    string Mathhh = DoMath((double)numArray2[i, rowIndex], ThisMathTable, false, "Table").ToString();
+                                    try
+                                    {
+                                        if (ThisTableFormat == "X4") values[i] = Int16.Parse(Mathhh).ToString(ThisTableFormat);
+                                        else if (ThisTableFormat == "X8") values[i] = Int32.Parse(Mathhh).ToString(ThisTableFormat);
+                                        else values[i] = int.Parse(Mathhh).ToString(ThisTableFormat);
+                                    }
+                                    catch
+                                    {
+                                        values[i] = Mathhh;
+                                    }
+                                }
+                                else
+                                {
+                                    //Display Values in double/int
+                                    if (ThisTableFormat != "") values[i] = DoMath((double)numArray2[i, rowIndex], ThisMathTable, false, "Table").ToString(ThisTableFormat);
+                                    if (ThisTableFormat == "") values[i] = DoMath((double)numArray2[i, rowIndex], ThisMathTable, false, "Table").ToString();
+                                }
                             }
                         }
                         Editortable_0.dataGridView_0.Rows.Insert(rowIndex, values);
@@ -458,13 +545,13 @@ internal class ClassEditor
                         string valueinner = "";
                         if (IsXYInverted)
                         {
-                            if (ThisTableFormat != "") valueinner = DoMath((double)numArray2[i, i2], ThisMathTable, false).ToString(ThisTableFormat);
-                            if (ThisTableFormat == "") valueinner = DoMath((double)numArray2[i, i2], ThisMathTable, false).ToString();
+                            if (ThisTableFormat != "") valueinner = DoMath((double)numArray2[i, i2], ThisMathTable, false, "Table").ToString(ThisTableFormat);
+                            if (ThisTableFormat == "") valueinner = DoMath((double)numArray2[i, i2], ThisMathTable, false, "Table").ToString();
                         }
                         else
                         {
-                            if (ThisTableFormat != "") valueinner = DoMath((double)numArray2[i2, i], ThisMathTable, false).ToString(ThisTableFormat);
-                            if (ThisTableFormat == "") valueinner = DoMath((double)numArray2[i2, i], ThisMathTable, false).ToString();
+                            if (ThisTableFormat != "") valueinner = DoMath((double)numArray2[i2, i], ThisMathTable, false, "Table").ToString(ThisTableFormat);
+                            if (ThisTableFormat == "") valueinner = DoMath((double)numArray2[i2, i], ThisMathTable, false, "Table").ToString();
                         }
 
                         Editortable_0.dataGridView_0.Rows[i2].Cells[i].Value = valueinner;
@@ -473,6 +560,7 @@ internal class ClassEditor
             }
             //##############################################################################################################
 
+            Editortable_0.dataGridView_0.ReadOnly = IsReadOnly;
             foreach (object obj in Editortable_0.dataGridView_0.Columns)
             {
                 DataGridViewColumn dataGridViewColumn = (DataGridViewColumn)obj;
@@ -485,11 +573,11 @@ internal class ClassEditor
                 dataGridViewRow2.Height = 20;
             }
             this.SetBackColor(TableSize[0], Editortable.float_1[0], Editortable.float_1[1]);
-            this.bool_0 = true;
+            this.IsTableLoadedCorrectly = true;
         }
         catch (Exception ex)
         {
-            this.bool_0 = false;
+            this.IsTableLoadedCorrectly = false;
             DarkMessageBox.Show("Failed to load table. " + ex.ToString());
         }
     }
@@ -584,20 +672,110 @@ internal class ClassEditor
         return ReturnStr;
     }
 
-
-    public double DoMath(double ThisValueCheck, string ThisMath, bool Reverse)
+    public string SwipeMathFunc(string ThisMath)
     {
-        double ReturnVal = DoMathFinal(ThisValueCheck, ThisMath, Reverse);
+        string ReturnStr = "";
+        List<char> MathFuncList = new List<char>();
+        List<double> ValuesList = new List<double>();
+        bool WeHaveVal1 = false;
+        while (ThisMath != "")
+        {
+            if (!WeHaveVal1) ValuesList.Add(GetNextValue(ThisMath));
+            MathFuncList.Add(GetNextMath(ThisMath));
+            ThisMath = ThisMath.Substring(GetNearestMathIndex(ThisMath) + 1);
+            ValuesList.Add(GetNextValue(ThisMath));
 
+            int NearestIndex = GetNearestMathIndex(ThisMath);
+            if (NearestIndex != -1) ThisMath = ThisMath.Substring(GetNearestMathIndex(ThisMath));
+
+            WeHaveVal1 = true;
+
+            if (!ThisMath.Contains("/") && !ThisMath.Contains("*") && !ThisMath.Contains("+"))
+            {
+                ThisMath = ""; //No remaining maths to perform
+            }
+        }
+
+        //Create swiped math function
+        for (int i = 0; i < ValuesList.Count; i++)
+        {
+            if (i > 0)
+            {
+                if (i > 1) ReturnStr = ReturnStr + MathFuncList[i - 2].ToString();
+                else ReturnStr = ReturnStr + MathFuncList[MathFuncList.Count - 1].ToString();
+            }
+            ReturnStr = ReturnStr + ValuesList[i];
+        }
+
+        return ReturnStr;
+    }
+
+
+    public double DoMath(double ThisValueCheck, string ThisMath, bool Reverse, string Direction)
+    {
+        //Check if the reversed math function exist, if not we perform the reversed math function manually
+        bool ReversFinalForMath = Reverse;
+        if (Reverse)
+        {
+            if (Direction == "X" && DefinitionsMathXInverted[SelectedTableIndexInDefinitions] != "")
+            {
+                ThisMath = DefinitionsMathXInverted[SelectedTableIndexInDefinitions];
+                ReversFinalForMath = false;
+            }
+            if (Direction == "Y" && DefinitionsMathYInverted[SelectedTableIndexInDefinitions] != "")
+            {
+                ThisMath = DefinitionsMathYInverted[SelectedTableIndexInDefinitions];
+                ReversFinalForMath = false;
+            }
+            if (Direction == "Table" && DefinitionsMathTableInverted[SelectedTableIndexInDefinitions] != "")
+            {
+                ThisMath = DefinitionsMathTableInverted[SelectedTableIndexInDefinitions];
+                ReversFinalForMath = false;
+            }
+        }
+
+        //Perform Math
+        double ReturnVal = DoMathFinal(ThisValueCheck, ThisMath, ReversFinalForMath);
+
+        //################################################
         //Confirm Math function in reverse
         if (!Reverse)
         {
-            double ReversedVal = DoMathFinal(ReturnVal, ThisMath, true);
+            bool PerformedNormalReverse = true;
+
+            //Has the reversed math function existing
+            if (Direction == "X" && DefinitionsMathXInverted[SelectedTableIndexInDefinitions] != "")
+            {
+                ThisMath = DefinitionsMathXInverted[SelectedTableIndexInDefinitions];
+                PerformedNormalReverse = false;
+            }
+            if (Direction == "Y" && DefinitionsMathYInverted[SelectedTableIndexInDefinitions] != "")
+            {
+                ThisMath = DefinitionsMathYInverted[SelectedTableIndexInDefinitions];
+                PerformedNormalReverse = false;
+            }
+            if (Direction == "Table" && DefinitionsMathTableInverted[SelectedTableIndexInDefinitions] != "")
+            {
+                ThisMath = DefinitionsMathTableInverted[SelectedTableIndexInDefinitions];
+                PerformedNormalReverse = false;
+            }
+
+            //Has NOT the reversed math function existing
+            double ReversedVal = DoMathFinal(ReturnVal, ThisMath, PerformedNormalReverse);
             if (((int) ReversedVal).ToString() != ((int) ThisValueCheck).ToString()
                 && ((int)ReversedVal + 1).ToString() != ((int)ThisValueCheck).ToString()
                 && ((int)ReversedVal - 1).ToString() != ((int)ThisValueCheck).ToString())
             {
-                Editortable_0.GForm_Main_0.method_1("Problem with math: " + ThisMath + " | Values: " + ((int)ThisValueCheck).ToString() + " != " + ((int)ReversedVal).ToString());
+                if (LastMathDoneCheck != ThisMath)
+                {
+                    Editortable_0.GForm_Main_0.method_1("Problem with inverted math: " + ThisMath + " | Values: " + ((int)ThisValueCheck).ToString() + " != " + ((int)ReversedVal).ToString());
+                    LastMathDoneCheck = ThisMath;
+                }
+                //suggested to set 'ReadOnly' parameters when there is math problem.
+                //when there is math problem, it mean the inverted function of your math doesn't return the exact bytes values as within the binary.
+                //The problem come from the math inversion in the function bellow 'DoMathFinal'
+
+                //DefinitionsIsReadOnly
             }
         }
 
@@ -627,7 +805,21 @@ internal class ClassEditor
 
         ThisMath = ThisMath.Replace("X", ThisValue.ToString());
 
+        //########################################################
+        //double ValTest1 = GetNextValue(ThisMath);
+        char MathTestChar = GetNextMath(ThisMath);
+        string ThisMathTest = ThisMath.Substring(GetNearestMathIndex(ThisMath) + 1);
+        double ValTest2 = GetNextValue(ThisMathTest);
+        if (Reverse && MathTestChar == '*' && ValTest2 == 100)
+        {
+            IsDivXValFirst = true;
+            ThisMath = SwipeMathFunc(ThisMath);
+        }
+        //########################################################
+
         if (Reverse) ThisMath = InvertMathString(ThisMath);
+
+        //Console.WriteLine("Math: " + ThisMath + " | Reversed: " + Reverse);
 
         bool WeHaveVal1 = false;
         double Val1 = 0;
@@ -641,7 +833,8 @@ internal class ClassEditor
             if (MathChar == '*') ReturnVal = Val1 * Val2;
             if (MathChar == '/') ReturnVal = Val1 / Val2;
             if (MathChar == '+') ReturnVal = Val1 + Val2;
-            if (MathChar == '-') ReturnVal = Val1 - Val2;
+
+            //Console.WriteLine("Doing: " + Val1 + MathChar.ToString() + Val2 + "=" + ReturnVal);
 
             if (Reverse && MathChar == '*' && !IsDivXValFirst) ReturnVal = Val2 / Val1;
 
@@ -652,7 +845,6 @@ internal class ClassEditor
             Val1 = ReturnVal;
 
             //Check for remaining maths
-            //if (!ThisMath.Contains("/") && !ThisMath.Contains("*") && !ThisMath.Contains("+") && !ThisMath.Contains("-"))
             if (!ThisMath.Contains("/") && !ThisMath.Contains("*") && !ThisMath.Contains("+"))
             {
                 ThisMath = ""; //No remaining maths to perform
@@ -670,8 +862,8 @@ internal class ClassEditor
             if (IsSingleByteY) Valuue = GetSingleByteValue(ThisLocation + i);
             else Valuue = GetIntValue(ThisLocation + (i * 2));
 
-            if (HeaderFormat == "") strArray[i] = DoMath((double) Valuue, ThisMath, false).ToString();
-            if (HeaderFormat != "") strArray[i] = DoMath((double) Valuue, ThisMath, false).ToString(HeaderFormat);
+            if (HeaderFormat == "") strArray[i] = DoMath((double) Valuue, ThisMath, false, "Y").ToString();
+            if (HeaderFormat != "") strArray[i] = DoMath((double) Valuue, ThisMath, false, "Y").ToString(HeaderFormat);
         }
         return strArray;
     }
@@ -729,41 +921,47 @@ internal class ClassEditor
         {
             try
             {
-                this.byte_0 = File.ReadAllBytes(string_4);
+                this.ROM_Bytes = File.ReadAllBytes(string_4);
 
                 //Create a fake bootloader section
                 if (!Editortable_0.IsFullBinary)
                 {
-                    byte[] BufferBytes = new byte[0x8000 + this.byte_0.Length];
+                    byte[] BufferBytes = new byte[0x8000 + this.ROM_Bytes.Length];
                     for (int i = 0; i < 0x8000; i++) BufferBytes[i] = 0xff;
-                    for (int i = 0; i < this.byte_0.Length; i++) BufferBytes[0x8000 + i] = this.byte_0[i];
+                    for (int i = 0; i < this.ROM_Bytes.Length; i++) BufferBytes[0x8000 + i] = this.ROM_Bytes[i];
 
-                    this.byte_0 = BufferBytes;
+                    this.ROM_Bytes = BufferBytes;
                 }
 
                 //Get ECU filename  (33 37 38 30 35 2D  ->  37805- 'in ASCII chars')  (37805-RRB-A140)
                 this.string_ECU_Name = "";
-                for (int i = 0; i < this.byte_0.Length; i++)
+                for (int i = 0; i < this.ROM_Bytes.Length; i++)
                 {
-                    if (this.byte_0[i] == 0x33 &&
-                        this.byte_0[i + 1] == 0x37 &&
-                        this.byte_0[i + 2] == 0x38 &&
-                        this.byte_0[i + 3] == 0x30 &&
-                        (this.byte_0[i + 4] == 0x35 || this.byte_0[i + 4] == 0x36) &&
-                        this.byte_0[i + 5] == 0x2D)
+                    if (this.ROM_Bytes[i] == 0x33 &&
+                        this.ROM_Bytes[i + 1] == 0x37 &&
+                        this.ROM_Bytes[i + 2] == 0x38 &&
+                        this.ROM_Bytes[i + 3] == 0x30 &&
+                        (this.ROM_Bytes[i + 4] == 0x35 || this.ROM_Bytes[i + 4] == 0x36) &&
+                        this.ROM_Bytes[i + 5] == 0x2D)
                     {
                         for (int i2 = 0; i2 < 14; i2++)
                         {
-                            this.string_ECU_Name += (char)this.byte_0[i + i2];
+                            this.string_ECU_Name += (char)this.ROM_Bytes[i + i2];
                         }
                         break;
                     }
                 }
+                //##################################################################################################
+                //Load all differences made in ROM from logs
+                string text = string_4 + "-logs.txt";
+                if (File.Exists(text))
+                {
+                    AllROMDifferences = File.ReadAllText(text);
+                }
                 return true;
-
+                //##################################################################################################
                 /*this.string_0 = array[0];     //37805-RRB-A140
                 this.string_1 = array[1];     //Unused
-
                 using (FileStream fileStream = new FileStream(string_4, FileMode.Open))
                 {
                     using (ZipArchive zipArchive = new ZipArchive(fileStream, ZipArchiveMode.Read))
@@ -804,6 +1002,7 @@ internal class ClassEditor
                 }
                 Editortable_0.GForm_Main_0.method_1("Cannot load Error#1");
                 return false;*/
+                //##################################################################################################
             }
             catch
             {
@@ -815,12 +1014,12 @@ internal class ClassEditor
 
     public int GetIntValue(int int_232)
     {
-        return (int)((short)((int)this.byte_0[int_232] << 8 | (int)this.byte_0[int_232 + 1]));
+        return (int)((short)((int)this.ROM_Bytes[int_232] << 8 | (int)this.ROM_Bytes[int_232 + 1]));
     }
 
     public int GetSingleByteValue(int int_232)
     {
-        return (int)this.byte_0[int_232];
+        return (int)this.ROM_Bytes[int_232];
     }
 
     public void SetBackColor(int int_232, float float_0, float float_1)
@@ -847,6 +1046,10 @@ internal class ClassEditor
     public Color GetColor(float float_0, float float_1, float float_2)
     {
         Color result;
+
+        if (float_0 > float_1) return Color.White;  //More than Maximum
+        if (float_0 < float_2) return Color.White;  //Less than Minimum
+
         try
         {
             int num = (int)(1023f * (float_0 - float_1) / (float_2 - float_1));
@@ -958,20 +1161,29 @@ internal class ClassEditor
                 DefinitionsTableSize = new List<string>();
                 DefinitionsMathX = new List<string>();
                 DefinitionsMathY = new List<string>();
+                DefinitionsMathTable = new List<string>();
+                DefinitionsMathXInverted = new List<string>();
+                DefinitionsMathYInverted = new List<string>();
+                DefinitionsMathTableInverted = new List<string>();
                 DefinitionsValueMin = new List<float>();
                 DefinitionsValueMax = new List<float>();
                 DefinitionsChangeAmount = new List<double>();
                 DefinitionsIsSingleByteX = new List<bool>();
                 DefinitionsIsSingleByteY = new List<bool>();
                 DefinitionsIsSingleByteTable = new List<bool>();
-                DefinitionsFormatX = new List<string>();
                 DefinitionsHeaders = new List<string>();
+                DefinitionsFormatX = new List<string>();
                 DefinitionsFormatY = new List<string>();
+                DefinitionsFormatTable = new List<string>();
                 DefinitionsIsXYInverted = new List<bool>();
                 DefinitionsIsTableInverted = new List<bool>();
+                DefinitionsIsReadOnly = new List<bool>();
+                DefinitionsIsUntested = new List<bool>();
+                DefinitionsIsNotDefined = new List<bool>();
 
                 Editortable_0.GForm_Main_0.method_1("Loading ECU definitions for: " + ThisECU);
                 bool ECUFound = false;
+                bool IsFileGenerated = false;
                 foreach (string ThisFilePath in AllDefinitionFiles)
                 {
                     string[] AllLines = File.ReadAllLines(ThisFilePath);
@@ -987,6 +1199,9 @@ internal class ClassEditor
                     string CurrentMathX = "";
                     string CurrentMathY = "";
                     string CurrentMathTable = "";
+                    string CurrentMathXInverted = "";
+                    string CurrentMathYInverted = "";
+                    string CurrentMathTableInverted = "";
                     float CurrentValueMin = 0f;
                     float CurrentValueMax = 255f;
                     double CurrentChangeAmount = 1;
@@ -999,13 +1214,18 @@ internal class ClassEditor
                     string CurrentHeaders = "";
                     bool CurrentIsXYInverted = false;
                     bool CurrentIsTableInverted = false;
+                    bool CurrentIsReadOnly = false;
+                    bool CurrentIsUntested = false;
+                    bool CurrentIsNotDefined = false;
+
+                    IsFileGenerated = false;
 
                     for (int i = 0; i < AllLines.Length; i++)
                     {
                         string Thisline = AllLines[i];
                         if (Thisline.Contains("ROM Parameters")) GettingEcuList = false; //make sure we are not reading false contents
 
-                        if (Thisline.Contains("THIS FILE AS BEEN GENERATED")) DarkMessageBox.Show("This Definitions file as been generated to get the ROM Locations.\nThe ROM Locations can possibly be wrong and\nthe tables can display corrupted values!");
+                        if (Thisline.Contains("THIS FILE AS BEEN GENERATED")) IsFileGenerated = true;
 
                         //Get supported ecu list from file and check if it's match
                         if (Thisline[0] != '#' && Thisline != "")
@@ -1033,6 +1253,9 @@ internal class ClassEditor
                                     if (Commands[0] == "MathX") CurrentMathX = Commands[1];
                                     if (Commands[0] == "MathY") CurrentMathY = Commands[1];
                                     if (Commands[0] == "MathTable") CurrentMathTable = Commands[1];
+                                    if (Commands[0] == "MathXInverted") CurrentMathXInverted = Commands[1];
+                                    if (Commands[0] == "MathYInverted") CurrentMathYInverted = Commands[1];
+                                    if (Commands[0] == "MathTableInverted") CurrentMathTableInverted = Commands[1];
                                     if (Commands[0] == "ValueMin") CurrentValueMin = (float) double.Parse(Commands[1].Replace(',', '.'), CultureInfo.InvariantCulture);
                                     if (Commands[0] == "ValueMax") CurrentValueMax = (float) double.Parse(Commands[1].Replace(',', '.'), CultureInfo.InvariantCulture);
                                     if (Commands[0] == "ChangeAmount") CurrentChangeAmount = double.Parse(Commands[1].Replace(',', '.'), CultureInfo.InvariantCulture);
@@ -1045,6 +1268,9 @@ internal class ClassEditor
                                     if (Commands[0] == "Headers") CurrentHeaders = Commands[1];
                                     if (Commands[0] == "IsXYInverted") CurrentIsXYInverted = bool.Parse(Commands[1].ToLower());
                                     if (Commands[0] == "IsTableInverted") CurrentIsTableInverted = bool.Parse(Commands[1].ToLower());
+                                    if (Commands[0] == "IsReadOnly") CurrentIsReadOnly = bool.Parse(Commands[1].ToLower());
+                                    if (Commands[0] == "IsUntested") CurrentIsUntested = bool.Parse(Commands[1].ToLower());
+                                    if (Commands[0] == "IsNotDefined") CurrentIsNotDefined = bool.Parse(Commands[1].ToLower());
                                 }
                             }
 
@@ -1055,6 +1281,8 @@ internal class ClassEditor
                                 if (CurrentName != "")
                                 {
                                     CurrentName = CurrentName.Replace("\\x00b0", "°");
+                                    CurrentUnit1 = CurrentUnit1.Replace("\\x00b0", "°");
+                                    CurrentUnit2 = CurrentUnit2.Replace("\\x00b0", "°");
                                     DefinitionsLocationsX.Add(CurrentLocationX);
                                     DefinitionsLocationsY.Add(CurrentLocationY);
                                     DefinitionsLocationsTable.Add(CurrentLocationTable);
@@ -1065,6 +1293,9 @@ internal class ClassEditor
                                     DefinitionsMathX.Add(CurrentMathX);
                                     DefinitionsMathY.Add(CurrentMathY);
                                     DefinitionsMathTable.Add(CurrentMathTable);
+                                    DefinitionsMathXInverted.Add(CurrentMathXInverted);
+                                    DefinitionsMathYInverted.Add(CurrentMathYInverted);
+                                    DefinitionsMathTableInverted.Add(CurrentMathTableInverted);
                                     DefinitionsValueMin.Add(CurrentValueMin);
                                     DefinitionsValueMax.Add(CurrentValueMax);
                                     DefinitionsChangeAmount.Add(CurrentChangeAmount);
@@ -1077,6 +1308,9 @@ internal class ClassEditor
                                     DefinitionsHeaders.Add(CurrentHeaders);
                                     DefinitionsIsXYInverted.Add(CurrentIsXYInverted);
                                     DefinitionsIsTableInverted.Add(CurrentIsTableInverted);
+                                    DefinitionsIsReadOnly.Add(CurrentIsReadOnly);
+                                    DefinitionsIsUntested.Add(CurrentIsUntested);
+                                    DefinitionsIsNotDefined.Add(CurrentIsNotDefined);
 
                                     //Reset values to default
                                     CurrentLocationX = "";
@@ -1089,6 +1323,9 @@ internal class ClassEditor
                                     CurrentMathX = "";
                                     CurrentMathY = "";
                                     CurrentMathTable = "";
+                                    CurrentMathXInverted = "";
+                                    CurrentMathYInverted = "";
+                                    CurrentMathTableInverted = "";
                                     CurrentValueMin = 0f;
                                     CurrentValueMax = 255f;
                                     CurrentChangeAmount = 1f;
@@ -1101,13 +1338,21 @@ internal class ClassEditor
                                     CurrentFormatTable = "";
                                     CurrentIsXYInverted = false;
                                     CurrentIsTableInverted = false;
+                                    CurrentIsReadOnly = false;
+                                    CurrentIsUntested = false;
+                                    CurrentIsNotDefined = false;
                                 }
                             }
                         }
                     }
-                    Editortable_0.GForm_Main_0.method_1("Definitions loaded!");
 
-                    if (ECUFound) return;
+                    if (ECUFound)
+                    {
+                        Editortable_0.GForm_Main_0.method_1("Definitions loaded!");
+
+                        if (IsFileGenerated) DarkMessageBox.Show("This Definitions file as been generated to get the ROM Locations.\nThe ROM Locations can possibly be wrong and\nthe tables can display corrupted values!");
+                        return;
+                    }
                 }
 
                 if (!ECUFound) Editortable_0.GForm_Main_0.method_1("Definitions NOT loaded!");
@@ -1123,33 +1368,6 @@ internal class ClassEditor
         }
     }
 
-    public int SelectedROMLocation;
-    public int SelectedTableSize;
-    public bool bool_0 = false;
-    public bool bool_1 = false;
-    public string string_ECU_Name;
-    public byte[] byte_0;
-    public string string_2;
-    public string string_3;
-    public bool bool_2 = false;
-    public bool IsSingleByteX = false;
-    public bool IsSingleByteY = false;
-    public bool IsSingleByteTable = false;
-
-    public int[] BufferValuesArray = new int[200];
-    //public byte[] BufferBytesArray = new byte[400];
-    public int[] BufferTableSize = new int[2];
-    public string BufferMath = "";
-
-    public int[] int_219 = new int[400];
-    public int[] int_220 = new int[128];
-    public int[] int_221 = new int[30];
-    public int[] int_222 = new int[16];
-    public int[] int_223 = new int[14];
-    public int[] int_224 = new int[12];
-    public int[] int_225 = new int[10];
-    public int[] int_226 = new int[8];
-    public int[] int_231 = new int[2];
 
     [CompilerGenerated]
     private sealed class Class40

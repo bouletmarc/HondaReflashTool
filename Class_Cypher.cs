@@ -94,10 +94,10 @@ public class Class_Cypher
     public static uint GetKey41(uint uint_0, byte byte_0)
     {
         uint uint_ = 0U;
-        uint num = 0U;
-        uint num2 = 0U;
-        uint num3 = 0U;
-        byte uint_2 = 0;
+        uint uint_2 = 0U;
+        uint KeyBytes1 = 0U;
+        uint KeyBytes2 = 0U;
+        uint FinalAdder = 0U;
 
         switch (byte_0)
         {
@@ -132,10 +132,10 @@ public class Class_Cypher
     IL_111:             //Test#1 work for 0x01 algorithm
         //CIVIC 06-10 (All models??) | AE 0D 23 FF 40 65 58 B3
         uint_ = 2U;
-        uint_2 = 0;
-        num = 2920096767U;
-        num2 = 1080383667U;
-        num3 = 0U;
+        uint_2 = 0U;
+        KeyBytes1 = 2920096767U;
+        KeyBytes2 = 1080383667U;
+        FinalAdder = 0U;
         goto IL_170;
     //#########################################
     IL_127:
@@ -144,28 +144,28 @@ public class Class_Cypher
     //#########################################
     IL_146:             //Test#2 (Default Switch, NOT WORK**)
         uint_ = 2U;
-        uint_2 = 0;
-        num = 3129510011U;
-        num2 = 0U;
-        num3 = 955378367U;
+        uint_2 = 0U;
+        KeyBytes1 = 3129510011U;
+        KeyBytes2 = 0U;
+        FinalAdder = 955378367U;
         goto IL_170;
     //#########################################
     IL_15C:             //Test#3 should works without issue
         //RIDGELINE 06-13 | 16 A4 AB B0 BF E8 5A 6D
         uint_ = 1U;
-        uint_2 = 0;
-        num = 379890608U;
-        num2 = 3219675757U;
-        num3 = 0U;
+        uint_2 = 0U;
+        KeyBytes1 = 379890608U;
+        KeyBytes2 = 3219675757U;
+        FinalAdder = 0U;
         goto IL_170;
     //#########################################
     IL_160:            //Test#4 should works without issue
         //CRV 07-10 KEY BYTES | 6D 75 32 AC 9D 62 3B 64
         uint_ = 2U;
-        uint_2 = 0;
-        num = BitConverter.ToUInt32(new byte[] { 0xac, 0x32, 0x75, 0x6d }, 0);
-        num2 = BitConverter.ToUInt32(new byte[] { 0x64, 0x3b, 0x62, 0x9d }, 0);
-        num3 = 0U;
+        uint_2 = 0U;
+        KeyBytes1 = BitConverter.ToUInt32(new byte[] { 0xac, 0x32, 0x75, 0x6d }, 0);
+        KeyBytes2 = BitConverter.ToUInt32(new byte[] { 0x64, 0x3b, 0x62, 0x9d }, 0);
+        FinalAdder = 0U;
         goto IL_170;
     //#########################################
     //#########################################
@@ -174,18 +174,18 @@ public class Class_Cypher
     IL_161:
         //FREED 11-13 | 95 58 3E 2C F3 96 B5 6F
         uint_ = 3U;
-        uint_2 = 0;
-        num = BitConverter.ToUInt32(new byte[] { 0x2c, 0x3e, 0x58, 0x95 }, 0);
-        num2 = BitConverter.ToUInt32(new byte[] { 0x6f, 0xb5, 0x96, 0xf3 }, 0);
-        num3 = 0U;
+        uint_2 = 0U;
+        KeyBytes1 = BitConverter.ToUInt32(new byte[] { 0x2c, 0x3e, 0x58, 0x95 }, 0);
+        KeyBytes2 = BitConverter.ToUInt32(new byte[] { 0x6f, 0xb5, 0x96, 0xf3 }, 0);
+        FinalAdder = 0U;
         goto IL_170;
     IL_165:
         //RDX KEY BYTES | 67 E9 76 C1 78 3E 17 39
         uint_ = 2U;
-        uint_2 = 0;
-        num = BitConverter.ToUInt32(new byte[] { 0xC1, 0x76, 0xE9, 0x67 }, 0);
-        num2 = BitConverter.ToUInt32(new byte[] { 0x39, 0x17, 0x3E, 0x78 }, 0);
-        num3 = 0U;
+        uint_2 = 0U;
+        KeyBytes1 = BitConverter.ToUInt32(new byte[] { 0xC1, 0x76, 0xE9, 0x67 }, 0);
+        KeyBytes2 = BitConverter.ToUInt32(new byte[] { 0x39, 0x17, 0x3E, 0x78 }, 0);
+        FinalAdder = 0U;
     //#########################################
     //#########################################
     //#########################################
@@ -196,9 +196,9 @@ public class Class_Cypher
         Console.WriteLine("num3:" + num3.ToString());       //num3      = 0
         Console.WriteLine("uint_:" + uint_.ToString());     //uint_     = 2
         Console.WriteLine("uint_2:" + uint_2.ToString());   //uint_2    = 0*/
-        uint num6 = Class_Cypher.smethod_3(num + uint_0, uint_);
-        uint num7 = Class_Cypher.smethod_4(num2 + uint_0, (uint)uint_2);
-        return (num6 ^ num7 ^ (uint_0 & 65535U) * (uint_0 >> 16)) + num3;
+        uint num6 = Class_Cypher.smethod_3(KeyBytes1 + uint_0, uint_);
+        uint num7 = Class_Cypher.smethod_4(KeyBytes2 + uint_0, uint_2);
+        return (num6 ^ num7 ^ (uint_0 & 65535U) * (uint_0 >> 16)) + FinalAdder;
     }
 
     public static uint smethod_3(uint uint_0, uint uint_1)
