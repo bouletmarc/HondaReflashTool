@@ -8,6 +8,8 @@ You can download the Tool and **use at Your Own Risk!**
 
 ### Or download the lastest release [HERE](https://github.com/bouletmarc/HondaReflashTool/releases)
 
+You can download some Honda/Acura firmwares updates files (.rwd/.bin) to give you a good head start [HERE](https://github.com/bouletmarc/HondaCalibFiles)
+
 # Description
 
 This is a Work In Progress Honda/Acura Reflash Tool under CanBUS Interface.
