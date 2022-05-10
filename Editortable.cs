@@ -54,6 +54,11 @@ public class Editortable : DarkForm
     private ToolStripMenuItem removeBootloaderInbinToolStripMenuItem;
     private ToolStripSeparator toolStripSeparator3;
     private ToolStripMenuItem generateDefinitionFileFromExtractedDefinitionToolStripMenuItem;
+    private ToolStripSeparator toolStripSeparator4;
+    private ToolStripMenuItem extractbinFileFromFPMToolStripMenuItem;
+    private ToolStripMenuItem convertrwdTobinToolStripMenuItem;
+    private ToolStripMenuItem convertbinTorwdToolStripMenuItem;
+    private ToolStripMenuItem openOBD2ScanToolToolStripMenuItem;
     private ToolStripMenuItem decreaseSelectionToolStripMenuItem;
 
     internal Editortable(ref GForm_Main GForm_Main_1)
@@ -128,18 +133,23 @@ public class Editortable : DarkForm
             this.increaseSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.decreaseSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripDropDownButton3 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.removeBootloaderInbinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.developpersToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateDefinitionsFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.getDifferencesInAllFirmwaresFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.extractAllBootloadersumByteFromAllFirmwaresFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.extractDefinitionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.extractbinFileFromFPMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.darkTextBox_0 = new DarkUI.Controls.DarkTextBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.removeBootloaderInbinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.convertrwdTobinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.convertbinTorwdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openOBD2ScanToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_0)).BeginInit();
             this.darkToolStrip1.SuspendLayout();
@@ -389,6 +399,9 @@ public class Editortable : DarkForm
             this.toolStripDropDownButton3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.toolStripDropDownButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripDropDownButton3.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openOBD2ScanToolToolStripMenuItem,
+            this.convertrwdTobinToolStripMenuItem,
+            this.convertbinTorwdToolStripMenuItem,
             this.removeBootloaderInbinToolStripMenuItem,
             this.toolStripSeparator3,
             this.developpersToolsToolStripMenuItem});
@@ -399,6 +412,23 @@ public class Editortable : DarkForm
             this.toolStripDropDownButton3.Size = new System.Drawing.Size(47, 25);
             this.toolStripDropDownButton3.Text = "Tools";
             // 
+            // removeBootloaderInbinToolStripMenuItem
+            // 
+            this.removeBootloaderInbinToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.removeBootloaderInbinToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.removeBootloaderInbinToolStripMenuItem.Name = "removeBootloaderInbinToolStripMenuItem";
+            this.removeBootloaderInbinToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.removeBootloaderInbinToolStripMenuItem.Text = "Remove Bootloader in .bin";
+            this.removeBootloaderInbinToolStripMenuItem.Click += new System.EventHandler(this.removeBootloaderInbinToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.toolStripSeparator3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.toolStripSeparator3.Margin = new System.Windows.Forms.Padding(0, 0, 0, 1);
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(211, 6);
+            // 
             // developpersToolsToolStripMenuItem
             // 
             this.developpersToolsToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
@@ -406,7 +436,9 @@ public class Editortable : DarkForm
             this.generateDefinitionsFilesToolStripMenuItem,
             this.getDifferencesInAllFirmwaresFilesToolStripMenuItem,
             this.extractAllBootloadersumByteFromAllFirmwaresFilesToolStripMenuItem,
+            this.toolStripSeparator4,
             this.extractDefinitionToolStripMenuItem,
+            this.extractbinFileFromFPMToolStripMenuItem,
             this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem});
             this.developpersToolsToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.developpersToolsToolStripMenuItem.Name = "developpersToolsToolStripMenuItem";
@@ -440,14 +472,40 @@ public class Editortable : DarkForm
             this.extractAllBootloadersumByteFromAllFirmwaresFilesToolStripMenuItem.Text = "Extract all bootloader \'sum\' byte from all firmwares files";
             this.extractAllBootloadersumByteFromAllFirmwaresFilesToolStripMenuItem.Click += new System.EventHandler(this.extractAllBootloadersumByteFromAllFirmwaresFilesToolStripMenuItem_Click);
             // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.toolStripSeparator4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.toolStripSeparator4.Margin = new System.Windows.Forms.Padding(0, 0, 0, 1);
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(364, 6);
+            // 
             // extractDefinitionToolStripMenuItem
             // 
             this.extractDefinitionToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.extractDefinitionToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.extractDefinitionToolStripMenuItem.Name = "extractDefinitionToolStripMenuItem";
             this.extractDefinitionToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
-            this.extractDefinitionToolStripMenuItem.Text = "Extract Definition file";
+            this.extractDefinitionToolStripMenuItem.Text = "Extract Definition file from FPM";
             this.extractDefinitionToolStripMenuItem.Click += new System.EventHandler(this.extractDefinitionToolStripMenuItem_Click);
+            // 
+            // extractbinFileFromFPMToolStripMenuItem
+            // 
+            this.extractbinFileFromFPMToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.extractbinFileFromFPMToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.extractbinFileFromFPMToolStripMenuItem.Name = "extractbinFileFromFPMToolStripMenuItem";
+            this.extractbinFileFromFPMToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.extractbinFileFromFPMToolStripMenuItem.Text = "Extract .bin file from FPM";
+            this.extractbinFileFromFPMToolStripMenuItem.Click += new System.EventHandler(this.extractbinFileFromFPMToolStripMenuItem_Click);
+            // 
+            // generateDefinitionFileFromExtractedDefinitionToolStripMenuItem
+            // 
+            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.Name = "generateDefinitionFileFromExtractedDefinitionToolStripMenuItem";
+            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
+            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.Text = "Generate Definition file from Extracted Definition";
+            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.Click += new System.EventHandler(this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -495,31 +553,32 @@ public class Editortable : DarkForm
             this.darkTextBox_0.TabIndex = 56;
             this.darkTextBox_0.Text = "Honda CANBUS Tools";
             // 
-            // toolStripSeparator3
+            // convertrwdTobinToolStripMenuItem
             // 
-            this.toolStripSeparator3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.toolStripSeparator3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.toolStripSeparator3.Margin = new System.Windows.Forms.Padding(0, 0, 0, 1);
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(211, 6);
+            this.convertrwdTobinToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.convertrwdTobinToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.convertrwdTobinToolStripMenuItem.Name = "convertrwdTobinToolStripMenuItem";
+            this.convertrwdTobinToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.convertrwdTobinToolStripMenuItem.Text = "Convert .rwd to .bin";
+            this.convertrwdTobinToolStripMenuItem.Click += new System.EventHandler(this.convertrwdTobinToolStripMenuItem_Click);
             // 
-            // removeBootloaderInbinToolStripMenuItem
+            // convertbinTorwdToolStripMenuItem
             // 
-            this.removeBootloaderInbinToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.removeBootloaderInbinToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.removeBootloaderInbinToolStripMenuItem.Name = "removeBootloaderInbinToolStripMenuItem";
-            this.removeBootloaderInbinToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
-            this.removeBootloaderInbinToolStripMenuItem.Text = "Remove Bootloader in .bin";
-            this.removeBootloaderInbinToolStripMenuItem.Click += new System.EventHandler(this.removeBootloaderInbinToolStripMenuItem_Click);
+            this.convertbinTorwdToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.convertbinTorwdToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.convertbinTorwdToolStripMenuItem.Name = "convertbinTorwdToolStripMenuItem";
+            this.convertbinTorwdToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.convertbinTorwdToolStripMenuItem.Text = "Convert .bin to .rwd";
+            this.convertbinTorwdToolStripMenuItem.Click += new System.EventHandler(this.convertbinTorwdToolStripMenuItem_Click);
             // 
-            // generateDefinitionFileFromExtractedDefinitionToolStripMenuItem
+            // openOBD2ScanToolToolStripMenuItem
             // 
-            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.Name = "generateDefinitionFileFromExtractedDefinitionToolStripMenuItem";
-            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
-            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.Text = "Generate Definition file from Extracted Definition";
-            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.Click += new System.EventHandler(this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem_Click);
+            this.openOBD2ScanToolToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.openOBD2ScanToolToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.openOBD2ScanToolToolStripMenuItem.Name = "openOBD2ScanToolToolStripMenuItem";
+            this.openOBD2ScanToolToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.openOBD2ScanToolToolStripMenuItem.Text = "Open OBD2 Scan Tool";
+            this.openOBD2ScanToolToolStripMenuItem.Click += new System.EventHandler(this.openOBD2ScanToolToolStripMenuItem_Click);
             // 
             // Editortable
             // 
@@ -1151,7 +1210,7 @@ public class Editortable : DarkForm
 
     private void extractDefinitionToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        GForm_Main_0.Class_DefinitionMaker_0.Extract();
+        GForm_Main_0.Class_DefinitionMaker_0.Extract("Definition");
         if (GForm_Main_0.Class_DefinitionMaker_0.CurrentExtractedDumps > 1) GForm_Main_0.Class_DefinitionMaker_0.CreateExtractedDefinition();
     }
 
@@ -1311,6 +1370,26 @@ public class Editortable : DarkForm
     {
         GForm_Main_0.Class_DefinitionMaker_0.CurrentExtractedDumps = 2;
         GForm_Main_0.Class_DefinitionMaker_0.CreateExtractedDefinition();
+    }
+
+    private void extractbinFileFromFPMToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        GForm_Main_0.Class_DefinitionMaker_0.Extract("Bin");
+    }
+
+    private void convertrwdTobinToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        GForm_Main_0.darkButton2_Click_1(sender, e);
+    }
+
+    private void convertbinTorwdToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        GForm_Main_0.darkButton3_Click_1(sender, e);
+    }
+
+    private void openOBD2ScanToolToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        GForm_Main_0.darkButton5_Click(sender, e);
     }
 }
 

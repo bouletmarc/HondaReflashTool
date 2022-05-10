@@ -679,7 +679,29 @@ public class Class_DefinitionMaker
         public ushort processorRevision;
     }
 
-    public bool Extract()
+    private int AllBytesContains(byte[] AllBytesCheck, byte[] CheckArray)
+    {
+        for (int i = 0; i < AllBytesCheck.Length; i++)
+        {
+            int Index2 = 0;
+            try
+            {
+                while (AllBytesCheck[i + Index2] == CheckArray[Index2])
+                {
+                    Index2++;
+                }
+            }
+            catch
+            {
+                return -1;
+            }
+            if (Index2 >= CheckArray.Length) return i;
+        }
+
+        return -1;
+    }
+
+    public bool Extract(string ExtractMode)
     {
         try
         {
@@ -737,27 +759,42 @@ public class Class_DefinitionMaker
                         proc_min_address_l = (long)proc_min_address;
                         proc_max_address_l = (long)proc_max_address;
 
-                        ExtractMemoryBlock();
+                        ExtractMemoryBlock(ExtractMode);
                         //ReloadDump = ReloadDumpFile();
-                        ReloadDump = File.ReadAllText(ThisEndPath + "DumpHex" + ExtractedBlockDone);
+                        //ReloadDump = File.ReadAllText(ThisEndPath + "DumpHex" + ExtractedBlockDone);
 
                         //5B446566696E6974696F6E5D  ->[Definition]
-                        if (ReloadDump.Contains("[Definition]"))
+                        if (ExtractMode == "Definition")
                         {
-                            //GForm_Main_0.method_1("Found Definition in DumpHex" + ExtractedBlockDone);
-                            Console.WriteLine("Found Definition in DumpHex" + ExtractedBlockDone);
+                            ReloadDump = File.ReadAllText(ThisEndPath + "DumpHex" + ExtractedBlockDone);
+                            if (ReloadDump.Contains("[Definition]"))
+                            {
+                                //GForm_Main_0.method_1("Found Definition in DumpHex" + ExtractedBlockDone);
+                                Console.WriteLine("Found Definition in DumpHex" + ExtractedBlockDone);
 
-                            CurrentExtractedDumps++;
-                            string DumpedDefinition = ReloadDump.Substring(ReloadDump.IndexOf("[Definition]"));
-                            DumpedDefinition = DumpedDefinition.Substring(0, DumpedDefinition.LastIndexOf("ConditionalEnableValue=") + 24);
+                                CurrentExtractedDumps++;
+                                string DumpedDefinition = ReloadDump.Substring(ReloadDump.IndexOf("[Definition]"));
+                                DumpedDefinition = DumpedDefinition.Substring(0, DumpedDefinition.LastIndexOf("ConditionalEnableValue=") + 24);
 
-                            DumpedDefinition = DumpedDefinition.Replace("..", "\n");
+                                DumpedDefinition = DumpedDefinition.Replace("..", "\n");
 
 
-                            string SaveDefPath = ThisEndPath + "ExtractedDefinition" + (CurrentExtractedDumps-1).ToString() + ".txt";
-                            GForm_Main_0.method_1("Extracted Definitions file created: " + SaveDefPath);
-                            File.Create(SaveDefPath).Dispose();
-                            File.WriteAllText(SaveDefPath, DumpedDefinition);
+                                string SaveDefPath = ThisEndPath + "ExtractedDefinition" + (CurrentExtractedDumps - 1).ToString() + ".txt";
+                                GForm_Main_0.method_1("Extracted Definitions file created: " + SaveDefPath);
+                                File.Create(SaveDefPath).Dispose();
+                                File.WriteAllText(SaveDefPath, DumpedDefinition);
+                            }
+                        }
+                        if (ExtractMode == "Bin")
+                        {
+                            byte[] AllBytesArray = File.ReadAllBytes(ThisEndPath + "DumpHex" + ExtractedBlockDone);
+                            byte[] CheckBytes = new byte[] { 0xD0, 0x02, 0x40, 0x0B, 0x00, 0x09, 0xAF, 0xFE, 0x00, 0x09, 0x00, 0x00, 0x00 };
+                            //D0 02 40 0B 00 09 AF FE 00 09 00 00 00
+
+                            if (AllBytesContains(AllBytesArray, CheckBytes) != -1)
+                            {
+                                Console.WriteLine("Found Bin in DumpHex" + ExtractedBlockDone);
+                            }
                         }
                     }
 
@@ -765,17 +802,17 @@ public class Class_DefinitionMaker
                     ExtractedBlockDone++;
                 }
 
-                RemovePastDump();
+                //RemovePastDump();
                 GForm_Main_0.ResetProgressBar();
 
                 if (CurrentExtractedDumps == 1)
                 {
-                    GForm_Main_0.method_1("No definitions found loaded in memory\nTry saving your calibration in FlashProManager with small changes and retry this feature");
+                    GForm_Main_0.method_1("No " + ExtractMode + " found loaded in memory" + Environment.NewLine + "Try saving your calibration in FlashProManager with small changes and retry this feature");
                     return false;
                 }
                 else
                 {
-                    GForm_Main_0.method_1((CurrentExtractedDumps - 1) + " definitions found!");
+                    GForm_Main_0.method_1((CurrentExtractedDumps - 1) + " " + ExtractMode + " found!");
                     return true;
                 }
             }
@@ -783,7 +820,7 @@ public class Class_DefinitionMaker
         catch (Exception message)
         {
             GForm_Main_0.ResetProgressBar();
-            GForm_Main_0.method_1("Cannot extract! Error:\n" + message);
+            GForm_Main_0.method_1("Cannot extract! Error:" + Environment.NewLine + message);
             return false;
 
         }
@@ -813,7 +850,7 @@ public class Class_DefinitionMaker
         return ReloadDump;
     }*/
 
-    void ExtractMemoryBlock()
+    void ExtractMemoryBlock(string ExtractMode)
     {
         int bytesRead = 0;
         IntPtr processHandle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_WM_READ, false, process.Id);
@@ -833,8 +870,8 @@ public class Class_DefinitionMaker
 
                 for (int i = 0; i < mem_basic_info.RegionSize; i++)
                 {
-                    //sw.WriteLine(buffer[i].ToString("X2"));
-                    sw2.Write((char)buffer[i]);
+                    if (ExtractMode == "Bin") sw2.Write(buffer[i].ToString("X2") + " ");
+                    else sw2.Write((char)buffer[i]);
                 }
             }
 
@@ -844,6 +881,22 @@ public class Class_DefinitionMaker
 
         //sw.Close();
         sw2.Close();
+
+        if (ExtractMode == "Bin")
+        {
+            byte[] AllBytesChar = File.ReadAllBytes(ThisEndPath + "DumpHex" + ExtractedBlockDone);
+            byte[] AllReturnBytes = new byte[AllBytesChar.Length / 3];
+            for (int i = 0; i < AllReturnBytes.Length; i++)
+            {
+                char char1 = (char) AllBytesChar[(i * 3)];
+                char char2 = (char) AllBytesChar[(i * 3) + 1];
+                string ByteHex = char1.ToString() + char2.ToString();
+
+                AllReturnBytes[i] = (byte) int.Parse(ByteHex, System.Globalization.NumberStyles.HexNumber);
+            }
+
+            File.WriteAllBytes(ThisEndPath + "DumpHex" + ExtractedBlockDone, AllReturnBytes);
+        }
     }
 
     //##########################################################################################################################
