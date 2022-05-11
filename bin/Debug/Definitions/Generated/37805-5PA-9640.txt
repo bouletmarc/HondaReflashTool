@@ -1,0 +1,531 @@
+#######################################################################
+#######################################################################
+# THIS FILE AS BEEN GENERATED AUTOMATICLY, ROM LOCATIONS CAN BE WRONG
+#######################################################################
+#######################################################################
+# Supported ECU:
+#######################################################################
+37805-5PA-9640
+#######################################################################
+#######################################################################
+#######################################################################
+# ROM Parameters Definitions:
+#######################################################################
+ROMLocationTable:0x8026D5D0
+Name:VTC enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+IsUntested:true
+#############################
+ROMLocationTable:0x8026D6FF
+Name:Primary oxygen sensor enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8026D700
+Name:Secondary oxygen sensor enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8026D5E2
+Name:Immobilizer enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8026D5C4
+Name:AFM enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+IsUntested:true
+#############################
+ROMLocationTable:0x8026D792
+Name:EGR enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+IsReadOnly:true
+IsUntested:true
+#############################
+ROMLocationTable:0x8026D793
+Name:ELD enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+IsReadOnly:true
+IsUntested:true
+#############################
+ROMLocationTable:0x8026D5C5
+Name:EPS enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+IsReadOnly:true
+IsUntested:true
+#############################
+ROMLocationTable:0x8026D5C8
+Name:Knock sensor enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+IsReadOnly:true
+IsUntested:true
+#############################
+ROMLocationTable:0x8026D794
+Name:PA sensor enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+IsUntested:true
+#############################
+ROMLocationTable:0x8026D796
+Name:Engine oil pressure sensor enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+IsReadOnly:true
+IsUntested:true
+#############################
+ROMLocationTable:0x8026D797
+Name:Purge/EVAP enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8026D5CD
+Name:Forced induction enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+IsUntested:true
+#############################
+ROMLocationTable:0x8026D5CE
+Name:Second ECT sensor enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8026D5CF
+Name:VSA enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8026D798
+Name:VTEC oil pressure switch enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+IsUntested:true
+#############################
+ROMLocationTable:0x8026D71B
+Name:Use MAP to determine WOT
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x80213F84
+Name:Speed limiter rpm
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8021401E
+Name:Speed limiter speed
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8021307C
+Name:Short term fuel trim maximum
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8021307E
+Name:Short term fuel trim minimum
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8021377C
+Name:AF learned value minimum
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8021377A
+Name:AF learned value maximum
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x802128D0
+Name:Closed loop target lambda
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8021316E
+Name:Initial knock control multiplier
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+IsUntested:true
+#############################
+ROMLocationTable:0x80213E26
+Name:Long term fuel trim minimum
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x80212C1E
+Name:Long term fuel trim maximum
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x801E7E8D
+Name:Econ button boost (Hondata mode) enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x00000
+Name:0x01q5276851A^TSX-07-8-AT-DW800.fpcal^29^800^0^0^1.00^^TSX AT 2007-2008, 800cc Deatchwerks Injectors^MAP^DW 800cc^NA^Stock^Stock^Stock^Stock^^^Stock^Standard^Stock^StocklText
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x6AFEA
+Name:Driving recorder enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+IsUntested:true
+#############################
+ROMLocationTable:0x0B594
+Name:Intake runner low
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x0B592
+Name:Intake runner high
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x10772
+Name:Injector flow for fuel economy calc
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+IsUntested:true
+#############################
+ROMLocationTable:0x12850
+Name:Launch rpm
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x1284C
+Name:Launch recover rpm
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0xA2200
+Name:Pit lane speed limit enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+IsUntested:true
+#############################
+ROMLocationTable:0xA2202
+Name:Pit lane speed limit speed
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+IsUntested:true
+#############################
+ROMLocationTable:0xA2204
+Name:Fuel Pressure
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x0AA1C
+Name:Secondary intake runner enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x0A9E1
+Name:Coil test enabled (P351 P352 P353 P354)
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+IsUntested:true
+#############################
+ROMLocationTable:0x0A9D0
+Name:Secondary intake runner low rpm error enabled (P1077)
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x47547
+Name:Use second coolant temperature sensor for fan control
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x0B4DC
+Name:Radiator fan on
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x0B4E0
+Name:Radiator fan off
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0xA20C6
+Name:Boost cut enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################################################
+#############################################################
+#############################################################
+ROMLocationTable:0x802183D2
+Name:Throttle flow vs opening
+TableSize:10x1
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x802150C8
+Name:Overrun fuel cut delay
+TableSize:5x1
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x802174CC
+Name:Closed loop target lambda limit
+TableSize:8x1
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x802174DC
+Name:Closed loop target lambda high load
+TableSize:8x1
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x802174EC
+Name:Closed loop target lambda low load
+TableSize:8x1
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x80217DF6
+Name:Air temperature fuel compensation cranking
+TableSize:9x1
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x80237F28
+Name:Lean best torque
+TableSize:10x20
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8026BFAA
+ROMLocationX:0x8026B64A
+Name:Knock ignition limit
+TableSize:20x20
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x802343C8
+Name:EGR Ignition
+TableSize:10x20
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x80215ABE
+Name:Water temperature ignition compensation hot high
+TableSize:5x1
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x80214D8A
+Name:Water temperature ignition compensation hot low
+TableSize:5x1
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x80215AC8
+Name:Water temperature ignition compensation cold high
+TableSize:5x1
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x80214D94
+Name:Water temperature ignition compensation cold low
+TableSize:5x1
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x80216B3C
+Name:Idle speed (normal)
+TableSize:8x1
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x80216B4C
+Name:Idle speed (after start)
+TableSize:8x1
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8024418A
+Name:TC max boost(IAT2)
+TableSize:16x20
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+IsUntested:true
+#############################
+ROMLocationTable:0x8024558A
+ROMLocationX:0x8024580A
+Name:TC maximum pressure ratio
+TableSize:16x20
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8021EB56
+Name:TC max boost(PA)
+TableSize:5x20
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8021EBBA
+ROMLocationX:0x8021EC1E
+Name:TC max boost(IAT)
+TableSize:5x20
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x80237C08
+ROMLocationX:0x802378E8
+ROMLocationY:0x802375C8
+Name:WOT lambda adjustment low
+TableSize:10x20
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x802152C6
+Name:Air temperature ignition compensation high (MAP>40 kPa)
+TableSize:5x1
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x802152D0
+Name:Air temperature ignition compensation low (MAP<40 kPa)
+TableSize:5x1
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8025DAEA
+Name:TC boost command
+TableSize:20x20
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x80223EAC
+ROMLocationX:0x80223D1C
+Name:Knock air limit
+TableSize:10x20
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8021C6F6
+Name:Torque limit
+TableSize:20x1
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8026ACF4
+Name:Digital AFM flow
+TableSize:129x1
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8021614A
+Name:Individual cylinder ignition trim
+TableSize:4x1
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x802160D2
+Name:Individual cylinder fuel trim
+TableSize:4x1
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8021C7E6
+Name:Boost pressure reverse lookup
+TableSize:20x1
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+IsUntested:true
+#############################
+ROMLocationTable:0x80216620
+Name:WOT determination (mg/cyl)
+TableSize:7x1
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
+ROMLocationTable:0x801E7EA0
+Name:Economy Torque limit
+TableSize:20x1
+ValueMin:-32768
+ValueMax:32768
+IsNotDefined:true
+#############################
