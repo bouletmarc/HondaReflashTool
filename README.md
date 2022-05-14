@@ -41,6 +41,8 @@ Firmware files update (.rwd|.gz) are only partial and encrypted ROM file. This i
 | :white_check_mark: | Checksum Verification for 2Mb (.bin) file (SH72531/MPC5554) **(->TO CONFIRM)** |
 | :white_check_mark: | Checksum Verification for 4Mb (.bin) file (MED17.9.3/TC179X) **(->TO CONFIRM)** |
 | :white_check_mark: | Seed/Key ECU Unlock Algorithms(0x27,0x01) -> All ECUS?? |
+| :white_large_square: | Seed/Key ECU Unlock Algorithms(0x27,0x03) **(->NOT YET IMPLEMENTED)** |
+| :white_large_square: | Seed/Key ECU Unlock Algorithms(0x27,0x05) **(->NOT YET IMPLEMENTED)** |
 | :exclamation: | Seed/Key ECU Unlock Algorithms(0x27,0x41) -> ONLY Specified ECUS (see compatible list below) |
 | :white_check_mark: | RWD firmware file X-RAY/Decryptor to binary file (.bin) for 0x5A files |
 | :white_large_square: | RWD firmware file X-RAY/Decryptor to binary file (.bin) for 0x31 files **(->IN PROGRESS)** |
