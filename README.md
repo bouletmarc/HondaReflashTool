@@ -38,17 +38,17 @@ Firmware files update (.rwd|.gz) are only partial and encrypted ROM file. This i
 | :white_large_square: | Checksum Verification for 512Kb (.bin) file (SH7055) |
 | :white_check_mark: | Checksum Verification for 1Mb (.bin) file (SH7058) |
 | :white_large_square: | Checksum Verification for 1.5Mb (.bin) file (SH7059) |
-| :white_check_mark: | Checksum Verification for 2Mb (.bin) file (SH72531/MPC5554) **TO CONFIRM** |
-| :white_check_mark: | Checksum Verification for 4Mb (.bin) file (MED17.9.3/TC179X) **TO CONFIRM** |
+| :white_check_mark: | Checksum Verification for 2Mb (.bin) file (SH72531/MPC5554) **(->TO CONFIRM)** |
+| :white_check_mark: | Checksum Verification for 4Mb (.bin) file (MED17.9.3/TC179X) **(->TO CONFIRM)** |
 | :white_check_mark: | Seed/Key ECU Unlock Algorithms(0x27,0x01) -> All ECUS?? |
 | :exclamation: | Seed/Key ECU Unlock Algorithms(0x27,0x41) -> ONLY Specified ECUS (see compatible list below) |
 | :white_check_mark: | RWD firmware file X-RAY/Decryptor to binary file (.bin) for 0x5A files |
-| :white_large_square: | RWD firmware file X-RAY/Decryptor to binary file (.bin) for 0x31 files **IN PROGRESS** |
+| :white_large_square: | RWD firmware file X-RAY/Decryptor to binary file (.bin) for 0x31 files **(->IN PROGRESS)** |
 | :white_check_mark: | Binary file (.bin) to RWD firmware file builder for 0x5A files |
-| :white_large_square: | Binary file (.bin) to RWD firmware file builder for 0x31 files **IN PROGRESS** |
+| :white_large_square: | Binary file (.bin) to RWD firmware file builder for 0x31 files **(->IN PROGRESS)** |
 | :white_check_mark: | OBD2 Scan Tools |
 | :white_check_mark: | Binary ROM Tables Editor (with Definitions) |
-| :white_large_square: | Immobilizer Tool **NOT YET IMPLEMENTED** |
+| :white_large_square: | Immobilizer Tool **(->NOT YET IMPLEMENTED)** |
 
 # Want to contribute your work to this project?
 
