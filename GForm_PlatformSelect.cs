@@ -44,12 +44,21 @@ public class GForm_PlatformSelect : DarkForm
 
     private void method_1()
     {
+        //this.list_0.Add(new Class_ECUS("512k", "SH7055", 16, "0x10", 0x7FFFF, 1015808, "Manual"));
+        //this.list_0.Add(new Class_ECUS("512k", "SH7055", 17, "0x11", 0x7FFFF, 1015808, "Automatic"));
+        //this.list_0.Add(new Class_ECUS("512k", "SH7055", 14, "0x0E", 0x7FFFF, 1015808, "CVT(maybe?)"));
         this.list_0.Add(new Class_ECUS("1MB", "SH7058", 16, "0x10", 1048576, 1015808, "Manual"));
         this.list_0.Add(new Class_ECUS("1MB", "SH7058", 17, "0x11", 1048576, 1015808, "Automatic"));
         this.list_0.Add(new Class_ECUS("1MB", "SH7058", 14, "0x0E", 1048576, 1015808, "CVT(maybe?)"));
-        this.list_0.Add(new Class_ECUS("2MB", "SH72531", 16, "0x10", 2097152, 2031616, "Manual"));
-        this.list_0.Add(new Class_ECUS("2MB", "SH72531", 17, "0x11", 2097152, 2031616, "Automatic"));
-        this.list_0.Add(new Class_ECUS("2MB", "SH72531", 14, "0x0E", 2097152, 2031616, "CVT(maybe?)"));
+        //this.list_0.Add(new Class_ECUS("1.5MB", "SH7059", 16, "0x10", 1048576, 1015808, "Manual"));
+        //this.list_0.Add(new Class_ECUS("1.5MB", "SH7059", 17, "0x11", 1048576, 1015808, "Automatic"));
+        //this.list_0.Add(new Class_ECUS("1.5MB", "SH7059", 14, "0x0E", 1048576, 1015808, "CVT(maybe?)"));
+        this.list_0.Add(new Class_ECUS("2MB", "SH72531/MPC5554", 16, "0x10", 2097152, 2031616, "Manual"));
+        this.list_0.Add(new Class_ECUS("2MB", "SH72531/MPC5554", 17, "0x11", 2097152, 2031616, "Automatic"));
+        this.list_0.Add(new Class_ECUS("2MB", "SH72531/MPC5554", 14, "0x0E", 2097152, 2031616, "CVT(maybe?)"));
+        this.list_0.Add(new Class_ECUS("4MB", "MED17.9.3/TC179X", 16, "0x10", 0x400000, 0x270000, "Manual"));
+        this.list_0.Add(new Class_ECUS("4MB", "MED17.9.3/TC179X", 17, "0x11", 0x400000, 0x270000, "Automatic"));
+        this.list_0.Add(new Class_ECUS("4MB", "MED17.9.3/TC179X", 14, "0x0E", 0x400000, 0x270000, "CVT(maybe?)"));
     }
 
 

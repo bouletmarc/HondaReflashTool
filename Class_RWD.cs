@@ -164,10 +164,14 @@ static class Class_RWD
 
         string indicatorBytes = data[0].ToString("x2") + data[1].ToString("x2") + data[2].ToString("x2");
         if (indicatorBytes != "5a0d0a")
+        //if (indicatorBytes != "5a0d0a" && indicatorBytes != "310d0a")
         {
             GForm_Main_0.method_1("Not Compatible file!");
             return;
         }
+
+        byte Mode = 0x5a;
+        if (indicatorBytes == "310d0a") Mode = 0x31;
 
         byte[] headers0 = { };
         byte[] headers1 = { };
@@ -175,25 +179,83 @@ static class Class_RWD
         byte[] headers3 = { };
         byte[] headers4 = { };
         byte[] headers5 = { };
-        int idx = 0;
-        idx += 3;
+        int idx = 3;
         for (int i = 0; i < 6; i++)
         {
-            // first byte is number of values
-            var count = data[idx];
-            idx += 1;
-
             byte[] header = { };
-            for (int j = 0; j < count; j++)
+
+            if (Mode == 0x5a)
             {
-                // first byte is length of value
-                int length = data[idx];
+                byte count = data[idx];
                 idx += 1;
 
-                byte[] v = Slice(data, idx, idx + length);
-                idx += length;
+                for (int j = 0; j < count; j++)
+                {
+                    // first byte is length of value
+                    int length = data[idx];
+                    idx += 1;
 
-                header = Push(header, v);
+                    byte[] v = Slice(data, idx, idx + length);
+                    idx += length;
+
+                    header = Push(header, v);
+                }
+            }
+
+            if (Mode == 0x31)
+            {
+                byte[] h_prefix = new byte[2];
+                idx += 4;
+                h_prefix[0] = data[idx];
+                h_prefix[1] = data[idx + 1];
+                //h_prefix[2] = data[idx + 2];
+                idx += 2;
+
+                if (h_prefix[0] != 0x0d && h_prefix[1] != 0x0a)
+                {
+                    GForm_Main_0.method_1("header delimiter not found!");
+                    return;
+                }
+
+                //while (data[idx] != h_prefix[0] && data[idx + 1] != h_prefix[1] && data[idx + 2] != h_prefix[2])
+                while (data[idx] != h_prefix[0] && data[idx + 1] != h_prefix[1])
+                {
+                    int end_idx = -1;
+                    for (int j = idx; j < data.Length - 1; j++)
+                    {
+                        if (data[j] == 0x0d && data[j + 1] == 0x0a)
+                        {
+                            end_idx = j;
+                            j = data.Length;
+                        }
+                    }
+                    if (end_idx == -1) 
+                    {
+                        GForm_Main_0.method_1("field delimiter not found!");
+                        return;
+                    }
+
+                    byte[] v_data = Slice(data, idx, end_idx);
+                    idx += v_data.Length;
+
+                    //skip past field delimiter
+                    //byte[] v_suffix = Slice(data, idx, idx + 2);
+                    idx += 2;
+
+                    header = Push(header, v_data);
+                }
+
+                //skip past delimiter
+                byte[] h_suffix = Slice(data, idx, idx + 2);
+                idx += 3;
+                if (h_prefix != h_suffix)
+                //if (h_prefix[0] != h_suffix[0] && h_prefix[1] != h_suffix[1])
+                {
+                    Console.WriteLine(h_prefix[0].ToString("X2") + h_prefix[1].ToString("X2"));
+                    Console.WriteLine(h_suffix[0].ToString("X2") + h_suffix[1].ToString("X2"));
+                    GForm_Main_0.method_1("header prefix and suffix do not match");
+                    return;
+                }
             }
 
             if (i == 0) headers0 = header;
@@ -328,13 +390,17 @@ static class Class_RWD
             //Since we are missing the bootloader section of the full binary we have to remove the section 0x0000 to 0x8000(Start_Address)
             //we can calculate what was the 'sum' of the bootloader by subtracting the 'sum' of the decrypted firmware!
 
-            if (start == 0x8000) //Only SH7058 1mb file
+            if (fc.Length - 1 == 0xF7FFF || fc.Length - 1 == 0x1EFFFF || fc.Length - 1 == 0x26FFFF)
             {
-                byte num = GetBootloaderSum(fc);
-                byte num2 = GetNegativeChecksumFWBin(fc);
+                int CheckLocation = 0;
+                if (fc.Length - 1 == 0xF7FFF) CheckLocation = 0x400;
+                if (fc.Length - 1 == 0x1EFFFF) CheckLocation = 0x12;        //0x10012
+                if (fc.Length - 1 == 0x26FFFF) CheckLocation = 0x1F03E6;    //0x2003E6
+                byte num = GetBootloaderSum(fc, CheckLocation);
+                byte num2 = GetNegativeChecksumFWBin(fc, CheckLocation);
                 byte ThisSum = num;
                 ThisSum -= num2;
-                byte chk = fc[0x400];
+                byte chk = fc[CheckLocation];
                 if (chk == ThisSum)
                 {
                     GForm_Main_0.method_1("checksums good!");
@@ -418,26 +484,24 @@ static class Class_RWD
         }
     }
 
-    public static byte GetBootloaderSum(byte[] FWFileBytes)
+    public static byte GetBootloaderSum(byte[] FWFileBytes, int CheckLocation)
     {
         //###############################
         //Get Checksum (sum)
         byte[] BufferBytes = FWFileBytes;
-        byte num = BufferBytes[0x400];
-        byte num2 = GetNegativeChecksumFWBin(BufferBytes);
+        byte num = BufferBytes[CheckLocation];
+        byte num2 = GetNegativeChecksumFWBin(BufferBytes, CheckLocation);
         byte BTSum = num;
         BTSum += num2;
         return BTSum;
-        //BootloaderSum = BTSum;
-        //GForm_Main_0.method_1("Bootloader Sum are 0x" + BootloaderSum.ToString("X"));
     }
 
-    public static byte GetNegativeChecksumFWBin(byte[] byte_1)
+    public static byte GetNegativeChecksumFWBin(byte[] byte_1, int CheckLocation)
     {
         byte b = 0;
         for (int i = 0; i < byte_1.Length; i++)
         {
-            if (i != 0x400) b -= byte_1[i];
+            if (i != CheckLocation) b -= byte_1[i];
         }
         return b;
     }

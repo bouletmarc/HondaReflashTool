@@ -49,7 +49,7 @@ internal class ClassEditor
     public List<bool> DefinitionsIsUntested = new List<bool>();
     public List<bool> DefinitionsIsNotDefined = new List<bool>();
 
-    public int SelectedROMLocation;
+    public long SelectedROMLocation;
     public int SelectedTableSize;
     public int SelectedTableIndexInDefinitions;
     public bool IsTableLoadedCorrectly = false;
@@ -67,6 +67,7 @@ internal class ClassEditor
     public int[] BufferTableSize = new int[2];
     public string BufferMath = "";
     private string LastMathDoneCheck = "";
+    public string FileFormat = "";     //-> 1mb-fw, 1mb-full, 
 
     private Editortable Editortable_0;
 
@@ -107,6 +108,18 @@ internal class ClassEditor
             return (float.Parse(text) + num).ToString(format);
         }
         return (float.Parse(text) - num).ToString(format);
+    }
+
+    public void SetFileFormat(byte[] FilesBytes)
+    {
+        //SH7055 512Kb, SH7058 1Mb, SH72543 2Mb, SH7059 1.5Mb, MPC5554 2Mb, Bosch MED17.9.3 ECU 4Mb, TC179X 4Mb
+        if ((FilesBytes.Length - 1) == 0xF7FFF) FileFormat = "1mb-fw";
+        if ((FilesBytes.Length - 1) == 0xFFFFF) FileFormat = "1mb-full";
+        if ((FilesBytes.Length - 1) == 0x1EFFFF) FileFormat = "2mb-fw";
+        if ((FilesBytes.Length - 1) == 0x1FFFFF) FileFormat = "2mb-full";
+        if ((FilesBytes.Length - 1) == 0x26FFFF) FileFormat = "4mb-fw";
+        if ((FilesBytes.Length - 1) == 0x27FFFF) FileFormat = "4mb-full";
+        //if ((FilesBytes.Length - 1) == 0x3FFFFF) FileFormat = "4mb-full";
     }
 
     public void IncDecreaseSelection(bool Decreasing, bool HoldShift)
@@ -215,7 +228,7 @@ internal class ClassEditor
 
     public void GetChanges()
     {
-        int num = this.SelectedROMLocation;
+        long num = this.SelectedROMLocation;
         int multiplier = 2;
         if (this.IsSingleByteX || this.IsSingleByteY || this.IsSingleByteTable) multiplier = 1; //###############################
 
@@ -309,10 +322,18 @@ internal class ClassEditor
             //Remove fake bootloader section if it's a partial firmware .bin file
             if (!this.Editortable_0.IsFullBinary)
             {
-                byte[] BufferBytes = new byte[SavingBytes.Length - 0x8000];
-                for (int i = 0; i < SavingBytes.Length; i++) BufferBytes[i] = SavingBytes[i + 0x8000];
-
-                SavingBytes = BufferBytes;
+                if (FileFormat == "1mb-fw")
+                {
+                    byte[] BufferBytes = new byte[SavingBytes.Length - 0x8000];
+                    for (int i = 0; i < SavingBytes.Length; i++) BufferBytes[i] = SavingBytes[i + 0x8000];
+                    SavingBytes = BufferBytes;
+                }
+                if (FileFormat == "2mb-fw" || FileFormat == "4mb-fw")
+                {
+                    byte[] BufferBytes = new byte[SavingBytes.Length - 0x10000];
+                    for (int i = 0; i < SavingBytes.Length; i++) BufferBytes[i] = SavingBytes[i + 0x10000];
+                    SavingBytes = BufferBytes;
+                }
             }
 
             //Fix Checksums
@@ -361,7 +382,7 @@ internal class ClassEditor
 
     }
 
-    public void SetTableValues(int[] TableSize, int ROMLocationX, string TopLeftString, string RowHeaderString, string[] HeaderStringList, string ThisMathX, string ThisFormatX, bool IsXYInverted, int ROMLocationTable, string ThisMathTable, string ThisTableFormat, bool IsTableInverted, bool IsReadOnly)
+    public void SetTableValues(int[] TableSize, long ROMLocationX, string TopLeftString, string RowHeaderString, string[] HeaderStringList, string ThisMathX, string ThisFormatX, bool IsXYInverted, long ROMLocationTable, string ThisMathTable, string ThisTableFormat, bool IsTableInverted, bool IsReadOnly)
     {
         try
         {
@@ -853,7 +874,7 @@ internal class ClassEditor
         return ReturnVal;
     }
 
-    public string[] GetAdvancedHeader(int ValuesCount, int ThisLocation, string ThisMath, string HeaderFormat)
+    public string[] GetAdvancedHeader(int ValuesCount, long ThisLocation, string ThisMath, string HeaderFormat)
     {
         string[] strArray = new string[ValuesCount];
         for (int i = 0; i < ValuesCount; i++)
@@ -890,7 +911,7 @@ internal class ClassEditor
         return k1;
     }*/
 
-    public int HexStringToInt(string hex)
+    public long HexStringToInt(string hex)
     {
         string ThisStr = hex.Replace("0x", "");
         if (ThisStr.Length == 1 || ThisStr.Length == 3 || ThisStr.Length == 5 || ThisStr.Length == 7)
@@ -908,10 +929,34 @@ internal class ClassEditor
             for (int i = 0; i < ThisBytes.Length; i++) buffArray[i] = ThisBytes[i];
             ThisBytes = buffArray;
         }
+        if (ThisBytes.Length == 5)
+        {
+            byte[] buffArray = new byte[8];
+            buffArray[5] = 0;
+            buffArray[6] = 0;
+            buffArray[7] = 0;
+            for (int i = 0; i < ThisBytes.Length; i++) buffArray[i] = ThisBytes[i];
+            ThisBytes = buffArray;
+        }
+        if (ThisBytes.Length == 6)
+        {
+            byte[] buffArray = new byte[8];
+            buffArray[6] = 0;
+            buffArray[7] = 0;
+            for (int i = 0; i < ThisBytes.Length; i++) buffArray[i] = ThisBytes[i];
+            ThisBytes = buffArray;
+        }
+        if (ThisBytes.Length == 7)
+        {
+            byte[] buffArray = new byte[8];
+            buffArray[7] = 0;
+            for (int i = 0; i < ThisBytes.Length; i++) buffArray[i] = ThisBytes[i];
+            ThisBytes = buffArray;
+        }
 
         if (ThisBytes.Length == 2) return BitConverter.ToUInt16(ThisBytes, 0);
-        if (ThisBytes.Length == 4) return BitConverter.ToInt32(ThisBytes, 0);
-        //if (ThisBytes.Length == 8) return BitConverter.ToUInt64(ThisBytes, 0);
+        if (ThisBytes.Length == 4) return BitConverter.ToUInt32(ThisBytes, 0);
+        if (ThisBytes.Length == 8) return BitConverter.ToInt64(ThisBytes, 0);
         return 0;
     }
 
@@ -923,14 +968,27 @@ internal class ClassEditor
             {
                 this.ROM_Bytes = File.ReadAllBytes(string_4);
 
+                //Console.WriteLine(Editortable_0.IsFullBinary);
+                //Console.WriteLine(FileFormat);
+
                 //Create a fake bootloader section
                 if (!Editortable_0.IsFullBinary)
                 {
-                    byte[] BufferBytes = new byte[0x8000 + this.ROM_Bytes.Length];
-                    for (int i = 0; i < 0x8000; i++) BufferBytes[i] = 0xff;
-                    for (int i = 0; i < this.ROM_Bytes.Length; i++) BufferBytes[0x8000 + i] = this.ROM_Bytes[i];
-
-                    this.ROM_Bytes = BufferBytes;
+                    if (FileFormat == "1mb-fw")
+                    {
+                        byte[] BufferBytes = new byte[0x8000 + this.ROM_Bytes.Length];
+                        for (int i = 0; i < 0x8000; i++) BufferBytes[i] = 0xff;
+                        for (int i = 0; i < this.ROM_Bytes.Length; i++) BufferBytes[0x8000 + i] = this.ROM_Bytes[i];
+                        this.ROM_Bytes = BufferBytes;
+                    }
+                    if (FileFormat == "2mb-fw" || FileFormat == "4mb-fw")
+                    {
+                        long ThisSize = (long)0x10000 + (long)this.ROM_Bytes.Length;
+                        byte[] BufferBytes = new byte[ThisSize];
+                        for (long i = 0; i < 0x10000; i++) BufferBytes[i] = 0xff;
+                        for (long i = 0; i < this.ROM_Bytes.Length; i++) BufferBytes[0x10000 + i] = this.ROM_Bytes[i];
+                        this.ROM_Bytes = BufferBytes;
+                    }
                 }
 
                 //Get ECU filename  (33 37 38 30 35 2D  ->  37805- 'in ASCII chars')  (37805-RRB-A140)
@@ -1012,12 +1070,12 @@ internal class ClassEditor
         return false;
     }
 
-    public int GetIntValue(int int_232)
+    public int GetIntValue(long int_232)
     {
         return (int)((short)((int)this.ROM_Bytes[int_232] << 8 | (int)this.ROM_Bytes[int_232 + 1]));
     }
 
-    public int GetSingleByteValue(int int_232)
+    public int GetSingleByteValue(long int_232)
     {
         return (int)this.ROM_Bytes[int_232];
     }

@@ -955,8 +955,12 @@ public class Editortable : DarkForm
                 string[] TableSizeStrSplit = TableSizeStr.Split('x');
                 int[] TableSizze = new int[] { int.Parse(TableSizeStrSplit[0]), int.Parse(TableSizeStrSplit[1]) };
 
+                if (ClassEditor_0.DefinitionsLocationsX[NodeIndex].Length >= 10) ClassEditor_0.DefinitionsLocationsX[NodeIndex] = ClassEditor_0.DefinitionsLocationsX[NodeIndex].Replace("0x80", "0x");
+                if (ClassEditor_0.DefinitionsLocationsY[NodeIndex].Length >= 10) ClassEditor_0.DefinitionsLocationsY[NodeIndex] = ClassEditor_0.DefinitionsLocationsY[NodeIndex].Replace("0x80", "0x");
+                if (ClassEditor_0.DefinitionsLocationsTable[NodeIndex].Length >= 10) ClassEditor_0.DefinitionsLocationsTable[NodeIndex] = ClassEditor_0.DefinitionsLocationsTable[NodeIndex].Replace("0x80", "0x");
+
                 //Set X rom location
-                int ParamLocation = ClassEditor_0.HexStringToInt(ClassEditor_0.DefinitionsLocationsX[NodeIndex]);
+                long ParamLocation = ClassEditor_0.HexStringToInt(ClassEditor_0.DefinitionsLocationsX[NodeIndex]);
 
                 //Set Y Headers (normal header mode)
                 int DoingThisSize = TableSizze[0];
@@ -980,7 +984,7 @@ public class Editortable : DarkForm
                 string NewHeaderLocation = ClassEditor_0.DefinitionsLocationsY[NodeIndex];
                 if (NewHeaderLocation != "")
                 {
-                    int ParamHeaderLocation = ClassEditor_0.HexStringToInt(NewHeaderLocation);
+                    long ParamHeaderLocation = ClassEditor_0.HexStringToInt(NewHeaderLocation);
                     textArray1 = ClassEditor_0.GetAdvancedHeader(TableSizze[0], ParamHeaderLocation, ClassEditor_0.DefinitionsMathY[NodeIndex], ClassEditor_0.DefinitionsFormatY[NodeIndex]);
                 }
 
@@ -1063,6 +1067,7 @@ public class Editortable : DarkForm
         return ECUName;
     }
 
+
     public void LoadThisFile(string ThisFilePath)
     {
         this.Text = "Honda Rom Tables Editor (" + this.GForm_Main_0.Version + ") | " + Path.GetFileName(ThisFilePath);
@@ -1070,16 +1075,23 @@ public class Editortable : DarkForm
         string LastOpenFilePath = Application.StartupPath + @"\LastFileOpened.txt";
         File.Create(LastOpenFilePath).Dispose();
         File.WriteAllText(LastOpenFilePath, ThisFilePath);
+        this.IsFullBinary = false;
 
         byte[] FilesBytes = File.ReadAllBytes(ThisFilePath);
         this.Editortable_0.LoadedFilename = ThisFilePath;
         if ((FilesBytes.Length - 1) == 0xFFFFF) this.IsFullBinary = true;
+        if ((FilesBytes.Length - 1) == 0x1FFFFF) this.IsFullBinary = true;
+        if ((FilesBytes.Length - 1) == 0x27FFFF) this.IsFullBinary = true;
+        //if ((FilesBytes.Length - 1) == 0x3FFFFF) this.IsFullBinary = true;
+
+        ClassEditor_0.SetFileFormat(FilesBytes);
+
+        //Console.WriteLine("calib: " + (FilesBytes.Length - 1).ToString("X"));
+        //Console.WriteLine("full: " + (FilesBytes.Length - 1 + 0xA0010000).ToString("X"));
 
         //Load BootLoader Sum byte for decrypted firmware (not a full binary rom)    
-        if ((FilesBytes.Length - 1) == 0xF7FFF)
+        if ((FilesBytes.Length - 1) == 0xF7FFF || (FilesBytes.Length - 1) == 0x1EFFFF || (FilesBytes.Length - 1) == 0x26FFFF)
         {
-            this.IsFullBinary = false;
-
             int BtSumInt = CheckForBootLoaderSum(ExtractECUNameFromThisFile(FilesBytes));
             if (BtSumInt == -1)
             {
@@ -1101,14 +1113,19 @@ public class Editortable : DarkForm
         }
 
         //Load File
-        if ((FilesBytes.Length - 1) == 0xF7FFF || (FilesBytes.Length - 1) == 0xFFFFF)
+        if ((FilesBytes.Length - 1) == 0xF7FFF
+            || (FilesBytes.Length - 1) == 0xFFFFF
+            || (FilesBytes.Length - 1) == 0x1EFFFF
+            || (FilesBytes.Length - 1) == 0x1FFFFF
+            || (FilesBytes.Length - 1) == 0x26FFFF
+            || (FilesBytes.Length - 1) == 0x27FFFF)     //0x3FFFFF
         {
             //Load Binary into ROM Table Editor
-            this.Editortable_0.method_1();
+            this.method_1();
         }
         else
         {
-            Console.WriteLine((FilesBytes.Length - 1).ToString("X"));
+            //Console.WriteLine((FilesBytes.Length - 1).ToString("X"));
             DarkMessageBox.Show(this, "This file is not compatible!");
         }
     }
@@ -1343,13 +1360,20 @@ public class Editortable : DarkForm
         if (result == DialogResult.OK)
         {
             byte[] FilesBytes = File.ReadAllBytes(openFileDialog1.FileName);
-            if ((FilesBytes.Length - 1) == 0xFFFFF)
+            ClassEditor_0.SetFileFormat(FilesBytes);
+
+            if (ClassEditor_0.FileFormat == "1mb-full" || ClassEditor_0.FileFormat == "2mb-full" || ClassEditor_0.FileFormat == "4mb-full")
             {
-                //remove 0x0000 to 0x8000
-                byte[] FilesBytesRWD = new byte[FilesBytes.Length - 0x8000];
-                for (int i = 0; i < FilesBytesRWD.Length; i++)
+                byte[] FilesBytesRWD = new byte[] { };
+                if (ClassEditor_0.FileFormat == "1mb-full")
                 {
-                    FilesBytesRWD[i] = FilesBytes[i + 0x8000];
+                    FilesBytesRWD = new byte[FilesBytes.Length - 0x8000];
+                    for (int i = 0; i < FilesBytesRWD.Length; i++) FilesBytesRWD[i] = FilesBytes[i + 0x8000];
+                }
+                if (ClassEditor_0.FileFormat == "2mb-full" || ClassEditor_0.FileFormat == "4mb-full")
+                {
+                    FilesBytesRWD = new byte[FilesBytes.Length - 0x10000];
+                    for (int i = 0; i < FilesBytesRWD.Length; i++) FilesBytesRWD[i] = FilesBytes[i + 0x10000];
                 }
 
                 string SaveeePath = Path.GetDirectoryName(openFileDialog1.FileName) + @"\" + Path.GetFileNameWithoutExtension(openFileDialog1.FileName) + "_NoBootloader.bin";
@@ -1374,6 +1398,7 @@ public class Editortable : DarkForm
 
     private void extractbinFileFromFPMToolStripMenuItem_Click(object sender, EventArgs e)
     {
+        //THIS FUNCTION DOES NOT WORK YET
         GForm_Main_0.Class_DefinitionMaker_0.Extract("Bin");
     }
 

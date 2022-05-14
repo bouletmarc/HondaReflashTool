@@ -215,7 +215,7 @@ public class Class_DefinitionMaker
             {
                 if (BufECUName != "") CreateFile(AllStringFile, BufECUName);
                 BufECUName = AllECUS[i];
-                AllStringFile = GenerateNewHeader(BufECUName);
+                AllStringFile = GenerateNewHeader(BufECUName, new List<string>());
                 //Console.WriteLine(AllECUS[i] + " | 0x" + AllFoundAddress[i].ToString("X") + " | " + AllFoundFunctions[i]);
             }
 
@@ -349,7 +349,7 @@ public class Class_DefinitionMaker
         GForm_Main_0.method_1("File saved:" + DirectoryPath + @"\" + ThisFile + ".txt");
     }
 
-    private string GenerateNewHeader(string ThisEECU)
+    private string GenerateNewHeader(string ThisEECU, List<string> AllEcuCompatible)
     {
         string ReturnStr = "";
         ReturnStr = ReturnStr + "#######################################################################" + Environment.NewLine;
@@ -359,7 +359,11 @@ public class Class_DefinitionMaker
         ReturnStr = ReturnStr + "#######################################################################" + Environment.NewLine;
         ReturnStr = ReturnStr + "# Supported ECU:" + Environment.NewLine;
         ReturnStr = ReturnStr + "#######################################################################" + Environment.NewLine;
-        ReturnStr = ReturnStr + ThisEECU + Environment.NewLine;
+        if (ThisEECU != "") ReturnStr = ReturnStr + ThisEECU + Environment.NewLine;
+        if (AllEcuCompatible.Count > 0)
+        {
+            for (int i = 0; i < AllEcuCompatible.Count; i++) ReturnStr = ReturnStr + AllEcuCompatible[i] + Environment.NewLine;
+        }
         ReturnStr = ReturnStr + "#######################################################################" + Environment.NewLine;
         ReturnStr = ReturnStr + "#######################################################################" + Environment.NewLine;
         ReturnStr = ReturnStr + "#######################################################################" + Environment.NewLine;
@@ -527,49 +531,191 @@ public class Class_DefinitionMaker
                     List<bool> AllTableUntested = new List<bool>();
 
                     string CurrentParam = "";
+                    //string ThisECUName = "";
+                    int ParamCount = 0;
+                    int TableCount = 0;
+                    List<string> AllEcuCompatible = new List<string>();
+                    int NumberOfEcus = 0;
+
+                    //#########################################
+                    //FileName=RDX-RWC-A620    NumBinaries
+                    if (AllLines[2].Contains("NumBinaries="))
+                    {
+                        NumberOfEcus = int.Parse(AllLines[2].Split('=')[1]);
+
+                        for (int i2 = 0; i2 < NumberOfEcus; i2++)
+                        {
+                            AllEcuCompatible.Add(AllLines[3 + (i2 * 3) + 1].Split('=')[1]);
+                        }
+
+                        SavingPath = ThisEndPath + AllEcuCompatible[0] + ".txt";
+                    }
+
+                    if (AllLines[1].Contains("FileName=") && !AllLines[2].Contains("NumBinaries="))
+                    {
+                        string ThisECUName = AllLines[1].Split('=')[1];
+                        if (ThisECUName.Contains(".")) ThisECUName = ThisECUName.Split('.')[0];
+                        ThisECUName = "37805-" + ThisECUName.Substring(ThisECUName.Length - 8);
+
+                        SavingPath = ThisEndPath + ThisECUName + ".txt";
+                        AllEcuCompatible.Add(ThisECUName);
+                    }
+                    //#########################################
+
                     for (int i = 0; i < AllLines.Length; i++)
                     {
                         try
                         {
+                            //#########################################
+                            /*ParameterCount=40
+                            IndexCount=53
+                            TableCount=49
+                            ChecksumAddress=0x001FFFFA
+                            ChecksumAddress=0x00008400*/
+                            if (AllLines[i].Contains("ParameterCount=")) ParamCount = int.Parse(AllLines[i].Split('=')[1]);
+                            if (AllLines[i].Contains("TableCount=") && !AllLines[i].Contains("DevTableCount")) TableCount = int.Parse(AllLines[i].Split('=')[1]);
+
+                            //#########################################
                             if (AllLines[i].Contains("[Parameter"))
                             {
                                 if (AllLines[i] != CurrentParam)
                                 {
                                     CurrentParam = AllLines[i];
 
-                                    AllParamName.Add(AllLines[i + 2].Split('=')[1]);
-                                    AllParamLocations.Add(AllLines[i + 7].Split('=')[1]);
-                                    if (AllLines[i + 17].Split('=')[1] == "0") AllParamReadOnly.Add(false);
-                                    if (AllLines[i + 17].Split('=')[1] == "1") AllParamReadOnly.Add(true);
-                                    if (AllLines[i + 18].Split('=')[1] == "0") AllParamUntested.Add(false);
-                                    if (AllLines[i + 18].Split('=')[1] == "1") AllParamUntested.Add(true);
+                                    bool DoneThisParameter = false;
+                                    try
+                                    {
+                                        string ParamNamee = AllLines[i + 2].Split('=')[1];
+
+                                        for (int i2 = 0; i2 < AllParamName.Count; i2++) if (AllParamName[i2] == ParamNamee) DoneThisParameter = true;
+                                    }
+                                    catch
+                                    {
+                                        DoneThisParameter = true;
+                                    }
+
+                                    if (!DoneThisParameter)
+                                    {
+                                        //############################
+                                        AllParamName.Add("");
+                                        AllParamLocations.Add("");
+                                        AllParamReadOnly.Add(false);
+                                        AllParamUntested.Add(false);
+                                        //############################
+
+                                        try
+                                        {
+                                            AllParamName[AllParamName.Count - 1] = AllLines[i + 2].Split('=')[1];
+                                            AllParamLocations[AllParamLocations.Count - 1] = AllLines[i + 7].Split('=')[1];
+                                            if (AllLines[i + 17].Split('=')[1] == "0") AllParamReadOnly[AllParamReadOnly.Count - 1] = false;
+                                            if (AllLines[i + 17].Split('=')[1] == "1") AllParamReadOnly[AllParamReadOnly.Count - 1] = true;
+                                            if (AllLines[i + 18].Split('=')[1] == "0") AllParamUntested[AllParamUntested.Count - 1] = false;
+                                            if (AllLines[i + 18].Split('=')[1] == "1") AllParamUntested[AllParamUntested.Count - 1] = true;
+
+                                            //Check for issues
+                                            bool IssueEncountered = false;
+                                            if (!AllParamLocations[AllParamLocations.Count - 1].Contains("0x")) IssueEncountered = true;
+                                            if (AllParamLocations[AllParamLocations.Count - 1] == "0") IssueEncountered = true;
+                                            if (AllParamName[AllParamName.Count - 1].Contains("0x")) IssueEncountered = true;
+
+                                            if (IssueEncountered)
+                                            {
+                                                AllParamName.RemoveAt(AllParamName.Count - 1);
+                                                AllParamLocations.RemoveAt(AllParamLocations.Count - 1);
+                                                AllParamReadOnly.RemoveAt(AllParamReadOnly.Count - 1);
+                                                AllParamUntested.RemoveAt(AllParamUntested.Count - 1);
+                                            }
+                                        }
+                                        catch
+                                        {
+                                            //issue extracing parameters, remove from list to avoid issue creating definition
+                                            AllParamName.RemoveAt(AllParamName.Count - 1);
+                                            AllParamLocations.RemoveAt(AllParamLocations.Count - 1);
+                                            AllParamReadOnly.RemoveAt(AllParamReadOnly.Count - 1);
+                                            AllParamUntested.RemoveAt(AllParamUntested.Count - 1);
+                                        }
+                                    }
                                 }
                             }
-
+                            //#########################################
                             if (AllLines[i].Contains("[Table"))
                             {
                                 if (AllLines[i] != CurrentParam)
                                 {
                                     CurrentParam = AllLines[i];
 
-                                    AllTableName.Add(AllLines[i + 2].Split('=')[1]);
-                                    AllTableLocations.Add(AllLines[i + 5].Split('=')[1]);
-                                    AllColCount.Add(int.Parse(AllLines[i + 10].Split('=')[1]));
+                                    bool DoneThisParameter = false;
+                                    try
+                                    {
+                                        string ParamNamee = AllLines[i + 2].Split('=')[1];
+                                        for (int i2 = 0; i2 < AllTableName.Count; i2++) if (AllTableName[i2] == ParamNamee) DoneThisParameter = true;
+                                    }
+                                    catch
+                                    {
+                                        DoneThisParameter = true;
+                                    }
 
-                                    if (AllLines[i + 18].Split('=')[1] == "1") AllRowCount.Add(1);
-                                    if (AllLines[i + 18].Split('=')[1] == "0") AllRowCount.Add(20); //#####
+                                    if (!DoneThisParameter)
+                                    {
+                                        //############################
+                                        AllTableName.Add("");
+                                        AllTableLocations.Add("");
+                                        AllColCount.Add(0);
+                                        AllRowCount.Add(0);
+                                        AllTableLocationsX.Add("");
+                                        AllTableLocationsY.Add("");
+                                        AllTableReadOnly.Add(false);
+                                        AllTableUntested.Add(false);
+                                        //############################
 
-                                    if (AllLines[i + 6].Split('=')[1] != "0x00000") AllTableLocationsX.Add(AllLines[i + 6].Split('=')[1]);
-                                    if (AllLines[i + 6].Split('=')[1] == "0x00000") AllTableLocationsX.Add("");
+                                        try
+                                        {
+                                            AllTableName[AllTableName.Count - 1] = AllLines[i + 2].Split('=')[1];
+                                            AllTableLocations[AllTableLocations.Count - 1] = AllLines[i + 5].Split('=')[1];
+                                            AllColCount[AllColCount.Count - 1] = int.Parse(AllLines[i + 10].Split('=')[1]);
 
-                                    if (AllLines[i + 7].Split('=')[1] != "0x00000") AllTableLocationsY.Add(AllLines[i + 7].Split('=')[1]);
-                                    if (AllLines[i + 7].Split('=')[1] == "0x00000") AllTableLocationsY.Add("");
+                                            if (AllLines[i + 18].Split('=')[1] == "1") AllRowCount[AllRowCount.Count - 1] = 1;
+                                            if (AllLines[i + 18].Split('=')[1] == "0") AllRowCount[AllRowCount.Count - 1] = 20; //#####
 
-                                    if (AllLines[i + 15].Split('=')[1] == "0") AllTableReadOnly.Add(false);
-                                    if (AllLines[i + 15].Split('=')[1] == "1") AllTableReadOnly.Add(true);
+                                            if (AllLines[i + 6].Split('=')[1] != "0x00000") AllTableLocationsX[AllTableLocationsX.Count - 1] = AllLines[i + 6].Split('=')[1];
+                                            if (AllLines[i + 6].Split('=')[1] == "0x00000") AllTableLocationsX[AllTableLocationsX.Count - 1] = "";
 
-                                    if (AllLines[i + 16].Split('=')[1] == "0") AllTableUntested.Add(false);
-                                    if (AllLines[i + 16].Split('=')[1] == "1") AllTableUntested.Add(true);
+                                            if (AllLines[i + 7].Split('=')[1] != "0x00000") AllTableLocationsY[AllTableLocationsY.Count - 1] = AllLines[i + 7].Split('=')[1];
+                                            if (AllLines[i + 7].Split('=')[1] == "0x00000") AllTableLocationsY[AllTableLocationsY.Count - 1] = "";
+
+                                            if (AllLines[i + 15].Split('=')[1] == "0") AllTableReadOnly[AllTableReadOnly.Count - 1] = false;
+                                            if (AllLines[i + 15].Split('=')[1] == "1") AllTableReadOnly[AllTableReadOnly.Count - 1] = true;
+
+                                            if (AllLines[i + 16].Split('=')[1] == "0") AllTableUntested[AllTableUntested.Count - 1] = false;
+                                            if (AllLines[i + 16].Split('=')[1] == "1") AllTableUntested[AllTableUntested.Count - 1] = true;
+
+                                            //Check for issues
+                                            bool IssueEncountered = false;
+                                            if (!AllTableLocations[AllTableLocations.Count - 1].Contains("0x")) IssueEncountered = true;
+                                            if (AllTableLocations[AllTableLocations.Count - 1] == "0") IssueEncountered = true;
+                                            if (AllTableName[AllTableName.Count - 1].Contains("0x")) IssueEncountered = true;
+
+                                            if (IssueEncountered)
+                                            {
+                                                AllParamName.RemoveAt(AllParamName.Count - 1);
+                                                AllParamLocations.RemoveAt(AllParamLocations.Count - 1);
+                                                AllParamReadOnly.RemoveAt(AllParamReadOnly.Count - 1);
+                                                AllParamUntested.RemoveAt(AllParamUntested.Count - 1);
+                                            }
+                                        }
+                                        catch
+                                        {
+                                            //issue extracing parameters, remove from list to avoid issue creating definition
+                                            AllTableName.RemoveAt(AllTableName.Count - 1);
+                                            AllTableLocations.RemoveAt(AllTableLocations.Count - 1);
+                                            AllColCount.RemoveAt(AllColCount.Count - 1);
+                                            AllRowCount.RemoveAt(AllRowCount.Count - 1);
+                                            AllTableLocationsX.RemoveAt(AllTableLocationsX.Count - 1);
+                                            AllTableLocationsY.RemoveAt(AllTableLocationsY.Count - 1);
+                                            AllTableReadOnly.RemoveAt(AllTableReadOnly.Count - 1);
+                                            AllTableUntested.RemoveAt(AllTableUntested.Count - 1);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -579,7 +725,15 @@ public class Class_DefinitionMaker
                         }
                     }
 
-                    string SavingStr = "";
+                    //Check Counts
+                    GForm_Main_0.method_1("Parameters existing in FPM: " + ParamCount);
+                    GForm_Main_0.method_1("Parameters extracted: " + AllParamName.Count);
+                    GForm_Main_0.method_1("Tables existing in FPM: " + TableCount);
+                    GForm_Main_0.method_1("Tables extracted: " + AllTableName.Count);
+
+
+                    //string SavingStr = GenerateNewHeader(ThisECUName);
+                    string SavingStr = GenerateNewHeader("", AllEcuCompatible);
                     for (int i = 0; i < AllParamName.Count; i++)
                     {
                         SavingStr = SavingStr + "ROMLocationTable:" + AllParamLocations[i] + Environment.NewLine;
@@ -589,7 +743,7 @@ public class Class_DefinitionMaker
                         SavingStr = SavingStr + "IsNotDefined:true" + Environment.NewLine;
                         if (AllParamReadOnly[i]) SavingStr = SavingStr + "IsReadOnly:true" + Environment.NewLine;
                         if (AllParamUntested[i]) SavingStr = SavingStr + "IsUntested:true" + Environment.NewLine;
-                        if (i < AllParamName.Count - 2) SavingStr = SavingStr + "#############################" + Environment.NewLine;
+                        if (i < AllParamName.Count - 1) SavingStr = SavingStr + "#############################" + Environment.NewLine;
                     }
 
                     SavingStr = SavingStr + "#############################################################" + Environment.NewLine;
@@ -623,8 +777,20 @@ public class Class_DefinitionMaker
     // REQUIRED CONSTS
     const int PROCESS_QUERY_INFORMATION = 0x0400;
     const int MEM_COMMIT = 0x00001000;
-    const int PAGE_READWRITE = 0x04;
+    //const int PAGE_READWRITE = 0x04;
     const int PROCESS_WM_READ = 0x0010;
+
+    const int PAGE_EXECUTE = 0x10;
+    const int PAGE_EXECUTE_READ = 0x20;
+    const int PAGE_EXECUTE_READWRITE = 0x40;
+    const int PAGE_EXECUTE_WRITECOPY = 0x80;
+    const int PAGE_NOACCESS = 0x01;
+    const int PAGE_READONLY = 0x02;
+    const int PAGE_READWRITE = 0x04;
+    const int PAGE_WRITECOPY = 0x08;
+    const int PAGE_GUARD = 0x100;
+    const int PAGE_NOCACHE = 0x200;
+    const int PAGE_WRITECOMBINE = 0x400;
 
     // REQUIRED METHODS
     [DllImport("kernel32.dll")]
@@ -740,13 +906,17 @@ public class Class_DefinitionMaker
                 //RemovePastDump();
                 string ReloadDump = "";
 
+                Console.WriteLine("memsize: " + sys_info.maximumApplicationAddress.ToString("X"));
+
                 while (!Done)
                 {
-                    int Percent = (int)(((CurrentIndex - 4000000) * 100) / (Int64.Parse(sys_info.maximumApplicationAddress.ToString()) - 1));
+                    //int Percent = (int)(((CurrentIndex - 4000000) * 100) / (Int64.Parse(sys_info.maximumApplicationAddress.ToString()) - 1));
+                    int Percent = (int)(((CurrentIndex) * 100) / (Int64.Parse(sys_info.maximumApplicationAddress.ToString()) - 1));
                     //Console.Write("\nSEARCH #" + SearchID + " " + Percent + "%");
                     GForm_Main_0.method_4(Percent);
 
                     if ((CurrentIndex + BlockSizeExtracted) > Int64.Parse(sys_info.maximumApplicationAddress.ToString()))
+                    //if ((CurrentIndex + BlockSizeExtracted) > 0xFEFFFFFF)
                     {
                         Done = true;
                     }
@@ -783,6 +953,16 @@ public class Class_DefinitionMaker
                                 GForm_Main_0.method_1("Extracted Definitions file created: " + SaveDefPath);
                                 File.Create(SaveDefPath).Dispose();
                                 File.WriteAllText(SaveDefPath, DumpedDefinition);
+
+                                //< 0x20 > 0x7E
+                                /*byte[] AllFileBytes = File.ReadAllBytes(SaveDefPath);
+                                string SavingString = "";
+                                for (int i = 0; i < AllFileBytes.Length; i++)
+                                {
+                                    if (AllFileBytes[i] >= 0x20 && AllFileBytes[i] <= 0x7E) SavingString += ((char)AllFileBytes[i]).ToString();
+                                    if (AllFileBytes[i] == 0x0D && AllFileBytes[i + 1] == 0x0A) SavingString += Environment.NewLine;
+                                }
+                                File.WriteAllText(SaveDefPath, SavingString);*/
                             }
                         }
                         if (ExtractMode == "Bin")
@@ -862,11 +1042,14 @@ public class Class_DefinitionMaker
         {
             VirtualQueryEx(processHandle, proc_min_address, out mem_basic_info, 28);
 
-            if (mem_basic_info.Protect == PAGE_READWRITE && mem_basic_info.State == MEM_COMMIT)
+            if ((mem_basic_info.Protect == PAGE_READWRITE && mem_basic_info.State == MEM_COMMIT) || mem_basic_info.Protect == PAGE_WRITECOPY)
             {
                 byte[] buffer = new byte[mem_basic_info.RegionSize];
 
                 ReadProcessMemory((int)processHandle, mem_basic_info.BaseAddress, buffer, mem_basic_info.RegionSize, ref bytesRead);
+
+                //Console.WriteLine("adrr: " + mem_basic_info.BaseAddress.ToString("X"));
+                //Console.WriteLine("size: " + mem_basic_info.RegionSize.ToString("X"));
 
                 for (int i = 0; i < mem_basic_info.RegionSize; i++)
                 {
@@ -881,6 +1064,21 @@ public class Class_DefinitionMaker
 
         //sw.Close();
         sw2.Close();
+
+        if (ExtractMode == "Definition")
+        {
+            byte[] AllBytes = File.ReadAllBytes(ThisEndPath + "DumpHex" + ExtractedBlockDone);
+            List<byte> AllBytesList = new List<byte>();
+            for (int i = 0; i < AllBytes.Length; i++)
+            {
+                if (AllBytes[i] >= 0x20 && AllBytes[i] <= 0x7E) AllBytesList.Add(AllBytes[i]);
+                if (AllBytes[i] == 0x0D || AllBytes[i] == 0x0A) AllBytesList.Add(AllBytes[i]);
+            }
+            AllBytes = new byte[AllBytesList.Count];
+            for (int i = 0; i < AllBytesList.Count; i++) AllBytes[i] = AllBytesList[i];
+
+            File.WriteAllBytes(ThisEndPath + "DumpHex" + ExtractedBlockDone, AllBytes);
+        }
 
         if (ExtractMode == "Bin")
         {

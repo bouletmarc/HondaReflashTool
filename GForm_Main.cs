@@ -1055,19 +1055,6 @@ public class GForm_Main : DarkForm
         }
     }
 
-    public byte GetNegativeChecksumFullBin(byte[] byte_1)
-    {
-        byte b = 0;
-        for (int i = 0; i < byte_1.Length; i++)
-        {
-            if (i != 0x8400)
-            {
-                b -= byte_1[i];
-            }
-        }
-        return b;
-    }
-
     public byte GetNegativeChecksumArea(byte[] byte_1, int Start, int ChecksumLocation)
     {
         byte b = 0;
@@ -1084,28 +1071,15 @@ public class GForm_Main : DarkForm
     public byte[] VerifyChecksumFullBin(byte[] BinFileBytes)
     {
         //###############################
-        //Get Checksum and Fix it for 0x8400
+        //Get Checksum and Fix it
         byte[] BufferBytes = BinFileBytes;
-        int CheckLocation = 0x8400;
+        int CheckLocation = 0;
+        if (BufferBytes.Length - 1 == 0xFFFFF) CheckLocation = 0x8400;      //1mb-full
+        if (BufferBytes.Length - 1 == 0x1FFFFF) CheckLocation = 0x10012;    //2mb-full
+        if (BufferBytes.Length - 1 == 0x27FFFF) CheckLocation = 0x2003E6;   //4mb-full       //0x3FFFFF
+
         byte num = BufferBytes[CheckLocation];
         byte num2 = GetNegativeChecksumArea(BufferBytes, 0, CheckLocation);
-        //byte num2 = this.GetNegativeChecksumFullBin(BufferBytes);
-        if (num != num2)
-        {
-            this.method_1("Checksum miss match.");
-            BufferBytes[0x8400] = num2;
-            this.method_1("Checksum fixed at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
-        }
-        else
-        {
-            this.method_1("Checksum are good at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
-        }
-        //########################################################
-        //########################################################
-        //Verify for 0x10400
-        /*CheckLocation = 0x10400;
-        num = BufferBytes[CheckLocation];
-        num2 = GetNegativeChecksumArea(BufferBytes, 0x8000, CheckLocation);
         if (num != num2)
         {
             this.method_1("Checksum miss match.");
@@ -1115,52 +1089,35 @@ public class GForm_Main : DarkForm
         else
         {
             this.method_1("Checksum are good at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
-        }*/
-        //########################################################
-        //########################################################
+        }
         return BufferBytes;
     }
 
     public byte[] VerifyChecksumFWBin(byte[] FWFileBytes)
     {
         //###############################
-        //Get Checksum and Fix it at 0x400 (0x8400 in full bin)
+        //Get Checksum and Fix it
         byte[] BufferBytes = FWFileBytes;
+        int CheckLocation = 0;
+        if (BufferBytes.Length - 1 == 0xF7FFF) CheckLocation = 0x400;       //1mb-fw  -> 0x8400 in full bin but we dont have the bootloader 0x0000 to 0x8000
+        if (BufferBytes.Length - 1 == 0x1EFFFF) CheckLocation = 0x12;       //2mb-fw
+        if (BufferBytes.Length - 1 == 0x26FFFF) CheckLocation = 0x1F03E6;   //4mb-fw
 
         byte num = Class_RWD.BootloaderSum;
-        byte num2 = Class_RWD.GetNegativeChecksumFWBin(BufferBytes);
+        byte num2 = Class_RWD.GetNegativeChecksumFWBin(BufferBytes, CheckLocation);
         byte ThisSum = num;
         ThisSum -= num2;
-        int CheckLocation = 0x400;
         byte chk = BufferBytes[CheckLocation];
         if (chk != ThisSum)
         {
             this.method_1("Checksum miss match.");
-            BufferBytes[0x400] = ThisSum;
+            BufferBytes[CheckLocation] = ThisSum;
             this.method_1("Checksum fixed at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
         }
         else 
         {
             GForm_Main_0.method_1("checksum good at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
         }
-        //########################################################
-        //########################################################
-        //Verify for 0x8400 (0x10400 in full bin)
-        /*CheckLocation = 0x8400;
-        num = BufferBytes[CheckLocation];
-        num2 = GetNegativeChecksumArea(BufferBytes, 0, CheckLocation);
-        if (num != num2)
-        {
-            this.method_1("Checksum miss match.");
-            BufferBytes[CheckLocation] = num2;
-            this.method_1("Checksum fixed at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
-        }
-        else
-        {
-            this.method_1("Checksum are good at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
-        }*/
-        //########################################################
-        //########################################################
         return BufferBytes;
     }
 
