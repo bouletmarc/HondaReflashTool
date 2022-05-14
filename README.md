@@ -35,14 +35,20 @@ Firmware files update (.rwd|.gz) are only partial and encrypted ROM file. This i
 | :white_check_mark: | Read ECU rom |
 | :white_check_mark: | Write/Flash ECU binary (.bin) rom file |
 | :white_check_mark: | Write/Flash ECU firmware (.rwd) file |
+| :white_large_square: | Checksum Verification for 512Kb (.bin) file (SH7055) |
 | :white_check_mark: | Checksum Verification for 1Mb (.bin) file (SH07058) |
-| :white_large_square: | Checksum Verification for 2Mb (.bin) file (SH72531) |
+| :white_large_square: | Checksum Verification for 1.5Mb (.bin) file (SH7059) |
+| :white_check_mark: | Checksum Verification for 2Mb (.bin) file (SH72531/MPC5554) **TO CONFIRM** |
+| :white_check_mark: | Checksum Verification for 4Mb (.bin) file (MED17.9.3/TC179X) **TO CONFIRM** |
 | :white_check_mark: | Seed/Key ECU Unlock Algorithms(0x27,0x01) -> All ECUS?? |
 | :exclamation: | Seed/Key ECU Unlock Algorithms(0x27,0x41) -> ONLY Specified ECUS (see compatible list below) |
-| :white_check_mark: | RWD firmware file X-RAY/Decryptor to binary file (.bin) |
-| :white_check_mark: | Binary file (.bin) to RWD firmware file builder |
+| :white_check_mark: | RWD firmware file X-RAY/Decryptor to binary file (.bin) for 0x5A files |
+| :white_large_square: | RWD firmware file X-RAY/Decryptor to binary file (.bin) for 0x31 files **IN PROGRESS** |
+| :white_check_mark: | Binary file (.bin) to RWD firmware file builder for 0x5A files |
+| :white_large_square: | Binary file (.bin) to RWD firmware file builder for 0x31 files **IN PROGRESS** |
 | :white_check_mark: | OBD2 Scan Tools |
 | :white_check_mark: | Binary ROM Tables Editor (with Definitions) |
+| :white_large_square: | Immobilizer Tool **NOT YET IMPLEMENTED** |
 
 # Want to contribute your work to this project?
 
@@ -73,124 +79,4 @@ Common's J2534 adapters such as the GNA600, Mongoose, Tactrix Openport 2.0 (also
 | Honda Freed **(In Progress)** | 2011-2013 | 0x20 | 0x95, 0x58, 0x3E, 0x2C | 0xF3, 0x96, 0xB5, 0x6F |
 
 **Notes: Keys Bytes can be found directly in the ecu ROM.bin by searching for them!
-
-# Compatible ECU's (using unlock 0x27,0x41 button)
-
-| ECU Code | Car Model/Year(s) |
-|------|---------|
-| 37805-REX-X540 | CR-V (10) |
-| 37805-REZ-A570 | CR-V (10) |
-| 37805-RJE-A840 | RIDGELINE (06, 07, 08, 09, 10, 11, 12, 13) |
-| 37805-RJE-A960 | RIDGELINE (06, 07, 08, 09, 10, 11, 12, 13) |
-| 37805-RJE-K020 | RIDGELINE (06, 07, 08, 09, 10, 11, 12, 13) |
-| 37805-RJE-K720 | RIDGELINE (06, 07, 08, 09, 10, 11, 12, 13) |
-| 37805-RJE-X640 | RIDGELINE (06, 07, 08, 09, 10, 11, 12, 13) |
-| 37805-RJE-X730 | RIDGELINE (06, 07, 08, 09, 10, 11, 12, 13) |
-| 37805-RK8-N520 | FREED (11, 13) **(IN PROGRESS)** |
-| 37805-RK8-N740 | FREED (11, 13) **(IN PROGRESS)** |
-| 37805-RK8-N840 | FREED (11, 13) **(IN PROGRESS)** |
-| 37805-RMX-3250 | Civic + Civic IMA (06, 07, 08, 09) |
-| 37805-RMX-5070 | Civic + Civic IMA (06, 07, 08, 09) |
-| 37805-RMX-5150 | Civic + Civic IMA (06, 07, 08, 09) |
-| 37805-RMX-A060 | Civic + Civic IMA (06, 07, 08, 09) |
-| 37805-RMX-A130 | Civic + Civic IMA (06, 07, 08, 09) |
-| 37805-RMX-A630 | Civic + Civic IMA (06, 07, 08, 09) |
-| 37805-RMX-X050 | Civic + Civic IMA (06, 07, 08, 09) |
-| 37805-RMX-X550 | Civic + Civic IMA (06, 07, 08, 09) |
-| 37805-RNA-3260 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-3290 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-3450 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-3470 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-A150 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-A240 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-A340 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-A680 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-A740 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-A840 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-C130 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-C240 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-C340 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-C440 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-C640 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-C740 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-C840 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-C910 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-K080 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-K590 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-U720 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-U840 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-U950 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-Y030 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-Y330 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-Y530 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-Y720 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNA-Y830 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNB-X040 | Civic (06, 07, 09, 10) |
-| 37805-RNB-X120 | Civic (06, 07, 09, 10) |
-| 37805-RNB-X560 | Civic (06, 07, 09, 10) |
-| 37805-RNB-X620 | Civic (06, 07, 09, 10) |
-| 37805-RND-M030 | Civic (06, 07, 08, 09) |
-| 37805-RND-M530 | Civic (06, 07, 08, 09) |
-| 37805-RND-M620 | Civic (06, 07, 08, 09) |
-| 37805-RND-M720 | Civic (06, 07, 08, 09) |
-| 37805-RND-P030 | Civic (06, 07, 08, 09) |
-| 37805-RND-P540 | Civic (06, 07, 08, 09) |
-| 37805-RND-P740 | Civic (06, 07, 08, 09) |
-| 37805-RNE-A550 | Civic (06, 07, 08, 09, 10) |
-| 37805-RNF-U050 | Civic (06, 07, 09) |
-| 37805-RNF-U540 | Civic (06, 07, 09) |
-| 37805-RNF-U730 | Civic (06, 07, 09) |
-| 37805-RNT-U030 | Civic (07, 09) |
-| 37805-RNT-U520 | Civic (07, 09) |
-| 37805-RNV-B030 | Civic (07, 08, 09, 10) |
-| 37805-RNV-B530 | Civic (07, 08, 09, 10) |
-| 37805-RNV-B630 | Civic (07, 08, 09, 10) |
-| 37805-RNV-B730 | Civic (07, 08, 09, 10) |
-| 37805-RNV-M070 | Civic (07, 08, 09, 10) |
-| 37805-RNV-M560 | Civic (07, 08, 09, 10) |
-| 37805-RNV-M660 | Civic (07, 08, 09, 10) |
-| 37805-RNV-R020 | Civic (07, 08, 09, 10) |
-| 37805-RNV-R520 | Civic (07, 08, 09, 10) |
-| 37805-RNV-R620 | Civic (07, 08, 09, 10) |
-| 37805-RNV-R720 | Civic (07, 08, 09, 10) |
-| 37805-RNV-Z020 | Civic (07, 08, 09, 10) |
-| 37805-RNV-Z520 | Civic (07, 08, 09, 10) |
-| 37805-RNV-Z620 | Civic (07, 08, 09, 10) |
-| 37805-RNV-Z720 | Civic (07, 08, 09, 10) |
-| 37805-RNX-M020 | Civic (09) |
-| 37805-RNX-M520 | Civic (09) |
-| 37805-RNX-M620 | Civic (09) |
-| 37805-RRA-C040 | Civic (06, 07, 08, 09, 10) |
-| 37805-RRA-C540 | Civic (06, 07, 08, 09, 10) |
-| 37805-RRB-3150 | Civic (06, 07, 09) |
-| 37805-RRB-A090 | Civic (06, 07, 09) |
-| 37805-RRB-A140 | Civic (06, 07, 09) |
-| 37805-RRB-K020 | Civic (06, 07, 09) |
-| 37805-RRB-X120 | Civic (06, 07, 09) |
-| 37805-RRD-M220 | Civic (07, 09, 10) |
-| 37805-RRD-P120 | Civic (07, 09, 10) |
-| 37805-RRD20 | Civic (07, 09, 10) |
-| 37805-RRH-U020 | Civic (06, 09) |
-| 37805-RRH-U520 | Civic (06, 09) |
-| 37805-RRH-U620 | Civic (06, 09) |
-| 37805-RWC-A570 | RDX (07, 09, 10, 12) **(IN PROGRESS)** |
-| 37805-RWC-A620 | RDX (07, 09, 10, 12) **(IN PROGRESS)** |
-| 37805-RWC-A720 | RDX (07, 09, 10, 12) **(IN PROGRESS)** |
-| 37805-RWC-X560 | RDX (07, 09, 10, 12) **(IN PROGRESS)** |
-| 37805-RWC-X620 | RDX (07, 09, 10, 12) **(IN PROGRESS)** |
-| 37805-RZA-A570 | CR-V (07, 08, 09, 10) |
-| 37805-RZA-A770 | CR-V (07, 08, 09, 10) |
-| 37805-RZA-K130 | CR-V (07, 08, 09, 10) |
-| 37805-RZA-K230 | CR-V (07, 08, 09, 10) |
-| 37805-RZA-K320 | CR-V (07, 08, 09, 10) |
-| 37805-RZA-K520 | CR-V (07, 08, 09, 10) |
-| 37805-RZA-K620 | CR-V (07, 08, 09, 10) |
-| 37805-RZA-K720 | CR-V (07, 08, 09, 10) |
-| 37805-RZA-K930 | CR-V (07, 08, 09, 10) |
-| 37805-RZA-X630 | CR-V (07, 08, 09, 10) |
-| 37805-RZA-X830 | CR-V (07, 08, 09, 10) |
-| 37805-RZP-M020 | CR-V (07, 08, 10) |
-| 37805-RZP-M520 | CR-V (07, 08, 10) |
-| 37805-RZP-M720 | CR-V (07, 08, 10) |
-| 37805-RZP-M820 | CR-V (07, 08, 10) |
 
