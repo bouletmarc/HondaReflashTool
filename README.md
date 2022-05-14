@@ -36,7 +36,7 @@ Firmware files update (.rwd|.gz) are only partial and encrypted ROM file. This i
 | :white_check_mark: | Write/Flash ECU binary (.bin) rom file |
 | :white_check_mark: | Write/Flash ECU firmware (.rwd) file |
 | :white_large_square: | Checksum Verification for 512Kb (.bin) file (SH7055) |
-| :white_check_mark: | Checksum Verification for 1Mb (.bin) file (SH07058) |
+| :white_check_mark: | Checksum Verification for 1Mb (.bin) file (SH7058) |
 | :white_large_square: | Checksum Verification for 1.5Mb (.bin) file (SH7059) |
 | :white_check_mark: | Checksum Verification for 2Mb (.bin) file (SH72531/MPC5554) **TO CONFIRM** |
 | :white_check_mark: | Checksum Verification for 4Mb (.bin) file (MED17.9.3/TC179X) **TO CONFIRM** |
