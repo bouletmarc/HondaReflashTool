@@ -5,6 +5,11 @@
 #	List all supported ecus by this new definitions file
 #
 #
+##############################################################
+#	Checksum Address Location:
+##############################################################
+# ChecksumAddress:0xFFFFF  -> type the location address for the checksum routine
+#
 #
 ##############################################################
 #			GENERAL '3D' TABLE LAYOUT:
