@@ -7,6 +7,10 @@
 #######################################################################
 37805-RNA-A330
 #######################################################################
+# Checksum Address Location:
+#######################################################################
+ChecksumAddress:0x8400
+#######################################################################
 #######################################################################
 #######################################################################
 # ROM Parameters Definitions:
@@ -577,6 +581,8 @@ Name:Air temperature fuel compensation cranking
 TableSize:9x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x13142
+Unit1:IAT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x1322C
@@ -584,6 +590,8 @@ Name:Water temperature fuel compensation low
 TableSize:8x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x1325E
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x1323C
@@ -591,6 +599,8 @@ Name:Water temperature fuel compensation high
 TableSize:8x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x1326E
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x1324C
@@ -598,6 +608,8 @@ Name:Water temperature fuel compensation cranking
 TableSize:9x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x1327E
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x14B58
@@ -633,6 +645,8 @@ Name:Water temperature ignition compensation hot low
 TableSize:5x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x15198
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x1518E
@@ -640,6 +654,8 @@ Name:Water temperature ignition compensation hot high
 TableSize:5x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x15184
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x151CA
@@ -647,6 +663,8 @@ Name:Water temperature ignition compensation cold low
 TableSize:5x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x151C0
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x151B6
@@ -654,6 +672,8 @@ Name:Water temperature ignition compensation cold high
 TableSize:5x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x151AC
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x13A14
@@ -713,6 +733,8 @@ Name:Idle speed (normal)
 TableSize:8x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x0FEEC
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x0FEDC
@@ -720,6 +742,8 @@ Name:Idle speed (after start)
 TableSize:8x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x0FEFC
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x12908
@@ -784,6 +808,8 @@ Name:Ignition retard gear compensation
 TableSize:6x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x14660
+Unit1:Gear
 IsNotDefined:true
 #############################
 ROMLocationTable:0x1148E
@@ -791,6 +817,8 @@ Name:High speed throttle reduction
 TableSize:4x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x11486
+Unit1:Speed
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -799,6 +827,8 @@ Name:Overrun cutoff MAP low cam hys low
 TableSize:4x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x126D0
+Unit1:rpm
 IsNotDefined:true
 IsReadOnly:true
 IsUntested:true
@@ -808,6 +838,8 @@ Name:Overrun cutoff MAP high cam hys low
 TableSize:4x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x126C0
+Unit1:rpm
 IsNotDefined:true
 IsReadOnly:true
 IsUntested:true
@@ -817,6 +849,8 @@ Name:Overrun cutoff MAP low cam hys high
 TableSize:4x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x126B0
+Unit1:rpm
 IsNotDefined:true
 IsReadOnly:true
 IsUntested:true
@@ -826,6 +860,8 @@ Name:Overrun cutoff MAP high cam hys high
 TableSize:4x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x126A0
+Unit1:rpm
 IsNotDefined:true
 IsReadOnly:true
 IsUntested:true
@@ -835,6 +871,8 @@ Name:Ignition retard rpm compensation
 TableSize:5x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x14644
+Unit1:Rpm
 IsNotDefined:true
 #############################
 ROMLocationTable:0x14606
@@ -842,6 +880,8 @@ Name:Ignition retard throttle compensation
 TableSize:4x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x14658
+Unit1:Throttle
 IsNotDefined:true
 #############################
 ROMLocationTable:0x128D8
@@ -856,6 +896,8 @@ Name:Tip in fuel throttle compensation
 TableSize:3x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x128DE
+Unit1:Throttle
 IsNotDefined:true
 #############################
 ROMLocationTable:0x0FFC8
@@ -935,6 +977,8 @@ Name:Closed loop target lambda low load
 TableSize:8x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x12AE4
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x12B14
@@ -942,6 +986,8 @@ Name:Closed loop target lambda high load
 TableSize:8x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x12B04
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x12B34
@@ -949,6 +995,8 @@ Name:Closed loop target lambda limit
 TableSize:8x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x12B24
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x151E6
@@ -978,6 +1026,8 @@ Name:R18 VTEC table
 TableSize:6x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x10EF0
+Unit1:Rpm
 IsNotDefined:true
 IsUntested:true
 #############################
