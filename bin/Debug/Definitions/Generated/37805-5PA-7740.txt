@@ -10,6 +10,10 @@
 37805-5PA-7640
 37805-5PA-6640
 #######################################################################
+# Checksum Address Location:
+#######################################################################
+ChecksumAddress:0x2003DE
+#######################################################################
 #######################################################################
 #######################################################################
 # ROM Parameters Definitions:
@@ -278,6 +282,8 @@ Name:Closed loop target lambda limit
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8023B164
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8023B1B2
@@ -285,6 +291,8 @@ Name:Closed loop target lambda high load
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8023B174
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8023B1C2
@@ -292,6 +300,8 @@ Name:Closed loop target lambda low load
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8023B184
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8023C47A
@@ -299,6 +309,8 @@ Name:Air temperature fuel compensation cranking
 TableSize:9x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8023C468
+Unit1:IAT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8023D248
@@ -356,6 +368,8 @@ Name:Water temperature ignition compensation hot high
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80248828
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80248846
@@ -363,6 +377,8 @@ Name:Water temperature ignition compensation hot low
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8024883C
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8024885A
@@ -370,6 +386,8 @@ Name:Water temperature ignition compensation cold high
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80248850
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8024886E
@@ -377,6 +395,8 @@ Name:Water temperature ignition compensation cold low
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80248864
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x802191B0
@@ -384,6 +404,8 @@ Name:Idle speed (normal)
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80219200
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x802191C0
@@ -391,6 +413,8 @@ Name:Idle speed (after start)
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80219210
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80230D72
@@ -398,6 +422,8 @@ Name:TC max boost(IAT2)
 TableSize:16x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80232AEC
+Unit1:IAT
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -422,6 +448,8 @@ Name:TC max boost(IAT)
 TableSize:5x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80237BC2
+Unit1:IAT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8023CF28
@@ -452,6 +480,8 @@ Name:TC boost command
 TableSize:20x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8024F89E
+Unit1:MAP
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80250020
@@ -495,6 +525,8 @@ Name:Boost pressure reverse lookup
 TableSize:20x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8024B68E
+Unit1:MAP
 IsNotDefined:true
 IsUntested:true
 #############################

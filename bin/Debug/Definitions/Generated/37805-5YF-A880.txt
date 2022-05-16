@@ -6,6 +6,13 @@
 # Supported ECU:
 #######################################################################
 37805-5YF-A880
+37805-5YF-A580
+37805-5YF-A780
+37805-5YF-A680
+#######################################################################
+# Checksum Address Location:
+#######################################################################
+ChecksumAddress:0x1FFFFA
 #######################################################################
 #######################################################################
 #######################################################################
@@ -90,49 +97,78 @@ TableSize:1x1
 IsSingleByteTable:true
 IsNotDefined:true
 #############################
-ROMLocationTable:0x80271F9E
-Name:Secondary oxygen sensor enabled
+ROMLocationTable:0x8021322A
+Name:Speed limiter rpm
 TableSize:1x1
 IsSingleByteTable:true
 IsNotDefined:true
 #############################
-ROMLocationTable:0x80271FAD
-Name:Use MAP to determine WOT
-TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-#############################
-ROMLocationTable:0x802123F8
-Name:Initial knock control multiplier
+ROMLocationTable:0x80213242
+Name:Maximum MAP voltage
 TableSize:1x1
 IsSingleByteTable:true
 IsNotDefined:true
 IsUntested:true
 #############################
-ROMLocationTable:0x802126C0
-Name:High speed throttle reduction speed
+ROMLocationTable:0x802132C4
+Name:Speed limiter speed
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x8021366C
+Name:Launch rpm disengage speed
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+IsReadOnly:true
+IsUntested:true
+#############################
+ROMLocationTable:0x802136C6
+Name:Launch rpm
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+IsReadOnly:true
+IsUntested:true
+#############################
+ROMLocationTable:0x802136D2
+Name:Launch recover rpm
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+IsReadOnly:true
+IsUntested:true
+#############################
+ROMLocationTable:0x80271E5D
+Name:AFM enabled
 TableSize:1x1
 IsSingleByteTable:true
 IsNotDefined:true
 IsUntested:true
 #############################
-ROMLocationTable:0x80271E32
-Name:Under boost error (P0299)
+ROMLocationTable:0x80271E5E
+Name:EPS enabled
 TableSize:1x1
 IsSingleByteTable:true
 IsNotDefined:true
+IsReadOnly:true
+IsUntested:true
 #############################
-ROMLocationTable:0x801E7E8D
-Name:Sport mode boost (Hondata mode) enabled
+ROMLocationTable:0x80271E61
+Name:Knock sensor enabled
 TableSize:1x1
 IsSingleByteTable:true
 IsNotDefined:true
+IsReadOnly:true
+IsUntested:true
 #############################
-ROMLocationTable:0x801E7E92
-Name:Ethanol input enabled
+ROMLocationTable:0x80271E66
+Name:Forced induction enabled
 TableSize:1x1
 IsSingleByteTable:true
 IsNotDefined:true
+IsUntested:true
 #############################
 ROMLocationTable:0x80271E67
 Name:Second ECT sensor enabled
@@ -206,8 +242,53 @@ Name:Immobilizer enabled
 TableSize:1x1
 IsSingleByteTable:true
 IsNotDefined:true
+#############################
 ROMLocationTable:0x80271F9D
 Name:Primary oxygen sensor enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x80271F9E
+Name:Secondary oxygen sensor enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x80271FAD
+Name:Use MAP to determine WOT
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x802123F8
+Name:Initial knock control multiplier
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+IsUntested:true
+#############################
+ROMLocationTable:0x802126C0
+Name:High speed throttle reduction speed
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+IsUntested:true
+#############################
+ROMLocationTable:0x80271E32
+Name:Under boost error (P0299)
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x801E7E8D
+Name:Sport mode boost (Hondata mode) enabled
+TableSize:1x1
+IsSingleByteTable:true
+IsNotDefined:true
+#############################
+ROMLocationTable:0x801E7E92
+Name:Ethanol input enabled
 TableSize:1x1
 IsSingleByteTable:true
 IsNotDefined:true
@@ -226,6 +307,8 @@ Name:Overrun cutoff MAP low cam (recover)
 TableSize:4x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80213FF4
+Unit1:Rpm
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80214014
@@ -233,6 +316,8 @@ Name:Overrun cutoff MAP high cam (cut)
 TableSize:4x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80213FEC
+Unit1:Rpm
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8021401C
@@ -240,6 +325,8 @@ Name:Overrun cutoff MAP high cam (recover)
 TableSize:4x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80213FE4
+Unit1:Rpm
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80216942
@@ -247,6 +334,8 @@ Name:Closed loop target lambda limit
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80216912
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80216952
@@ -254,6 +343,8 @@ Name:Closed loop target lambda high load
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80216922
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80216962
@@ -261,6 +352,8 @@ Name:Closed loop target lambda low load
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80216932
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x802172C0
@@ -268,6 +361,8 @@ Name:Air temperature fuel compensation cranking
 TableSize:9x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x802172AE
+Unit1:IAT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80214056
@@ -275,6 +370,8 @@ Name:Water temperature ignition compensation hot low
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80214EC0
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80214060
@@ -282,6 +379,8 @@ Name:Water temperature ignition compensation cold low
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80214ED4
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x802143D0
@@ -296,6 +395,8 @@ Name:Overrun injector restart rpm (cut)
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80214416
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x802143F8
@@ -303,6 +404,8 @@ Name:Overrun injector restart rpm (recover)
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80214420
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80214E84
@@ -310,6 +413,8 @@ Name:Water temperature ignition compensation hot high
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80214EB6
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80214E8E
@@ -317,6 +422,8 @@ Name:Water temperature ignition compensation cold high
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80214ECA
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80215E72
@@ -324,6 +431,8 @@ Name:Idle speed (normal)
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80215EC2
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80215E82
@@ -331,6 +440,8 @@ Name:Idle speed (after start)
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80215ED2
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80215436
@@ -353,6 +464,8 @@ Name:TC max boost(IAT2)
 TableSize:16x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8021B5F4
+Unit1:RPM
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80270858
@@ -376,6 +489,8 @@ Name:Torque limit
 TableSize:20x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8021C094
+Unit1:RPM
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8021EEFE
@@ -503,6 +618,8 @@ Name:Boost pressure reverse lookup
 TableSize:20x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8021C0BC
+Unit1:MAP
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -518,6 +635,8 @@ Name:Turbine overspeed avoidance upper limit
 TableSize:8x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8021B61C
+Unit1:RPM
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -526,6 +645,8 @@ Name:Ethanol percentage
 TableSize:2x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x801E7F5C
+Unit1:Ethanol %
 IsNotDefined:true
 #############################
 ROMLocationTable:0x801E7F68

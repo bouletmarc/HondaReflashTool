@@ -15,6 +15,10 @@
 37805-5AA-K660
 37805-5AA-K760
 #######################################################################
+# Checksum Address Location:
+#######################################################################
+ChecksumAddress:0x2003E2
+#######################################################################
 #######################################################################
 #######################################################################
 # ROM Parameters Definitions:
@@ -604,6 +608,8 @@ Name:Cranking (seq mode) fuel direct ratio
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8022D356
+Unit1:ECT
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -628,6 +634,8 @@ Name:Cranking (seq mode) wall deposit ratio
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8022D44E
+Unit1:ECT
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -636,6 +644,8 @@ Name:Overrun cutoff MAP high cam (recover)
 TableSize:4x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8022D756
+Unit1:Rpm
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -644,6 +654,8 @@ Name:Overrun cutoff MAP high cam (cut)
 TableSize:4x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8022D766
+Unit1:Rpm
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -684,6 +696,8 @@ Name:Closed loop target lambda limit
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x802310BC
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8023110A
@@ -691,6 +705,8 @@ Name:Closed loop target lambda high load
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x802310CC
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8023111A
@@ -698,6 +714,8 @@ Name:Closed loop target lambda low load
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x802310DC
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8023290E
@@ -705,6 +723,8 @@ Name:Air temperature fuel compensation cranking
 TableSize:9x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x802328FC
+Unit1:IAT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8023C8DC
@@ -756,6 +776,8 @@ Name:Idle speed (normal)
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80210648
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80210608
@@ -763,6 +785,8 @@ Name:Idle speed (after start)
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80210658
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x802115C2
@@ -777,6 +801,8 @@ Name:Overrun injector restart rpm (cut)
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8022D7CE
+Unit1:ECT
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -785,6 +811,8 @@ Name:Overrun injector restart rpm (recover)
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8022D7D8
+Unit1:ECT
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -827,6 +855,8 @@ Name:Torque limit
 TableSize:20x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80244362
+Unit1:RPM
 IsNotDefined:true
 #############################
 ROMLocationTable:0x802113AC
@@ -858,6 +888,8 @@ Name:TC max boost(IAT)
 TableSize:5x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8022DAFC
+Unit1:RPM
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8023B0C6
@@ -948,6 +980,8 @@ Name:TC max boost(PA)
 TableSize:5x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8022DB10
+Unit1:PA
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80227C4A
@@ -955,6 +989,8 @@ Name:TC max boost(EGT)
 TableSize:16x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x802297EA
+Unit1:RPM
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -1022,6 +1058,8 @@ Name:Basic drving force
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80253C68
+Unit1:RPM
 IsNotDefined:true
 IsReadOnly:true
 IsUntested:true
@@ -1031,6 +1069,8 @@ Name:Cat protect upper air limit
 TableSize:10x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8024422C
+Unit1:RPM
 IsNotDefined:true
 IsReadOnly:true
 IsUntested:true
@@ -1066,6 +1106,8 @@ Name:Boost pressure reverse lookup
 TableSize:20x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8023F7D2
+Unit1:MAP
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -1081,6 +1123,8 @@ Name:Boost by gear limit
 TableSize:6x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x801F82DC
+Unit1:Gear
 IsNotDefined:true
 #############################
 ROMLocationTable:0x801F82A0
@@ -1095,6 +1139,8 @@ Name:Ethanol percentage
 TableSize:2x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x801F835C
+Unit1:Ethanol %
 IsNotDefined:true
 #############################
 ROMLocationTable:0x801F8368
@@ -1137,6 +1183,8 @@ Name:Driving force 10
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80253B00
+Unit1:Speed
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -1145,6 +1193,8 @@ Name:Driving force 1
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80253AD8
+Unit1:Speed
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -1153,6 +1203,8 @@ Name:Driving force 2
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80253B28
+Unit1:Speed
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -1161,6 +1213,8 @@ Name:Driving force 3
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80253B50
+Unit1:Speed
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -1169,6 +1223,8 @@ Name:Driving force 4
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80253B78
+Unit1:Speed
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -1177,6 +1233,8 @@ Name:Driving force 5
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80253BA0
+Unit1:Speed
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -1185,6 +1243,8 @@ Name:Driving force 6
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80253BC8
+Unit1:Speed
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -1193,6 +1253,8 @@ Name:Driving force 7
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80253BF0
+Unit1:Speed
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -1201,6 +1263,8 @@ Name:Driving force 8
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80253C18
+Unit1:Speed
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -1209,6 +1273,8 @@ Name:Driving force 9
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80253C40
+Unit1:Speed
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -1247,6 +1313,8 @@ Name:CAIN angle map
 TableSize:20x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8024C0B8
+Unit1:RPM
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -1255,6 +1323,8 @@ Name:CAEX angle map
 TableSize:20x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80250F10
+Unit1:RPM
 IsNotDefined:true
 IsUntested:true
 #############################

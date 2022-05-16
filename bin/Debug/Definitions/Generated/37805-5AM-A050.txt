@@ -8,6 +8,10 @@
 37805-5AM-A050
 37805-5AM-C050
 #######################################################################
+# Checksum Address Location:
+#######################################################################
+ChecksumAddress:0x2003E6
+#######################################################################
 #######################################################################
 #######################################################################
 # ROM Parameters Definitions:
@@ -799,43 +803,11 @@ IsSingleByteTable:true
 IsNotDefined:true
 IsUntested:true
 #############################
-ROMLocationTable:0xFF462
-Name:VTC WOT table enabled
+ROMLocationTable:0x80240D80
+Name:Fuel pressure abnormality detection time
 TableSize:1x1
 IsSingleByteTable:true
 IsNotDefined:true
-IsUntested:true
-#############################
-ROMLocationTable:0x1620BE
-Name:Minimum pressure for speed/density
-TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-#############################
-ROMLocationTable:0x163A18
-Name:Launch min rpm for ign retard and fuel enrichment
-TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-#############################
-ROMLocationTable:0x163A1A
-Name:Launch rpm ign retard
-TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-#############################
-ROMLocationTable:0x163A1C
-Name:Launch rpm additional fuel
-TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-#############################
-ROMLocationTable:0x42DB2
-Name:Final drive ratio
-TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsReadOnly:true
 IsUntested:true
 #############################################################
 #############################################################
@@ -852,6 +824,8 @@ Name:Overrun cutoff MAP high cam (recover)
 TableSize:4x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8022EA46
+Unit1:Rpm
 IsNotDefined:true
 IsReadOnly:true
 IsUntested:true
@@ -861,6 +835,8 @@ Name:Overrun cutoff MAP high cam (cut)
 TableSize:4x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8022EA56
+Unit1:Rpm
 IsNotDefined:true
 IsReadOnly:true
 IsUntested:true
@@ -900,6 +876,8 @@ Name:Closed loop target lambda limit
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x802323B4
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80232402
@@ -907,6 +885,8 @@ Name:Closed loop target lambda high load
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x802323C4
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80232412
@@ -914,6 +894,8 @@ Name:Closed loop target lambda low load
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x802323D4
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x802336CA
@@ -921,6 +903,8 @@ Name:Air temperature fuel compensation cranking
 TableSize:9x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x802336B8
+Unit1:IAT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80234308
@@ -978,6 +962,8 @@ Name:Water temperature ignition compensation hot high
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8023ED20
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8023ED3E
@@ -985,6 +971,8 @@ Name:Water temperature ignition compensation hot low
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8023ED34
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8023ED52
@@ -992,6 +980,8 @@ Name:Water temperature ignition compensation cold high
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8023ED48
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8023ED66
@@ -999,6 +989,8 @@ Name:Water temperature ignition compensation cold low
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8023ED5C
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8020ED0E
@@ -1014,6 +1006,8 @@ Name:Idle speed (normal)
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8021068C
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8021064C
@@ -1021,6 +1015,8 @@ Name:Idle speed (after start)
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8021069C
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80210FDC
@@ -1037,6 +1033,8 @@ Name:TC max boost(IAT2)
 TableSize:16x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80229DBA
+Unit1:PA
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8022957A
@@ -1096,6 +1094,8 @@ Name:Overrun injector restart rpm (cut)
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8022EABE
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8022EAB0
@@ -1103,6 +1103,8 @@ Name:Overrun injector restart rpm (recover)
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8022EAC8
+Unit1:ECT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8022ECC8
@@ -1110,6 +1112,8 @@ Name:TC max boost(PA)
 TableSize:5x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8022EE08
+Unit1:PA
 IsNotDefined:true
 #############################
 ROMLocationTable:0x8022ED90
@@ -1118,6 +1122,8 @@ Name:TC max boost(IAT)
 TableSize:5x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8022EE12
+Unit1:IAT
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80233FE8
@@ -1191,6 +1197,8 @@ Name:TC boost command
 TableSize:20x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80245B5E
+Unit1:MAP
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80246218
@@ -1262,6 +1270,8 @@ Name:Driving force 1
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80255D10
+Unit1:Speed
 IsNotDefined:true
 IsReadOnly:true
 IsUntested:true
@@ -1271,6 +1281,8 @@ Name:Driving force 10
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80255D38
+Unit1:Speed
 IsNotDefined:true
 IsReadOnly:true
 IsUntested:true
@@ -1323,6 +1335,8 @@ Name:Boost by gear limit
 TableSize:6x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80264DDC
+Unit1:Gear
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80264E4C
@@ -1330,6 +1344,8 @@ Name:Ethanol percentage
 TableSize:2x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80264E5C
+Unit1:Ethanol %
 IsNotDefined:true
 #############################
 ROMLocationTable:0x80264E68
@@ -1358,6 +1374,8 @@ Name:Cranking fuel pressure
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x80230EDC
+Unit1:ECT
 IsNotDefined:true
 IsReadOnly:true
 IsUntested:true
@@ -1430,6 +1448,8 @@ Name:CAEX upper limit
 TableSize:20x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8025305C
+Unit1:RPM
 IsNotDefined:true
 IsReadOnly:true
 IsUntested:true
@@ -1439,6 +1459,8 @@ Name:EGR area target CAEX angle map upper limit
 TableSize:20x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x802531EC
+Unit1:RPM
 IsNotDefined:true
 IsReadOnly:true
 IsUntested:true
@@ -1517,6 +1539,8 @@ Name:Target fuel pressure map 4
 TableSize:10x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8022B7F2
+Unit1:RPM
 IsNotDefined:true
 IsReadOnly:true
 IsUntested:true
@@ -1526,6 +1550,8 @@ Name:Target fuel pressure map 5
 TableSize:10x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8022B81A
+Unit1:RPM
 IsNotDefined:true
 IsReadOnly:true
 IsUntested:true
@@ -1535,6 +1561,8 @@ Name:Target fuel pressure map 3
 TableSize:10x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8022B7CA
+Unit1:RPM
 IsNotDefined:true
 IsReadOnly:true
 IsUntested:true
@@ -1596,6 +1624,8 @@ Name:Fuel pump drive angle
 TableSize:30x20
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x8022C830
+Unit1:RPM
 IsNotDefined:true
 IsUntested:true
 #############################
@@ -1612,6 +1642,8 @@ Name:target torque rate limit air mass
 TableSize:20x1
 ValueMin:-32768
 ValueMax:32768
+ROMLocationY:0x802468BC
+Unit1:RPM
 IsNotDefined:true
 IsReadOnly:true
 IsUntested:true
@@ -1665,11 +1697,11 @@ ValueMax:32768
 IsNotDefined:true
 IsUntested:true
 #############################
-ROMLocationTable:0
-ROMLocationX:0
-Name:0x8023E190
-TableSize:1003x0
+ROMLocationTable:0x15FA0
+Name:VTC P
+TableSize:1010x0
 ValueMin:-32768
 ValueMax:32768
 IsNotDefined:true
+IsReadOnly:true
 #############################
