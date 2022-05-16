@@ -48,6 +48,8 @@ Firmware files update (.rwd|.gz) are only partial and encrypted ROM file. This i
 | :white_large_square: | RWD firmware file X-RAY/Decryptor to binary file (.bin) for 0x31 files **(->IN PROGRESS)** |
 | :white_check_mark: | Binary file (.bin) to RWD firmware file builder for 0x5A files |
 | :white_large_square: | Binary file (.bin) to RWD firmware file builder for 0x31 files **(->IN PROGRESS)** |
+| :white_check_mark: | Extract Definitions files from 'FPM' |
+| :white_check_mark: | Extract Binary files (.bin) from 'FPM' |
 | :white_check_mark: | OBD2 Scan Tools |
 | :white_check_mark: | Binary ROM Tables Editor (with Definitions) |
 | :white_large_square: | Immobilizer Tool **(->NOT YET IMPLEMENTED)** |
