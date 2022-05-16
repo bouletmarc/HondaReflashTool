@@ -14,7 +14,7 @@ You can download some Honda/Acura firmwares updates files (.rwd/.bin) to give yo
 
 This is a Work In Progress Honda/Acura Reflash Tool under CanBUS Interface.
 
-The Honda communauty is far behind on the other manufacturers when come to Reflash and Tuning capabilities for vehicules working under CanBUS. Reflash tools that are guenine and works are getting very costly and the vehicules to work with the tools are getting older everydays which is not resonable.
+The Honda communauty is far behind than the other manufacturers when come to Reflash and Tuning capabilities for vehicules working under CanBUS. Reflash tools that are guenine and works are getting very costly and the vehicules to work with the tools in questions are getting older everydays which is not resonable.
 
 I hope this tool will help others developers to pick up on the developement just like me and make reflash capability for Honda/Acura a lot easier for all of us.
 
