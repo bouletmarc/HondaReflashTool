@@ -110,9 +110,9 @@ public class Editortable : DarkForm
 
     private void InitializeComponent()
     {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editortable));
             this.treeView1 = new DarkUI.Controls.DarkTreeView();
             this.groupBox1 = new DarkUI.Controls.DarkGroupBox();
@@ -133,6 +133,9 @@ public class Editortable : DarkForm
             this.increaseSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.decreaseSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripDropDownButton3 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.openOBD2ScanToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.convertrwdTobinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.convertbinTorwdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeBootloaderInbinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.developpersToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -147,9 +150,6 @@ public class Editortable : DarkForm
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.darkTextBox_0 = new DarkUI.Controls.DarkTextBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.convertrwdTobinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.convertbinTorwdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openOBD2ScanToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_0)).BeginInit();
             this.darkToolStrip1.SuspendLayout();
@@ -203,37 +203,37 @@ public class Editortable : DarkForm
             this.dataGridView_0.AllowUserToDeleteRows = false;
             this.dataGridView_0.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView_0.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView_0.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView_0.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView_0.ColumnHeadersHeight = 20;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView_0.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView_0.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView_0.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView_0.EnableHeadersVisualStyles = false;
             this.dataGridView_0.GridColor = System.Drawing.SystemColors.ControlDarkDark;
             this.dataGridView_0.Location = new System.Drawing.Point(2, 15);
             this.dataGridView_0.Margin = new System.Windows.Forms.Padding(2);
             this.dataGridView_0.Name = "dataGridView_0";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView_0.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView_0.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridView_0.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             this.dataGridView_0.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             this.dataGridView_0.RowTemplate.Height = 31;
@@ -412,6 +412,33 @@ public class Editortable : DarkForm
             this.toolStripDropDownButton3.Size = new System.Drawing.Size(47, 25);
             this.toolStripDropDownButton3.Text = "Tools";
             // 
+            // openOBD2ScanToolToolStripMenuItem
+            // 
+            this.openOBD2ScanToolToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.openOBD2ScanToolToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.openOBD2ScanToolToolStripMenuItem.Name = "openOBD2ScanToolToolStripMenuItem";
+            this.openOBD2ScanToolToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.openOBD2ScanToolToolStripMenuItem.Text = "Open OBD2 Scan Tool";
+            this.openOBD2ScanToolToolStripMenuItem.Click += new System.EventHandler(this.openOBD2ScanToolToolStripMenuItem_Click);
+            // 
+            // convertrwdTobinToolStripMenuItem
+            // 
+            this.convertrwdTobinToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.convertrwdTobinToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.convertrwdTobinToolStripMenuItem.Name = "convertrwdTobinToolStripMenuItem";
+            this.convertrwdTobinToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.convertrwdTobinToolStripMenuItem.Text = "Convert .rwd to .bin";
+            this.convertrwdTobinToolStripMenuItem.Click += new System.EventHandler(this.convertrwdTobinToolStripMenuItem_Click);
+            // 
+            // convertbinTorwdToolStripMenuItem
+            // 
+            this.convertbinTorwdToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.convertbinTorwdToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.convertbinTorwdToolStripMenuItem.Name = "convertbinTorwdToolStripMenuItem";
+            this.convertbinTorwdToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.convertbinTorwdToolStripMenuItem.Text = "Convert .bin to .rwd";
+            this.convertbinTorwdToolStripMenuItem.Click += new System.EventHandler(this.convertbinTorwdToolStripMenuItem_Click);
+            // 
             // removeBootloaderInbinToolStripMenuItem
             // 
             this.removeBootloaderInbinToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
@@ -549,36 +576,10 @@ public class Editortable : DarkForm
             this.darkTextBox_0.Location = new System.Drawing.Point(0, 0);
             this.darkTextBox_0.Multiline = true;
             this.darkTextBox_0.Name = "darkTextBox_0";
+            this.darkTextBox_0.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.darkTextBox_0.Size = new System.Drawing.Size(799, 152);
             this.darkTextBox_0.TabIndex = 56;
             this.darkTextBox_0.Text = "Honda CANBUS Tools";
-            // 
-            // convertrwdTobinToolStripMenuItem
-            // 
-            this.convertrwdTobinToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.convertrwdTobinToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.convertrwdTobinToolStripMenuItem.Name = "convertrwdTobinToolStripMenuItem";
-            this.convertrwdTobinToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
-            this.convertrwdTobinToolStripMenuItem.Text = "Convert .rwd to .bin";
-            this.convertrwdTobinToolStripMenuItem.Click += new System.EventHandler(this.convertrwdTobinToolStripMenuItem_Click);
-            // 
-            // convertbinTorwdToolStripMenuItem
-            // 
-            this.convertbinTorwdToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.convertbinTorwdToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.convertbinTorwdToolStripMenuItem.Name = "convertbinTorwdToolStripMenuItem";
-            this.convertbinTorwdToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
-            this.convertbinTorwdToolStripMenuItem.Text = "Convert .bin to .rwd";
-            this.convertbinTorwdToolStripMenuItem.Click += new System.EventHandler(this.convertbinTorwdToolStripMenuItem_Click);
-            // 
-            // openOBD2ScanToolToolStripMenuItem
-            // 
-            this.openOBD2ScanToolToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.openOBD2ScanToolToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.openOBD2ScanToolToolStripMenuItem.Name = "openOBD2ScanToolToolStripMenuItem";
-            this.openOBD2ScanToolToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
-            this.openOBD2ScanToolToolStripMenuItem.Text = "Open OBD2 Scan Tool";
-            this.openOBD2ScanToolToolStripMenuItem.Click += new System.EventHandler(this.openOBD2ScanToolToolStripMenuItem_Click);
             // 
             // Editortable
             // 
@@ -1037,7 +1038,7 @@ public class Editortable : DarkForm
     public string ExtractECUNameFromThisFile(byte[] ThisFileBytes)
     {
         string ECUName = "";
-        for (int i = 0; i < ThisFileBytes.Length; i++)
+        for (int i = 0; i < ThisFileBytes.Length - 12; i++)
         {
             //37805-
             if ((char) ThisFileBytes[i] == '3'
@@ -1045,8 +1046,10 @@ public class Editortable : DarkForm
                 && (char)ThisFileBytes[i + 2] == '8'
                 && (char)ThisFileBytes[i + 3] == '0'
                 && (char)ThisFileBytes[i + 4] == '5'
-                && (char)ThisFileBytes[i + 5] == '-')
+                && (char)ThisFileBytes[i + 5] == '-'
+                && (char)ThisFileBytes[i + 10] != 'Z')
             {
+                ECUName = "";
                 ECUName = ECUName + ((char)ThisFileBytes[i]).ToString();        //3
                 ECUName = ECUName + ((char)ThisFileBytes[i + 1]).ToString();    //7
                 ECUName = ECUName + ((char)ThisFileBytes[i + 2]).ToString();    //8
@@ -1398,8 +1401,15 @@ public class Editortable : DarkForm
 
     private void extractbinFileFromFPMToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        //THIS FUNCTION DOES NOT WORK YET
-        GForm_Main_0.Class_DefinitionMaker_0.Extract("Bin");
+        GForm_ExtractSize GForm_ExtractSize_0 = new GForm_ExtractSize();
+        DialogResult result = GForm_ExtractSize_0.ShowDialog();
+        if (result == DialogResult.OK)
+        {
+            if (GForm_ExtractSize_0.comboBox1.SelectedIndex == 0) GForm_Main_0.Class_DefinitionMaker_0.ExtractMemorySize = 0xF7FFF;
+            if (GForm_ExtractSize_0.comboBox1.SelectedIndex == 1) GForm_Main_0.Class_DefinitionMaker_0.ExtractMemorySize = 0x1EFFFF;
+            if (GForm_ExtractSize_0.comboBox1.SelectedIndex == 2) GForm_Main_0.Class_DefinitionMaker_0.ExtractMemorySize = 0x26FFFF;
+            GForm_Main_0.Class_DefinitionMaker_0.Extract("Bin");
+        }
     }
 
     private void convertrwdTobinToolStripMenuItem_Click(object sender, EventArgs e)

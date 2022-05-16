@@ -1173,7 +1173,7 @@ internal class ClassEditor
                     for (int i = 0; i < AllLines.Length; i++)
                     {
                         string Thisline = AllLines[i];
-                        if (Thisline.Contains("ROM Parameters")) GettingEcuList = false; //make sure we are not reading false contents
+                        if (Thisline.Contains("ROM Parameters") || Thisline.Contains("Checksum ")) GettingEcuList = false; //make sure we are not reading false contents
 
                         if (Thisline[0] != '#' && Thisline != "")
                         {
@@ -1281,7 +1281,7 @@ internal class ClassEditor
                     for (int i = 0; i < AllLines.Length; i++)
                     {
                         string Thisline = AllLines[i];
-                        if (Thisline.Contains("ROM Parameters")) GettingEcuList = false; //make sure we are not reading false contents
+                        if (Thisline.Contains("ROM Parameters") || Thisline.Contains("Checksum ")) GettingEcuList = false; //make sure we are not reading false contents
 
                         if (Thisline.Contains("THIS FILE AS BEEN GENERATED")) IsFileGenerated = true;
 

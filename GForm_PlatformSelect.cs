@@ -44,6 +44,25 @@ public class GForm_PlatformSelect : DarkForm
 
     private void method_1()
     {
+        //#################################################################################################################
+        /*if (headers2[0] == 0x0b) AdditionnalCanInfos = " (Shift by wire)";                      //->54008-XXX-XXXX files
+        if (headers2[0] == 0x0e) AdditionnalCanInfos = " (CVT Transmission (maybe?))";          //->
+        if (headers2[0] == 0x10) AdditionnalCanInfos = " (ECM with Manual Transmission)";       //->37805-XXX-XXXX files
+        if (headers2[0] == 0x11) AdditionnalCanInfos = " (ECM with Automatics Transmission)";   //->37805-XXX-XXXX files
+        if (headers2[0] == 0x1e) AdditionnalCanInfos = " (TCM - Transmission Control Module)";  //->28101-XXX-XXXX files
+        if (headers2[0] == 0x28) AdditionnalCanInfos = " (VSA Module)";                         //->57114-XXX-XXXX files
+        if (headers2[0] == 0x2b) AdditionnalCanInfos = " (Electric Brake Booster Module)";      //->39494-XXX-XXXX files
+        if (headers2[0] == 0x30) AdditionnalCanInfos = " (Electric Power Sterring Module)";     //->39990-XXX-XXXX files
+        if (headers2[0] == 0x3a) AdditionnalCanInfos = " (Unknown Module)";                     //->39390-XXX-XXXX files
+        if (headers2[0] == 0x53) AdditionnalCanInfos = " (SRS Module)";                         //->77959-XXX-XXXX files
+        if (headers2[0] == 0x60) AdditionnalCanInfos = " (Odometer Module)";                    //->78109-XXX-XXXX files
+        if (headers2[0] == 0x61) AdditionnalCanInfos = " (HUD Module)";                         //->78209-XXX-XXXX files
+        if (headers2[0] == 0xb0) AdditionnalCanInfos = " (FWD Radar Module)";                   //->36802-XXX-XXXX files
+        if (headers2[0] == 0xb5) AdditionnalCanInfos = " (FWD Camera Module)";                  //->36161-XXX-XXXX files
+        if (headers2[0] == 0xef) AdditionnalCanInfos = " (Gateway Module)";                     //->38897-XXX-XXXX files*/
+        //#################################################################################################################
+
+
         //this.list_0.Add(new Class_ECUS("512k", "SH7055", 16, "0x10", 0x7FFFF, 1015808, "Manual"));
         //this.list_0.Add(new Class_ECUS("512k", "SH7055", 17, "0x11", 0x7FFFF, 1015808, "Automatic"));
         //this.list_0.Add(new Class_ECUS("512k", "SH7055", 14, "0x0E", 0x7FFFF, 1015808, "CVT(maybe?)"));

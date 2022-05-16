@@ -215,7 +215,7 @@ public class Class_DefinitionMaker
             {
                 if (BufECUName != "") CreateFile(AllStringFile, BufECUName);
                 BufECUName = AllECUS[i];
-                AllStringFile = GenerateNewHeader(BufECUName, new List<string>());
+                AllStringFile = GenerateNewHeader(BufECUName, new List<string>(), "0x8400");
                 //Console.WriteLine(AllECUS[i] + " | 0x" + AllFoundAddress[i].ToString("X") + " | " + AllFoundFunctions[i]);
             }
 
@@ -349,7 +349,7 @@ public class Class_DefinitionMaker
         GForm_Main_0.method_1("File saved:" + DirectoryPath + @"\" + ThisFile + ".txt");
     }
 
-    private string GenerateNewHeader(string ThisEECU, List<string> AllEcuCompatible)
+    private string GenerateNewHeader(string ThisEECU, List<string> AllEcuCompatible, string ChecksumLocation)
     {
         string ReturnStr = "";
         ReturnStr = ReturnStr + "#######################################################################" + Environment.NewLine;
@@ -364,6 +364,15 @@ public class Class_DefinitionMaker
         {
             for (int i = 0; i < AllEcuCompatible.Count; i++) ReturnStr = ReturnStr + AllEcuCompatible[i] + Environment.NewLine;
         }
+        //###############################
+        if (ChecksumLocation != "")
+        {
+            ReturnStr = ReturnStr + "#######################################################################" + Environment.NewLine;
+            ReturnStr = ReturnStr + "# Checksum Address Location:" + Environment.NewLine;
+            ReturnStr = ReturnStr + "#######################################################################" + Environment.NewLine;
+            ReturnStr = ReturnStr + "ChecksumAddress:" + ChecksumLocation + Environment.NewLine;
+        }
+        //###############################
         ReturnStr = ReturnStr + "#######################################################################" + Environment.NewLine;
         ReturnStr = ReturnStr + "#######################################################################" + Environment.NewLine;
         ReturnStr = ReturnStr + "#######################################################################" + Environment.NewLine;
@@ -530,15 +539,19 @@ public class Class_DefinitionMaker
                     List<bool> AllTableReadOnly = new List<bool>();
                     List<bool> AllTableUntested = new List<bool>();
 
+                    List<string> AllIndexName = new List<string>();
+                    List<string> AllIndexShortName = new List<string>();
+                    List<string> AllIndexLocations = new List<string>();
+
                     string CurrentParam = "";
                     //string ThisECUName = "";
                     int ParamCount = 0;
                     int TableCount = 0;
                     List<string> AllEcuCompatible = new List<string>();
                     int NumberOfEcus = 0;
+                    string ChecksumLocation = "";
 
                     //#########################################
-                    //FileName=RDX-RWC-A620    NumBinaries
                     if (AllLines[2].Contains("NumBinaries="))
                     {
                         NumberOfEcus = int.Parse(AllLines[2].Split('=')[1]);
@@ -571,7 +584,9 @@ public class Class_DefinitionMaker
                             IndexCount=53
                             TableCount=49
                             ChecksumAddress=0x001FFFFA
-                            ChecksumAddress=0x00008400*/
+                            ChecksumAddress=0x00008400
+                            ChecksumAddress=0x001FFFFA*/
+                            if (ChecksumLocation == "") if(AllLines[i].Contains("ChecksumAddress=")) ChecksumLocation = AllLines[i].Split('=')[1];
                             if (AllLines[i].Contains("ParameterCount=")) ParamCount = int.Parse(AllLines[i].Split('=')[1]);
                             if (AllLines[i].Contains("TableCount=") && !AllLines[i].Contains("DevTableCount")) TableCount = int.Parse(AllLines[i].Split('=')[1]);
 
@@ -624,6 +639,10 @@ public class Class_DefinitionMaker
                                                 AllParamLocations.RemoveAt(AllParamLocations.Count - 1);
                                                 AllParamReadOnly.RemoveAt(AllParamReadOnly.Count - 1);
                                                 AllParamUntested.RemoveAt(AllParamUntested.Count - 1);
+                                            }
+                                            else
+                                            {
+                                                GForm_Main_0.method_1("Added parameter: " + AllParamName[AllParamName.Count - 1]);
                                             }
                                         }
                                         catch
@@ -697,10 +716,18 @@ public class Class_DefinitionMaker
 
                                             if (IssueEncountered)
                                             {
-                                                AllParamName.RemoveAt(AllParamName.Count - 1);
-                                                AllParamLocations.RemoveAt(AllParamLocations.Count - 1);
-                                                AllParamReadOnly.RemoveAt(AllParamReadOnly.Count - 1);
-                                                AllParamUntested.RemoveAt(AllParamUntested.Count - 1);
+                                                AllTableName.RemoveAt(AllTableName.Count - 1);
+                                                AllTableLocations.RemoveAt(AllTableLocations.Count - 1);
+                                                AllColCount.RemoveAt(AllColCount.Count - 1);
+                                                AllRowCount.RemoveAt(AllRowCount.Count - 1);
+                                                AllTableLocationsX.RemoveAt(AllTableLocationsX.Count - 1);
+                                                AllTableLocationsY.RemoveAt(AllTableLocationsY.Count - 1);
+                                                AllTableReadOnly.RemoveAt(AllTableReadOnly.Count - 1);
+                                                AllTableUntested.RemoveAt(AllTableUntested.Count - 1);
+                                            }
+                                            else
+                                            {
+                                                GForm_Main_0.method_1("Added table: " + AllTableName[AllTableName.Count - 1]);
                                             }
                                         }
                                         catch
@@ -718,11 +745,86 @@ public class Class_DefinitionMaker
                                     }
                                 }
                             }
+                            //########################
+                            if (AllLines[i].Contains("[Index"))
+                            {
+                                //AllIndexName
+                                //AllIndexLocations
+                                if (AllLines[i] != CurrentParam)
+                                {
+                                    CurrentParam = AllLines[i];
+
+                                    bool DoneThisParameter = false;
+                                    try
+                                    {
+                                        string ParamNamee = AllLines[i + 2].Split('=')[1];
+                                        for (int i2 = 0; i2 < AllIndexName.Count; i2++) if (AllIndexName[i2] == ParamNamee) DoneThisParameter = true;
+                                    }
+                                    catch
+                                    {
+                                        DoneThisParameter = true;
+                                    }
+
+                                    if (!DoneThisParameter)
+                                    {
+                                        AllIndexName.Add("");
+                                        AllIndexShortName.Add("");
+                                        AllIndexLocations.Add("");
+
+                                        try
+                                        {
+                                            AllIndexName[AllIndexName.Count - 1] = AllLines[i + 2].Split('=')[1];
+                                            AllIndexShortName[AllIndexShortName.Count - 1] = AllLines[i + 5].Split('=')[1];
+                                            AllIndexLocations[AllIndexLocations.Count - 1] = AllLines[i + 6].Split('=')[1];
+
+                                            // XXX index
+                                            AllIndexName[AllIndexName.Count - 1] = AllIndexName[AllIndexName.Count - 1].Replace(" " + AllIndexShortName[AllIndexShortName.Count - 1], "");
+                                            AllIndexName[AllIndexName.Count - 1] = AllIndexName[AllIndexName.Count - 1].Replace(" index", "");
+
+                                            //Check for issues
+                                            bool IssueEncountered = false;
+                                            if (!AllIndexLocations[AllIndexLocations.Count - 1].Contains("0x")) IssueEncountered = true;
+                                            if (AllIndexLocations[AllIndexLocations.Count - 1] == "0") IssueEncountered = true;
+                                            if (AllIndexName[AllIndexName.Count - 1].Contains("0x")) IssueEncountered = true;
+
+                                            if (IssueEncountered)
+                                            {
+                                                AllIndexName.RemoveAt(AllIndexName.Count - 1);
+                                                AllIndexShortName.RemoveAt(AllIndexShortName.Count - 1);
+                                                AllIndexLocations.RemoveAt(AllIndexLocations.Count - 1);
+                                            }
+                                            else
+                                            {
+                                                GForm_Main_0.method_1("Added index: " + AllIndexName[AllIndexName.Count - 1]);
+                                            }
+                                        }
+                                        catch
+                                        {
+                                            //issue extracing parameters, remove from list to avoid issue creating definition
+                                            AllIndexName.RemoveAt(AllIndexName.Count - 1);
+                                            AllIndexShortName.RemoveAt(AllIndexShortName.Count - 1);
+                                            AllIndexLocations.RemoveAt(AllIndexLocations.Count - 1);
+                                        }
+                                    }
+                                }
+                            }
+                            //########################
                         }
                         catch (Exception ex)
                         {
                             GForm_Main_0.method_1("PROBLEM OCCURED while Generating Definitions file: " + ex);
                         }
+                    }
+
+
+                    //ChecksumAddress = 0x001FFFFA
+                    //ChecksumAddress = 0x00008400
+                    //ChecksumAddress = 0x001FFFFA
+                    if (ChecksumLocation != "")
+                    {
+                        ChecksumLocation = ChecksumLocation.Replace("0x00", "0x");
+                        ChecksumLocation = ChecksumLocation.Replace("0x00", "0x");
+                        GForm_Main_0.method_1("Checksum address: " + ChecksumLocation);
                     }
 
                     //Check Counts
@@ -733,13 +835,22 @@ public class Class_DefinitionMaker
 
 
                     //string SavingStr = GenerateNewHeader(ThisECUName);
-                    string SavingStr = GenerateNewHeader("", AllEcuCompatible);
+                    string SavingStr = GenerateNewHeader("", AllEcuCompatible, ChecksumLocation);
                     for (int i = 0; i < AllParamName.Count; i++)
                     {
                         SavingStr = SavingStr + "ROMLocationTable:" + AllParamLocations[i] + Environment.NewLine;
                         SavingStr = SavingStr + "Name:" + AllParamName[i] + Environment.NewLine;
                         SavingStr = SavingStr + "TableSize:1x1" + Environment.NewLine;
                         SavingStr = SavingStr + "IsSingleByteTable:true" + Environment.NewLine;
+                        for (int m = 0; m < AllIndexName.Count; m++)
+                        {
+                            if (AllIndexName[m].ToLower() == AllParamName[i].ToLower())
+                            {
+                                SavingStr = SavingStr + "ROMLocationY:" + AllIndexLocations[m] + Environment.NewLine;
+                                SavingStr = SavingStr + "Unit1:" + AllIndexShortName[m] + Environment.NewLine;
+                                m = AllIndexName.Count;
+                            }
+                        }
                         SavingStr = SavingStr + "IsNotDefined:true" + Environment.NewLine;
                         if (AllParamReadOnly[i]) SavingStr = SavingStr + "IsReadOnly:true" + Environment.NewLine;
                         if (AllParamUntested[i]) SavingStr = SavingStr + "IsUntested:true" + Environment.NewLine;
@@ -760,6 +871,15 @@ public class Class_DefinitionMaker
                         SavingStr = SavingStr + "ValueMin:-32768" + Environment.NewLine;
                         SavingStr = SavingStr + "ValueMax:32768" + Environment.NewLine;
                         //SavingStr = SavingStr + "IsSingleByteTable:true" + Environment.NewLine;
+                        for (int m = 0; m < AllIndexName.Count; m++)
+                        {
+                            if (AllIndexName[m].ToLower() == AllTableName[i].ToLower())
+                            {
+                                SavingStr = SavingStr + "ROMLocationY:" + AllIndexLocations[m] + Environment.NewLine;
+                                SavingStr = SavingStr + "Unit1:" + AllIndexShortName[m] + Environment.NewLine;
+                                m = AllIndexName.Count;
+                            }
+                        }
                         SavingStr = SavingStr + "IsNotDefined:true" + Environment.NewLine;
                         if (AllTableReadOnly[i]) SavingStr = SavingStr + "IsReadOnly:true" + Environment.NewLine;
                         if (AllTableUntested[i]) SavingStr = SavingStr + "IsUntested:true" + Environment.NewLine;
@@ -797,7 +917,7 @@ public class Class_DefinitionMaker
     public static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
 
     [DllImport("kernel32.dll")]
-    public static extern bool ReadProcessMemory(int hProcess, int lpBaseAddress, byte[] lpBuffer, int dwSize, ref int lpNumberOfBytesRead);
+    public static extern bool ReadProcessMemory(int hProcess, uint lpBaseAddress, byte[] lpBuffer, int dwSize, ref int lpNumberOfBytesRead);
 
     [DllImport("kernel32.dll")]
     static extern void GetSystemInfo(out SYSTEM_INFO lpSystemInfo);
@@ -817,6 +937,7 @@ public class Class_DefinitionMaker
     public string ThisEndPath = Application.StartupPath + @"\Extracted\";
     public int CurrentExtractedDumps = 1;
     public int ExtractedBlockDone = 1;
+    public int ExtractMemorySize = 0;
 
     // REQUIRED STRUCTS
     public struct MEMORY_BASIC_INFORMATION
@@ -845,35 +966,12 @@ public class Class_DefinitionMaker
         public ushort processorRevision;
     }
 
-    private int AllBytesContains(byte[] AllBytesCheck, byte[] CheckArray)
-    {
-        for (int i = 0; i < AllBytesCheck.Length; i++)
-        {
-            int Index2 = 0;
-            try
-            {
-                while (AllBytesCheck[i + Index2] == CheckArray[Index2])
-                {
-                    Index2++;
-                }
-            }
-            catch
-            {
-                return -1;
-            }
-            if (Index2 >= CheckArray.Length) return i;
-        }
-
-        return -1;
-    }
-
     public bool Extract(string ExtractMode)
     {
         try
         {
             SYSTEM_INFO sys_info = new SYSTEM_INFO();
             GetSystemInfo(out sys_info);
-            //CurrentIndex = 4000000;
             CurrentIndex = 0;
             Done = false;
             ExtractedBlockDone = 1;
@@ -903,39 +1001,42 @@ public class Class_DefinitionMaker
                 process = Process.GetProcessesByName("FlashProManager")[0];
                 GForm_Main_0.method_1("FlashProManager is running...");
 
-                //RemovePastDump();
                 string ReloadDump = "";
-
-                Console.WriteLine("memsize: " + sys_info.maximumApplicationAddress.ToString("X"));
-
-                while (!Done)
+                if (ExtractMode == "Bin")
                 {
-                    //int Percent = (int)(((CurrentIndex - 4000000) * 100) / (Int64.Parse(sys_info.maximumApplicationAddress.ToString()) - 1));
-                    int Percent = (int)(((CurrentIndex) * 100) / (Int64.Parse(sys_info.maximumApplicationAddress.ToString()) - 1));
-                    //Console.Write("\nSEARCH #" + SearchID + " " + Percent + "%");
-                    GForm_Main_0.method_4(Percent);
+                    //This function will extract datas present in 'system space memory' (kernel/protected area)
+                    //32Bit applications have 4Gb of memory split into 2sections of 2Gb, 
+                    //    ->the first section 0x00000000 to 0x7FFFFFFF are 'user space memory'
+                    //    ->the second section 0x80000000 to 0xFFFFFFFF are 'system space memory'
+                    ExtractBINFromMemory();
+                }
 
-                    if ((CurrentIndex + BlockSizeExtracted) > Int64.Parse(sys_info.maximumApplicationAddress.ToString()))
-                    //if ((CurrentIndex + BlockSizeExtracted) > 0xFEFFFFFF)
+                if (ExtractMode == "Definition")
+                {
+                    //This function will extract datas present in 'user space memory' (unprotected area)
+                    //32Bit applications have 4Gb of memory split into 2sections of 2Gb, 
+                    //    ->the first section 0x00000000 to 0x7FFFFFFF are 'user space memory'
+                    //    ->the second section 0x80000000 to 0xFFFFFFFF are 'system space memory'
+                    while (!Done)
                     {
-                        Done = true;
-                    }
-                    else
-                    {
-                        MaxIndex = (CurrentIndex + BlockSizeExtracted);
+                        int Percent = (int)(((CurrentIndex) * 100) / (Int64.Parse(sys_info.maximumApplicationAddress.ToString()) - 1));
+                        GForm_Main_0.method_4(Percent);
 
-                        proc_min_address = (IntPtr)CurrentIndex;
-                        proc_max_address = (IntPtr)MaxIndex;
-                        proc_min_address_l = (long)proc_min_address;
-                        proc_max_address_l = (long)proc_max_address;
-
-                        ExtractMemoryBlock(ExtractMode);
-                        //ReloadDump = ReloadDumpFile();
-                        //ReloadDump = File.ReadAllText(ThisEndPath + "DumpHex" + ExtractedBlockDone);
-
-                        //5B446566696E6974696F6E5D  ->[Definition]
-                        if (ExtractMode == "Definition")
+                        if ((CurrentIndex + BlockSizeExtracted) > Int64.Parse(sys_info.maximumApplicationAddress.ToString()))
                         {
+                            Done = true;
+                        }
+                        else
+                        {
+                            MaxIndex = (CurrentIndex + BlockSizeExtracted);
+
+                            proc_min_address = (IntPtr)CurrentIndex;
+                            proc_max_address = (IntPtr)MaxIndex;
+                            proc_min_address_l = (long)proc_min_address;
+                            proc_max_address_l = (long)proc_max_address;
+
+                            ExtractMemoryBlock();
+
                             ReloadDump = File.ReadAllText(ThisEndPath + "DumpHex" + ExtractedBlockDone);
                             if (ReloadDump.Contains("[Definition]"))
                             {
@@ -950,10 +1051,11 @@ public class Class_DefinitionMaker
 
 
                                 string SaveDefPath = ThisEndPath + "ExtractedDefinition" + (CurrentExtractedDumps - 1).ToString() + ".txt";
-                                GForm_Main_0.method_1("Extracted Definitions file created: " + SaveDefPath);
+                                GForm_Main_0.method_1("Extracted Definitions file created: " + Environment.NewLine + SaveDefPath);
                                 File.Create(SaveDefPath).Dispose();
                                 File.WriteAllText(SaveDefPath, DumpedDefinition);
 
+                                //NOT NEEDED ANYMORE
                                 //< 0x20 > 0x7E
                                 /*byte[] AllFileBytes = File.ReadAllBytes(SaveDefPath);
                                 string SavingString = "";
@@ -965,24 +1067,13 @@ public class Class_DefinitionMaker
                                 File.WriteAllText(SaveDefPath, SavingString);*/
                             }
                         }
-                        if (ExtractMode == "Bin")
-                        {
-                            byte[] AllBytesArray = File.ReadAllBytes(ThisEndPath + "DumpHex" + ExtractedBlockDone);
-                            byte[] CheckBytes = new byte[] { 0xD0, 0x02, 0x40, 0x0B, 0x00, 0x09, 0xAF, 0xFE, 0x00, 0x09, 0x00, 0x00, 0x00 };
-                            //D0 02 40 0B 00 09 AF FE 00 09 00 00 00
 
-                            if (AllBytesContains(AllBytesArray, CheckBytes) != -1)
-                            {
-                                Console.WriteLine("Found Bin in DumpHex" + ExtractedBlockDone);
-                            }
-                        }
+                        CurrentIndex += BlockSizeExtracted;
+                        ExtractedBlockDone++;
                     }
-
-                    CurrentIndex += BlockSizeExtracted;
-                    ExtractedBlockDone++;
                 }
 
-                //RemovePastDump();
+                RemovePastDump();
                 GForm_Main_0.ResetProgressBar();
 
                 if (CurrentExtractedDumps == 1)
@@ -1018,24 +1109,136 @@ public class Class_DefinitionMaker
         }
     }
 
-    /*string ReloadDumpFile()
+    void ExtractBINFromMemory()
     {
-        string ReloadDump = File.ReadAllText(ThisEndPath + "Dump" + ExtractedBlockDone + ".txt");
-        ReloadDump = ReloadDump.Replace("\n", "");
-        ReloadDump = ReloadDump.Replace("\r", "");
-        ReloadDump = ReloadDump.Replace(" ", "");
-        File.WriteAllText(ThisEndPath + "Dump" + ExtractedBlockDone + ".txt", ReloadDump);
+        int bytesRead = 0;
+        uint ThisLocation = 0xFC000000; //0xFCD180BB FD0100C3 FD2A00C3  //C60000
+        uint MaxLocation = 0xFE000000;
+        uint ExtractingSize = 0xFFFFF;
+        int BINSize = ExtractMemorySize + 1;
+        IntPtr processHandle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_WM_READ, false, process.Id);
+        byte[] buffer = new byte[ExtractingSize];
 
-        //ExtractedBytes = File.ReadAllBytes(ThisEndPath + "DumpHex");
-        return ReloadDump;
-    }*/
+        uint StartAddr = 0;
+        uint StartLocation = ThisLocation;
+        while (ThisLocation < MaxLocation && StartAddr == 0)
+        {
+            int Percent = (int)(((ThisLocation - StartLocation) * 100) / ((MaxLocation - StartLocation) - 1));
+            GForm_Main_0.method_4(Percent);
 
-    void ExtractMemoryBlock(string ExtractMode)
+            ReadProcessMemory((int)processHandle, ThisLocation, buffer, buffer.Length, ref bytesRead);
+
+            //D0 02 40 0B 00 09 AF FE ->works for 1Mb &7 2Mb ROM
+            //0D 00 40 02 00 80 00 90 ->works for 4Mb ROM
+            //20 00 00 03 B4 C0 FF FF ->works for some 1Mb ROM
+            //FF FF FF FF FF FF FF XX -> NOT SUGGESTED
+            for (int i = 0; i < buffer.Length - 8; i++)
+            {
+                if (buffer[i] == 0xd0
+                    && buffer[i + 1] == 0x02
+                    && buffer[i + 2] == 0x40
+                    && buffer[i + 3] == 0x0b
+                    && buffer[i + 4] == 0x00
+                    && buffer[i + 5] == 0x09
+                    && buffer[i + 6] == 0xaf
+                    && buffer[i + 7] == 0xfe)
+                {
+                    StartAddr = (uint)i - 8;
+                    i = buffer.Length;
+                }
+
+                if (StartAddr == 0)
+                {
+                    if (buffer[i] == 0x0d
+                        && buffer[i + 1] == 0x00
+                        && buffer[i + 2] == 0x40
+                        && buffer[i + 3] == 0x02
+                        && buffer[i + 4] == 0x00
+                        && buffer[i + 5] == 0x80
+                        && buffer[i + 6] == 0x00
+                        && buffer[i + 7] == 0x90)
+                    {
+                        StartAddr = (uint)i - 8;
+                        i = buffer.Length;
+                    }
+                }
+
+                if (StartAddr == 0)
+                {
+                    if (buffer[i] == 0x20
+                        && buffer[i + 1] == 0x00
+                        && buffer[i + 2] == 0x00
+                        && buffer[i + 3] == 0x03
+                        && buffer[i + 4] == 0xb4
+                        && buffer[i + 5] == 0xc0
+                        && buffer[i + 6] == 0xff
+                        && buffer[i + 7] == 0xff)
+                    {
+                        StartAddr = (uint)i - 8;
+                        i = buffer.Length;
+                    }
+                }
+
+                //NOT SUGGESTED
+                /*if (buffer[i] == 0xff
+                    && buffer[i + 1] == 0xff
+                    && buffer[i + 2] == 0xff
+                    && buffer[i + 3] == 0xff
+                    && buffer[i + 4] == 0xff
+                    && buffer[i + 5] == 0xff
+                    && buffer[i + 6] == 0xff
+                    && buffer[i + 7] != 0xff)
+                {
+                    StartAddr = (uint)i + 15;
+                    i = buffer.Length;
+                }*/
+            }
+
+            if (StartAddr == 0)
+            {
+                ThisLocation += ExtractingSize;
+                //ThisLocation += 1;
+            }
+        }
+
+        GForm_Main_0.ResetProgressBar();
+
+        if (StartAddr != 0)
+        {
+            Console.WriteLine("address: 0x" + (StartAddr + ThisLocation).ToString("X"));
+            buffer = new byte[BINSize];
+            ReadProcessMemory((int)processHandle, (StartAddr + ThisLocation), buffer, buffer.Length, ref bytesRead);
+
+            string ECUFilename = GForm_Main_0.Editortable_0.ExtractECUNameFromThisFile(buffer);
+            if (ECUFilename != "")
+            {
+                string SavePathh = ThisEndPath + GForm_Main_0.Editortable_0.ExtractECUNameFromThisFile(buffer) + ".bin";
+                File.Create(SavePathh).Dispose();
+                File.WriteAllBytes(SavePathh, buffer);
+                GForm_Main_0.method_1("Extracted Binary file created: " + Environment.NewLine + SavePathh);
+                CurrentExtractedDumps++;
+            }
+            else
+            {
+                GForm_Main_0.method_1("Something went wrong while extracting .bin:" + Environment.NewLine + "Could not find 'ECU name' inside the extracted data");
+                //string SavePathh = ThisEndPath + "DumpHex1";
+                //File.Create(SavePathh).Dispose();
+                //File.WriteAllBytes(SavePathh, buffer);
+            }
+        }
+        /*else
+        {
+            string SavePathh = ThisEndPath + "DumpHex1";
+            File.Create(SavePathh).Dispose();
+            File.WriteAllBytes(SavePathh, buffer);
+        }*/
+    }
+
+    void ExtractMemoryBlock()
     {
         int bytesRead = 0;
         IntPtr processHandle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_WM_READ, false, process.Id);
         MEMORY_BASIC_INFORMATION mem_basic_info = new MEMORY_BASIC_INFORMATION();
-        //StreamWriter sw = new StreamWriter(ThisEndPath + "Dump" + ExtractedBlockDone + ".txt");
         StreamWriter sw2 = new StreamWriter(ThisEndPath + "DumpHex" + ExtractedBlockDone);
 
         while (proc_min_address_l < proc_max_address_l)
@@ -1046,15 +1249,11 @@ public class Class_DefinitionMaker
             {
                 byte[] buffer = new byte[mem_basic_info.RegionSize];
 
-                ReadProcessMemory((int)processHandle, mem_basic_info.BaseAddress, buffer, mem_basic_info.RegionSize, ref bytesRead);
-
-                //Console.WriteLine("adrr: " + mem_basic_info.BaseAddress.ToString("X"));
-                //Console.WriteLine("size: " + mem_basic_info.RegionSize.ToString("X"));
+                ReadProcessMemory((int)processHandle, (uint) mem_basic_info.BaseAddress, buffer, mem_basic_info.RegionSize, ref bytesRead);
 
                 for (int i = 0; i < mem_basic_info.RegionSize; i++)
                 {
-                    if (ExtractMode == "Bin") sw2.Write(buffer[i].ToString("X2") + " ");
-                    else sw2.Write((char)buffer[i]);
+                    sw2.Write((char)buffer[i]);
                 }
             }
 
@@ -1062,25 +1261,21 @@ public class Class_DefinitionMaker
             proc_min_address = new IntPtr(proc_min_address_l);
         }
 
-        //sw.Close();
         sw2.Close();
 
-        if (ExtractMode == "Definition")
+        byte[] AllBytes = File.ReadAllBytes(ThisEndPath + "DumpHex" + ExtractedBlockDone);
+        List<byte> AllBytesList = new List<byte>();
+        for (int i = 0; i < AllBytes.Length; i++)
         {
-            byte[] AllBytes = File.ReadAllBytes(ThisEndPath + "DumpHex" + ExtractedBlockDone);
-            List<byte> AllBytesList = new List<byte>();
-            for (int i = 0; i < AllBytes.Length; i++)
-            {
-                if (AllBytes[i] >= 0x20 && AllBytes[i] <= 0x7E) AllBytesList.Add(AllBytes[i]);
-                if (AllBytes[i] == 0x0D || AllBytes[i] == 0x0A) AllBytesList.Add(AllBytes[i]);
-            }
-            AllBytes = new byte[AllBytesList.Count];
-            for (int i = 0; i < AllBytesList.Count; i++) AllBytes[i] = AllBytesList[i];
-
-            File.WriteAllBytes(ThisEndPath + "DumpHex" + ExtractedBlockDone, AllBytes);
+            if (AllBytes[i] >= 0x20 && AllBytes[i] <= 0x7E) AllBytesList.Add(AllBytes[i]);
+            if (AllBytes[i] == 0x0D || AllBytes[i] == 0x0A) AllBytesList.Add(AllBytes[i]);
         }
+        AllBytes = new byte[AllBytesList.Count];
+        for (int i = 0; i < AllBytesList.Count; i++) AllBytes[i] = AllBytesList[i];
 
-        if (ExtractMode == "Bin")
+        File.WriteAllBytes(ThisEndPath + "DumpHex" + ExtractedBlockDone, AllBytes);
+
+        /*if (ExtractMode == "Bin")
         {
             byte[] AllBytesChar = File.ReadAllBytes(ThisEndPath + "DumpHex" + ExtractedBlockDone);
             byte[] AllReturnBytes = new byte[AllBytesChar.Length / 3];
@@ -1094,7 +1289,7 @@ public class Class_DefinitionMaker
             }
 
             File.WriteAllBytes(ThisEndPath + "DumpHex" + ExtractedBlockDone, AllReturnBytes);
-        }
+        }*/
     }
 
     //##########################################################################################################################

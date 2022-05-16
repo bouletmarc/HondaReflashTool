@@ -32,7 +32,7 @@ public class GForm_Main : DarkForm
     private DarkButton darkButton6;
     private DarkButton darkButton3;
     public Editortable Editortable_0;
-    public string Version = "v1.1.3";
+    public string Version = "v1.1.5";
     private DarkTextBox darkTextBoxJ2534Command;
     private DarkLabel darkLabel1;
     private DarkButton darkButtonJ2534Command;
@@ -101,6 +101,7 @@ public class GForm_Main : DarkForm
 
             //Send to ROM Editor logs
             Editortable_0.method_1(string_3);
+            Application.DoEvents();
         }
         catch { }
     }
@@ -300,29 +301,23 @@ public class GForm_Main : DarkForm
     {
         if (this.byte_7 != null)
         {
-            this.method_8(this.byte_7);
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.RestoreDirectory = true;
+            saveFileDialog.Filter = "Honda Rom Dump|*.Bin";
+            saveFileDialog.FileName = this.darkTextBox_2.Text;
+            if (saveFileDialog.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+            File.WriteAllBytes(saveFileDialog.FileName, this.byte_7);
+            this.method_1("File saved: " + saveFileDialog.FileName);
+            DarkMessageBox.Show(this, "Successfully Saved File!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            /*this.darkButton_DownloadROM.Enabled = false;
+            this.darkButton_Unlock41.Enabled = false;
+            this.darkButton_Unlock01.Enabled = false;
+            this.darkButton_FlashRom.Enabled = false;
+            this.darkButton_FlashFW.Enabled = false;*/
         }
-    }
-
-
-    private void method_8(byte[] byte_12)
-    {
-        SaveFileDialog saveFileDialog = new SaveFileDialog();
-        saveFileDialog.RestoreDirectory = true;
-        saveFileDialog.Filter = "Honda Rom Dump|*.Bin";
-        saveFileDialog.FileName = this.darkTextBox_2.Text;
-        if (saveFileDialog.ShowDialog() != DialogResult.OK)
-        {
-            return;
-        }
-        File.WriteAllBytes(saveFileDialog.FileName, byte_12);
-        this.method_1("File saved: " + saveFileDialog.FileName);
-        DarkMessageBox.Show(this, "Successfully Saved File!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-        /*this.darkButton_DownloadROM.Enabled = false;
-        this.darkButton_Unlock41.Enabled = false;
-        this.darkButton_Unlock01.Enabled = false;
-        this.darkButton_FlashRom.Enabled = false;
-        this.darkButton_FlashFW.Enabled = false;*/
     }
 
     private void darkButton2_Click(object sender, EventArgs e)
@@ -499,7 +494,7 @@ public class GForm_Main : DarkForm
         {
             0x18,
             0xDA,
-            GForm_Main.byte_3,  //-> 0x10|0x11
+            GForm_Main.ECU_Byte,  //-> 0x10|0x11
             0xF1
         };
 
@@ -587,6 +582,7 @@ public class GForm_Main : DarkForm
             {
                 if (SendPendingResp)
                 {
+                    //This may resolve the issue
                     Thread.Sleep(5);
                     RetryCount++;
                     continue;
@@ -898,7 +894,7 @@ public class GForm_Main : DarkForm
         };
         byte[] byte_13 = new byte[]
         {
-            GForm_Main.byte_3,
+            GForm_Main.ECU_Byte,
             99
         };
 
@@ -986,8 +982,8 @@ public class GForm_Main : DarkForm
                     this.byte_7 = this.method_15(channel, this.backgroundWorker_1);
                     stopwatch.Stop();
                     TimeSpan.FromMilliseconds((double)stopwatch.ElapsedMilliseconds);
-                    DarkTextBox darkTextBox = this.darkTextBox_0;
-                    darkTextBox.Text = darkTextBox.Text + GForm_Main.smethod_1(this.byte_7) + Environment.NewLine;
+                    //DarkTextBox darkTextBox = this.darkTextBox_0;
+                    //darkTextBox.Text = darkTextBox.Text + GForm_Main.smethod_1(this.byte_7) + Environment.NewLine;
                 }
             }
         }
@@ -1239,13 +1235,13 @@ public class GForm_Main : DarkForm
             24,     //0x18
             218,    //0xDA
             241,    //0xF1
-            GForm_Main.byte_3       //0x00
+            GForm_Main.ECU_Byte       //0x00
         };
         messageFilter.FlowControl = new byte[]
         {
             24,     //0x18
             218,    //0xDA
-            GForm_Main.byte_3,      //0x00  -> 0x10|0x11
+            GForm_Main.ECU_Byte,      //0x00  -> 0x10|0x11
             241     //0xF1
         };
         MessageFilter filter = messageFilter;
@@ -1562,7 +1558,7 @@ public class GForm_Main : DarkForm
     public void method_13_Close(Channel channel_0)
     {
         byte[] arraySend1 = new byte[] {0x37};
-        byte[] buffer2 = new byte[] { GForm_Main.byte_3, 0x77 };
+        byte[] buffer2 = new byte[] { GForm_Main.ECU_Byte, 0x77 };
 
         byte[] Received = SendJ2534Message(channel_0, arraySend1, 3);
         if (BadResponceReceived) return;
@@ -1589,7 +1585,7 @@ public class GForm_Main : DarkForm
         {
             0x18,
             0xDA,
-            GForm_Main.byte_3,
+            GForm_Main.ECU_Byte,
             0xF1,
             0x36,
             byte_6X
@@ -1598,7 +1594,7 @@ public class GForm_Main : DarkForm
         SAE.J2534.Message message = new SAE.J2534.Message(data, TxFlag.CAN_29BIT_ID | TxFlag.ISO15765_FRAME_PAD);
         channel_0.SendMessage(message);
         bool flag = false;
-        byte[] buffer2 = new byte[] { GForm_Main.byte_3, 0x76, byte_6X };
+        byte[] buffer2 = new byte[] { GForm_Main.ECU_Byte, 0x76, byte_6X };
         while (!flag)
         {
             GetMessageResults messages = channel_0.GetMessages(5);
@@ -1646,12 +1642,12 @@ public class GForm_Main : DarkForm
                 return;
             }
             gform.Dispose();
-            GForm_Main.byte_3 = GForm_Main.class9_0.ECU_Byte;
+            GForm_Main.ECU_Byte = GForm_Main.class9_0.ECU_Byte;
             GForm_Main.byte_0[3] = GForm_Main.class9_0.ECU_Byte;
             GForm_Main.byte_1[3] = GForm_Main.class9_0.ECU_Byte;
             GForm_Main.byte_2[3] = GForm_Main.class9_0.ECU_Byte;
             this.byte_5[0] = GForm_Main.class9_0.ECU_Byte;
-            Array.Resize<byte>(ref GForm_Main.byte_4, GForm_Main.class9_0.FirmwareSize);
+            //Array.Resize<byte>(ref GForm_Main.byte_4, GForm_Main.class9_0.FirmwareSize);
             Array.Resize<byte>(ref this.byte_7, GForm_Main.class9_0.RomSize);
             this.byte_7 = Enumerable.Repeat<byte>(byte.MaxValue, GForm_Main.class9_0.RomSize).ToArray<byte>();
             this.darkButton_2.Enabled = true;
@@ -1719,6 +1715,7 @@ public class GForm_Main : DarkForm
             this.darkTextBox_0.Location = new System.Drawing.Point(218, 63);
             this.darkTextBox_0.Multiline = true;
             this.darkTextBox_0.Name = "darkTextBox_0";
+            this.darkTextBox_0.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.darkTextBox_0.Size = new System.Drawing.Size(399, 408);
             this.darkTextBox_0.TabIndex = 55;
             this.darkTextBox_0.Text = "Honda CANBUS Tools";
@@ -2155,14 +2152,8 @@ public class GForm_Main : DarkForm
 
 
     public static string string_0 = string.Empty;
-
-
     public static string string_1 = "";
-
-
     private Dictionary<string, byte[]> dictionary_0 = new Dictionary<string, byte[]>();
-
-
     private List<string> list_0 = new List<string>();
 
 
@@ -2200,37 +2191,28 @@ public class GForm_Main : DarkForm
     };
 
 
-    public static byte byte_3 = 16;
-
+    public static byte ECU_Byte = 16;
     public static byte[] byte_ToWrite = new byte[] { };
-
-
-    public static byte[] byte_4 = new byte[2097152];
+    //public static byte[] byte_4 = new byte[2097152];
 
 
     private byte[] byte_5 = new byte[]
     {
-        GForm_Main.byte_3,
+        GForm_Main.ECU_Byte,
         127
     };
 
-
     private byte[] byte_6 = new byte[2];
-
-
     private byte[] byte_7;
-
 
     private static byte[] byte_8 = new byte[]
     {
-        GForm_Main.byte_3,
+        GForm_Main.ECU_Byte,
         20
     };
 
 
     private string string_2 = string.Empty;
-
-
     internal static Class_ECUS class9_0;
 
 
@@ -2256,84 +2238,31 @@ public class GForm_Main : DarkForm
 
 
     private BackgroundWorker backgroundWorker_0;
-
     private BackgroundWorker backgroundWorker_1;
-
-
     private DateTime dateTime_0;
-
-
     private long long_0;
-
-
     private IContainer icontainer_0;
-
-
-
     private DarkButton darkButton_0;
-
-
     private DarkButton darkButton_DownloadROM;
-
-
     private DarkButton darkButton_2;
-
-
     private DarkButton darkButton_3;
-
-
     private DarkTextBox darkTextBox_0;
-
-
     private DarkGroupBox darkGroupBox_0;
-
-
     private DarkLabel darkLabel_0;
-
-
     private DarkLabel darkLabel_1;
-
-
     private DarkLabel darkLabel_2;
-
-
     private DarkLabel darkLabel_3;
-
-
     private DarkLabel darkLabel_4;
-
-
     private DarkLabel darkLabel_5;
-
-
     private DarkTextBox darkTextBox_1;
-
-
     private DarkTextBox darkTextBox_2;
-
-
     private DarkTextBox darkTextBox_3;
-
-
     private DarkTextBox darkTextBox_4;
-
-
     private DarkButton darkButton_4;
-
-
-
     private DarkButton darkButton_FlashRom;
-
-
     private DarkButton darkButton_6;
-
-
     private DarkProgressBar darkProgressBar_0;
-
-
     private DarkLabel darkLabel_7;
-
-
     private DarkLabel darkLabel_8;
     private DarkButton darkButton1;
     private DarkButton darkButton_Unlock41;

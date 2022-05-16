@@ -325,10 +325,21 @@ static class Class_RWD
         //Get CanAddress Infos
         CanAddress = "18DA" + headers2[0].ToString("X2") + "F1";
         string AdditionnalCanInfos = "";
-        if (headers2[0] == 0x0e) AdditionnalCanInfos = " (CVT Transmission (maybe?))";
-        if (headers2[0] == 0x10) AdditionnalCanInfos = " (Manual Transmission)";
-        if (headers2[0] == 0x11) AdditionnalCanInfos = " (Automatics Transmission)";
-        if (headers2[0] == 0x30) AdditionnalCanInfos = " (Electric Power Sterring)";
+        if (headers2[0] == 0x0b) AdditionnalCanInfos = " (Shift by wire)";                      //->54008-XXX-XXXX files
+        if (headers2[0] == 0x0e) AdditionnalCanInfos = " (CVT Transmission (maybe?))";          //->
+        if (headers2[0] == 0x10) AdditionnalCanInfos = " (ECM with Manual Transmission)";       //->37805-XXX-XXXX files
+        if (headers2[0] == 0x11) AdditionnalCanInfos = " (ECM with Automatics Transmission)";   //->37805-XXX-XXXX files
+        if (headers2[0] == 0x1e) AdditionnalCanInfos = " (TCM - Transmission Control Module)";  //->28101-XXX-XXXX files
+        if (headers2[0] == 0x28) AdditionnalCanInfos = " (VSA Module)";                         //->57114-XXX-XXXX files
+        if (headers2[0] == 0x2b) AdditionnalCanInfos = " (Electric Brake Booster Module)";      //->39494-XXX-XXXX files
+        if (headers2[0] == 0x30) AdditionnalCanInfos = " (Electric Power Sterring Module)";     //->39990-XXX-XXXX files
+        if (headers2[0] == 0x3a) AdditionnalCanInfos = " (Unknown Module)";                     //->39390-XXX-XXXX files
+        if (headers2[0] == 0x53) AdditionnalCanInfos = " (SRS Module)";                         //->77959-XXX-XXXX files
+        if (headers2[0] == 0x60) AdditionnalCanInfos = " (Odometer Module)";                    //->78109-XXX-XXXX files
+        if (headers2[0] == 0x61) AdditionnalCanInfos = " (HUD Module)";                         //->78209-XXX-XXXX files
+        if (headers2[0] == 0xb0) AdditionnalCanInfos = " (FWD Radar Module)";                   //->36802-XXX-XXXX files
+        if (headers2[0] == 0xb5) AdditionnalCanInfos = " (FWD Camera Module)";                  //->36161-XXX-XXXX files
+        if (headers2[0] == 0xef) AdditionnalCanInfos = " (Gateway Module)";                     //->38897-XXX-XXXX files
 
         //Print/Log Informations
         GForm_Main_0.method_1("Firmware Start: 0x" + start.ToString("X"));
@@ -394,18 +405,28 @@ static class Class_RWD
             {
                 int CheckLocation = 0;
                 if (fc.Length - 1 == 0xF7FFF) CheckLocation = 0x400;
-                if (fc.Length - 1 == 0x1EFFFF) CheckLocation = 0x12;        //0x10012
-                if (fc.Length - 1 == 0x26FFFF) CheckLocation = 0x1F03E6;    //0x2003E6
+                if (fc.Length - 1 == 0x1EFFFF) CheckLocation = 0x12;        //CONFIRMED GOOD LOCATION FOR FIRMWARE, FULL BIN LOCATION: 0x10012
+                if (fc.Length - 1 == 0x26FFFF) CheckLocation = 0x1F03E6;    //0x2003E6      0x1EFFFA in firmware  or 0x001FFFFA in full bin
                 byte num = GetBootloaderSum(fc, CheckLocation);
                 byte num2 = GetNegativeChecksumFWBin(fc, CheckLocation);
-                byte ThisSum = num;
-                ThisSum -= num2;
+                int ThisSumInt = num;
+                ThisSumInt -= num2;
+                if (ThisSumInt < 0) ThisSumInt += 255;
+                byte ThisSum = (byte)ThisSumInt;
                 byte chk = fc[CheckLocation];
+                /*Console.WriteLine("chk: " + chk.ToString("X2"));
+                Console.WriteLine("num2: " + num2.ToString("X2"));
+                Console.WriteLine("num: " + num.ToString("X2"));
+                Console.WriteLine("ThisSum: " + ThisSum.ToString("X2"));*/
                 if (chk == ThisSum)
                 {
                     GForm_Main_0.method_1("checksums good!");
                     BootloaderSum = num;
                     GForm_Main_0.method_1("Bootloader Sum are 0x" + BootloaderSum.ToString("X"));
+                }
+                else
+                {
+                    GForm_Main_0.method_1("checksums bad, could not get bootloader sum!");
                 }
             }
         }
@@ -491,19 +512,24 @@ static class Class_RWD
         byte[] BufferBytes = FWFileBytes;
         byte num = BufferBytes[CheckLocation];
         byte num2 = GetNegativeChecksumFWBin(BufferBytes, CheckLocation);
-        byte BTSum = num;
+        int BTSum = num;
         BTSum += num2;
-        return BTSum;
+        if (BTSum > 255) BTSum -= 255;
+        return (byte) BTSum;
     }
 
     public static byte GetNegativeChecksumFWBin(byte[] byte_1, int CheckLocation)
     {
-        byte b = 0;
+        int b = 0;
         for (int i = 0; i < byte_1.Length; i++)
         {
-            if (i != CheckLocation) b -= byte_1[i];
+            if (i != CheckLocation)
+            {
+                b -= byte_1[i];
+                if (b < 0) b += 255;
+            }
         }
-        return b;
+        return (byte) b;
     }
 
     public static byte[] Push(byte[] bArray, byte[] newBytes)
