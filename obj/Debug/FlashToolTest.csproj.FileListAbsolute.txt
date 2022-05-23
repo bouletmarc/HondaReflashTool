@@ -20,3 +20,5 @@ C:\Users\boule\Documents\Visual Studio 2019\Projects\FlashToolTest\obj\Debug\Fla
 C:\Users\boule\Documents\Visual Studio 2019\Projects\FlashToolTest\obj\Debug\GForm_Credits.resources
 C:\Users\boule\Documents\Visual Studio 2019\Projects\FlashToolTest\obj\Debug\Editortable.resources
 C:\Users\boule\Documents\Visual Studio 2019\Projects\FlashToolTest\bin\Debug\BootLoaderSumBytesList.txt
+C:\Users\boule\Documents\Visual Studio 2019\Projects\FlashToolTest\obj\Debug\GForm_ExtractSize.resources
+C:\Users\boule\Documents\Visual Studio 2019\Projects\FlashToolTest\obj\Debug\GForm_SeveralDef.resources

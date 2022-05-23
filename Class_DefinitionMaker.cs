@@ -976,6 +976,8 @@ public class Class_DefinitionMaker
             Done = false;
             ExtractedBlockDone = 1;
             CurrentExtractedDumps = 1;
+
+            if (!Directory.Exists(ThisEndPath)) Directory.CreateDirectory(ThisEndPath);
             RemovePastDump();
 
             long MaxIndex = (CurrentIndex + BlockSizeExtracted);
@@ -987,8 +989,6 @@ public class Class_DefinitionMaker
 
             GForm_Main_0.method_1("------------------------------------------");
             GForm_Main_0.method_1("Extracting...");
-
-            if (!Directory.Exists(ThisEndPath)) Directory.CreateDirectory(ThisEndPath);
 
             Process[] ProcList = Process.GetProcessesByName("FlashProManager");
             if (ProcList.Length == 0)
@@ -1054,17 +1054,6 @@ public class Class_DefinitionMaker
                                 GForm_Main_0.method_1("Extracted Definitions file created: " + Environment.NewLine + SaveDefPath);
                                 File.Create(SaveDefPath).Dispose();
                                 File.WriteAllText(SaveDefPath, DumpedDefinition);
-
-                                //NOT NEEDED ANYMORE
-                                //< 0x20 > 0x7E
-                                /*byte[] AllFileBytes = File.ReadAllBytes(SaveDefPath);
-                                string SavingString = "";
-                                for (int i = 0; i < AllFileBytes.Length; i++)
-                                {
-                                    if (AllFileBytes[i] >= 0x20 && AllFileBytes[i] <= 0x7E) SavingString += ((char)AllFileBytes[i]).ToString();
-                                    if (AllFileBytes[i] == 0x0D && AllFileBytes[i + 1] == 0x0A) SavingString += Environment.NewLine;
-                                }
-                                File.WriteAllText(SaveDefPath, SavingString);*/
                             }
                         }
 
@@ -1112,10 +1101,11 @@ public class Class_DefinitionMaker
     void ExtractBINFromMemory()
     {
         int bytesRead = 0;
-        uint ThisLocation = 0xFC000000; //0xFCD180BB FD0100C3 FD2A00C3  //C60000
+        uint ThisLocation = 0xFAFF0000; //0xFCD180BB FD0100C3 FD2A00C3  //C60000
         uint MaxLocation = 0xFE000000;
         uint ExtractingSize = 0xFFFFF;
-        int BINSize = ExtractMemorySize + 1;
+        //int BINSize = ExtractMemorySize + 1;
+        int BINSize = 0x26FFFF + 1;
         IntPtr processHandle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_WM_READ, false, process.Id);
         byte[] buffer = new byte[ExtractingSize];
 
@@ -1128,7 +1118,7 @@ public class Class_DefinitionMaker
 
             ReadProcessMemory((int)processHandle, ThisLocation, buffer, buffer.Length, ref bytesRead);
 
-            //D0 02 40 0B 00 09 AF FE ->works for 1Mb &7 2Mb ROM
+            //D0 02 40 0B 00 09 AF FE ->works for 1Mb & 2Mb ROM
             //0D 00 40 02 00 80 00 90 ->works for 4Mb ROM
             //20 00 00 03 B4 C0 FF FF ->works for some 1Mb ROM
             //FF FF FF FF FF FF FF XX -> NOT SUGGESTED
@@ -1145,6 +1135,7 @@ public class Class_DefinitionMaker
                 {
                     StartAddr = (uint)i - 8;
                     i = buffer.Length;
+                    Console.WriteLine("Bin method#1");
                 }
 
                 if (StartAddr == 0)
@@ -1160,6 +1151,7 @@ public class Class_DefinitionMaker
                     {
                         StartAddr = (uint)i - 8;
                         i = buffer.Length;
+                        Console.WriteLine("Bin method#2");
                     }
                 }
 
@@ -1174,10 +1166,31 @@ public class Class_DefinitionMaker
                         && buffer[i + 6] == 0xff
                         && buffer[i + 7] == 0xff)
                     {
-                        StartAddr = (uint)i - 8;
+                        StartAddr = (uint)i - 6; //fixed
                         i = buffer.Length;
+                        Console.WriteLine("Bin method#3");
                     }
                 }
+
+                /*if (StartAddr == 0)
+                {
+                    if (buffer[i] == 0x20
+                        && buffer[i + 1] == 0x00
+                        && buffer[i + 2] == 0x00
+                        && buffer[i + 3] == 0xd0
+                        && buffer[i + 4] == 0x3f
+                        && buffer[i + 5] == 0x87
+                        && buffer[i + 6] == 0x01
+                        && buffer[i + 7] == 0xd0)
+                    {
+                        StartAddr = (uint)i - 8;
+                        i = buffer.Length;
+                        Console.WriteLine("Bin method#4");
+                    }
+                }*/
+                //20 00 00 D0 4F 28 01 D0
+                //20 00 00 D0 3F 87 01 D0
+                //01 D0 00 00 00 B0 B7 06
 
                 //NOT SUGGESTED
                 /*if (buffer[i] == 0xff
@@ -1205,14 +1218,64 @@ public class Class_DefinitionMaker
 
         if (StartAddr != 0)
         {
-            Console.WriteLine("address: 0x" + (StartAddr + ThisLocation).ToString("X"));
+            //Console.WriteLine("address: 0x" + (StartAddr + ThisLocation).ToString("X"));
             buffer = new byte[BINSize];
             ReadProcessMemory((int)processHandle, (StartAddr + ThisLocation), buffer, buffer.Length, ref bytesRead);
+
+            //Remake buffer for appropriate size rom (1mb/2mb/4mb)
+            int NameLocation = GForm_Main_0.Editortable_0.ExtractECUNameLocationFromThisFile(buffer);
+            int Count0x00 = 0;
+            int BinFormatSize = 0x26FFFF + 1;
+
+            //Console.WriteLine("name location: 0x" + NameLocation.ToString("X"));
+            if (NameLocation < 0x1EFFFF)
+            {
+                for (int i = 0xF7FFF; i < buffer.Length; i++)
+                {
+                    if (buffer[i] == 0x00) Count0x00++;
+                    if (buffer[i] != 0x00) Count0x00 = 0;
+
+                    if (Count0x00 >= (16 * 150))
+                    {
+                        if (i >= 0xF7FFF && i < 0x1EFFFF)
+                        {
+                            BinFormatSize = 0xF7FFF + 1;
+                            //Console.WriteLine("too much 0x00 at: 0x" + i.ToString("X"));
+                            i = buffer.Length;
+                        }
+                        if (i >= 0x1EFFFF && i < 0x26FFFF)
+                        {
+                            BinFormatSize = 0x1EFFFF + 1;
+                            i = buffer.Length;
+                        }
+                    }
+                }
+            }
+            if (BinFormatSize == (0xF7FFF + 1))
+            {
+                //remake 1mb
+                GForm_Main_0.method_1("1Mb .bin format detected");
+                byte[] newwbuffer = new byte[0xF7FFF + 1];
+                for (int k = 0; k < newwbuffer.Length; k++) newwbuffer[k] = buffer[k];
+                buffer = newwbuffer;
+            }
+            if (BinFormatSize == (0x1EFFFF + 1))
+            {
+                //remake 2mb
+                GForm_Main_0.method_1("2Mb .bin format detected");
+                byte[] newwbuffer = new byte[0x1EFFFF + 1];
+                for (int k = 0; k < newwbuffer.Length; k++) newwbuffer[k] = buffer[k];
+                buffer = newwbuffer;
+            }
+            if (BinFormatSize == (0x26FFFF + 1))
+            {
+                GForm_Main_0.method_1("4Mb .bin format detected");
+            }
 
             string ECUFilename = GForm_Main_0.Editortable_0.ExtractECUNameFromThisFile(buffer);
             if (ECUFilename != "")
             {
-                string SavePathh = ThisEndPath + GForm_Main_0.Editortable_0.ExtractECUNameFromThisFile(buffer) + ".bin";
+                string SavePathh = ThisEndPath + ECUFilename + ".bin";
                 File.Create(SavePathh).Dispose();
                 File.WriteAllBytes(SavePathh, buffer);
                 GForm_Main_0.method_1("Extracted Binary file created: " + Environment.NewLine + SavePathh);
@@ -1221,9 +1284,9 @@ public class Class_DefinitionMaker
             else
             {
                 GForm_Main_0.method_1("Something went wrong while extracting .bin:" + Environment.NewLine + "Could not find 'ECU name' inside the extracted data");
-                //string SavePathh = ThisEndPath + "DumpHex1";
-                //File.Create(SavePathh).Dispose();
-                //File.WriteAllBytes(SavePathh, buffer);
+                string SavePathh = ThisEndPath + "DumpHex1";
+                File.Create(SavePathh).Dispose();
+                File.WriteAllBytes(SavePathh, buffer);
             }
         }
         /*else
@@ -1298,7 +1361,69 @@ public class Class_DefinitionMaker
     //##########################################################################################################################
     //##########################################################################################################################
 
-    public void ExtractAllBootLoaderSum_1Mb()
+    public void ExtractAllBootLoaderSum()
+    {
+        AllFileNames = new List<string>();
+        AllBootLoaderSumBytes = new List<byte>();
+
+        string[] AllFiles = Directory.GetFiles(FirmwareFolder, "*.gz"); //Get all RWD files
+        for (int i = 0; i < GForm_Main_0.Editortable_0.ClassEditor_0.Ecus_Definitions_Compatible.Count; i++)    //Check within all ecus that has a definitions file
+        {
+            string ThisEcu = GForm_Main_0.Editortable_0.ClassEditor_0.Ecus_Definitions_Compatible[i];
+
+            //Console.WriteLine("DEEEEE: " + ThisEcu);
+
+            bool RWDFileFound = false;
+            for (int k = 0; k < AllFiles.Length; k++)   //check within all RWD files
+            {
+                if (AllFiles[k].Contains(ThisEcu))
+                {
+                    RWDFileFound = true;
+                    //Console.WriteLine("DOING: " + ThisEcu);
+                    GForm_Main_0.ClearLogs();
+
+                    //Decrypt firmware file and get needed variable (Decryption byte)
+                    Class_RWD.LoadRWD(AllFiles[k], true, false, false);
+
+                    for (int m = 0; m < Class_RWD.SuppportedVersions.Length; m++)
+                    {
+                        if (Class_RWD.SuppportedVersions[m] == ThisEcu) //Matching ecu definition and RWD file
+                        {
+                            //Console.WriteLine("MATCHING!");
+                            byte[] AllBytes = Class_RWD.firmware_candidates[m];
+                            byte BootLoaderSumByte = Class_RWD.BootloaderSum;
+
+                            if (BootLoaderSumByte == 0)
+                            {
+                                Console.WriteLine("ERROR BOOTSUM FOR: " + ThisEcu);
+
+                            }
+                            else
+                            {
+                                AllFileNames.Add(ThisEcu);
+                                AllBootLoaderSumBytes.Add(BootLoaderSumByte);
+                            }
+
+                            m = Class_RWD.SuppportedVersions.Length;
+                            k = AllFiles.Length;
+                        }
+                    }
+                }
+            }
+            if (!RWDFileFound) Console.WriteLine("RWD NOT FOUND FOR: " + ThisEcu);
+        }
+
+        string SavingText = "";
+        for (int i = 0; i < AllFileNames.Count; i++) SavingText = SavingText + AllFileNames[i] + "|" + AllBootLoaderSumBytes[i] + Environment.NewLine;
+
+        string SavingPath = Application.StartupPath + @"\BootLoaderSumBytesList2.txt";
+        File.Create(SavingPath).Dispose();
+        File.WriteAllText(SavingPath, SavingText);
+
+        GForm_Main_0.method_1("File saved:" + SavingPath);
+    }
+
+    /*public void ExtractAllBootLoaderSum_1Mb()
     {
         AllFileNames = new List<string>();
         AllBootLoaderSumBytes = new List<byte>();
@@ -1344,5 +1469,5 @@ public class Class_DefinitionMaker
             if (i != 0x400) b -= byte_1[i];
         }
         return b;
-    }
+    }*/
 }

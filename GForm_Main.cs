@@ -39,9 +39,12 @@ public class GForm_Main : DarkForm
     public Class_DefinitionMaker Class_DefinitionMaker_0;
     private DarkComboBox darkComboBoxUnlockMode;
     private bool BadResponceReceived = false;
+    public Class_Checksums Class_Checksums_0;
+    public System.Windows.Forms.Timer Timer1 = new System.Windows.Forms.Timer();
 
     public GForm_Main()
     {
+        this.Enabled = false;
 
         this.InitializeComponent();
 
@@ -51,7 +54,18 @@ public class GForm_Main : DarkForm
 
         GForm_Main_0 = this;
 
+        Timer1.Interval = 1000;
+        Timer1.Tick += new EventHandler(TimerEventProcessor);
+        Timer1.Start();
+    }
+
+    private void TimerEventProcessor(Object myObject, EventArgs myEventArgs)
+    {
+        Timer1.Stop();
+
         Editortable_0 = new Editortable(ref GForm_Main_0);
+        Class_Checksums_0 = new Class_Checksums();
+        Class_Checksums_0.Load(ref GForm_Main_0);
 
         Class_RWD.Load(ref GForm_Main_0);
 
@@ -59,9 +73,11 @@ public class GForm_Main : DarkForm
 
         Class_DefinitionMaker_0 = new Class_DefinitionMaker(ref GForm_Main_0);
 
-        darkComboBoxUnlockMode.SelectedIndex = 0;
-    }
+        Editortable_0.ClassEditor_0.LoadSupportedECUDefinitions();
 
+        darkComboBoxUnlockMode.SelectedIndex = 0;
+        this.Enabled = true;
+    }
 
     private void method_0(string string_3)
     {
@@ -87,6 +103,10 @@ public class GForm_Main : DarkForm
         Editortable_0.method_Log(string_3);
     }
 
+    public void ClearLogs()
+    {
+        this.darkTextBox_0.Text = "";
+    }
 
     public void method_1(string string_3)
     {
@@ -1051,73 +1071,6 @@ public class GForm_Main : DarkForm
         }
     }
 
-    public byte GetNegativeChecksumArea(byte[] byte_1, int Start, int ChecksumLocation)
-    {
-        byte b = 0;
-        for (int i = Start; i < byte_1.Length; i++)
-        {
-            if (i != ChecksumLocation)
-            {
-                b -= byte_1[i];
-            }
-        }
-        return b;
-    }
-
-    public byte[] VerifyChecksumFullBin(byte[] BinFileBytes)
-    {
-        //###############################
-        //Get Checksum and Fix it
-        byte[] BufferBytes = BinFileBytes;
-        int CheckLocation = 0;
-        if (BufferBytes.Length - 1 == 0xFFFFF) CheckLocation = 0x8400;      //1mb-full
-        if (BufferBytes.Length - 1 == 0x1FFFFF) CheckLocation = 0x10012;    //2mb-full
-        if (BufferBytes.Length - 1 == 0x27FFFF) CheckLocation = 0x2003E6;   //4mb-full       //0x3FFFFF
-
-        byte num = BufferBytes[CheckLocation];
-        byte num2 = GetNegativeChecksumArea(BufferBytes, 0, CheckLocation);
-        if (num != num2)
-        {
-            this.method_1("Checksum miss match.");
-            BufferBytes[CheckLocation] = num2;
-            this.method_1("Checksum fixed at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
-        }
-        else
-        {
-            this.method_1("Checksum are good at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
-        }
-        return BufferBytes;
-    }
-
-    public byte[] VerifyChecksumFWBin(byte[] FWFileBytes)
-    {
-        //###############################
-        //Get Checksum and Fix it
-        byte[] BufferBytes = FWFileBytes;
-        int CheckLocation = 0;
-        if (BufferBytes.Length - 1 == 0xF7FFF) CheckLocation = 0x400;       //1mb-fw  -> 0x8400 in full bin but we dont have the bootloader 0x0000 to 0x8000
-        if (BufferBytes.Length - 1 == 0x1EFFFF) CheckLocation = 0x12;       //2mb-fw
-        if (BufferBytes.Length - 1 == 0x26FFFF) CheckLocation = 0x1F03E6;   //4mb-fw
-
-        byte num = Class_RWD.BootloaderSum;
-        byte num2 = Class_RWD.GetNegativeChecksumFWBin(BufferBytes, CheckLocation);
-        byte ThisSum = num;
-        ThisSum -= num2;
-        byte chk = BufferBytes[CheckLocation];
-        if (chk != ThisSum)
-        {
-            this.method_1("Checksum miss match.");
-            BufferBytes[CheckLocation] = ThisSum;
-            this.method_1("Checksum fixed at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
-        }
-        else 
-        {
-            GForm_Main_0.method_1("checksum good at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
-        }
-        return BufferBytes;
-    }
-
-
     private void method_17(object sender, EventArgs e)
     {
         if (GForm_Main.string_0.Length == 0)
@@ -1147,7 +1100,7 @@ public class GForm_Main : DarkForm
 
                 //###############################
                 //Get/Fix Checksums
-                byte_ToWrite = VerifyChecksumFullBin(byte_ToWrite);
+                byte_ToWrite = Class_Checksums_0.VerifyChecksumFullBin(byte_ToWrite);
 
                 if (MessageBox.Show("Are you sure you want to write this file to ECU?", "Flash Tool", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
@@ -1200,7 +1153,7 @@ public class GForm_Main : DarkForm
                 WritingBinaryMode = false;
 
                 //Decrypt firmware file and get needed variable (Decryption byte)
-                Class_RWD.LoadRWD(dialog.FileName, false, false);
+                Class_RWD.LoadRWD(dialog.FileName, false, false, true);
 
                 //###############################
                 //Get Checksum and Fix it -> checksums of rwd files should mostly always be fixed, no need to fix them!
@@ -2384,7 +2337,7 @@ public class GForm_Main : DarkForm
         DialogResult result = openFileDialog1.ShowDialog();
         if (result == DialogResult.OK)
         {
-            Class_RWD.LoadRWD(openFileDialog1.FileName, true, true);
+            Class_RWD.LoadRWD(openFileDialog1.FileName, true, true, true);
         }
     }
 
@@ -2402,7 +2355,7 @@ public class GForm_Main : DarkForm
             string ThisR = gform.FileRWD;
             gform.Dispose();
 
-            Class_RWD.LoadBIN(ThisB, ThisR);
+            Class_RWD.ConvertBIN2RWD(ThisB, ThisR);
         }
     }
 
@@ -2419,7 +2372,7 @@ public class GForm_Main : DarkForm
 
             if ((FilesBytes.Length - 1) == 0xFFFFF)
             {
-                byte[] NewFilesBytes = VerifyChecksumFullBin(FilesBytes);
+                byte[] NewFilesBytes = Class_Checksums_0.VerifyChecksumFullBin(FilesBytes);
                 if (NewFilesBytes != FilesBytes)
                 {
                     string NewPath = Path.GetDirectoryName(openFileDialog1.FileName) + @"\" + Path.GetFileNameWithoutExtension(openFileDialog1.FileName) + "_FixedChkSum.bin";
@@ -2441,7 +2394,7 @@ public class GForm_Main : DarkForm
                     result = openFileDialog1.ShowDialog();
                     if (result == DialogResult.OK)
                     {
-                        Class_RWD.LoadRWD(openFileDialog1.FileName, true, false);
+                        Class_RWD.LoadRWD(openFileDialog1.FileName, true, false, true);
                     }
                 }
                 else
@@ -2449,7 +2402,7 @@ public class GForm_Main : DarkForm
                     Class_RWD.BootloaderSum = (byte)BtSumInt;
                 }
 
-                byte[] NewFilesBytes = VerifyChecksumFWBin(FilesBytes);
+                byte[] NewFilesBytes = Class_Checksums_0.VerifyChecksumFWBin(FilesBytes);
                 if (NewFilesBytes != FilesBytes)
                 {
                     string NewPath = Path.GetDirectoryName(FilenameBuffer) + @"\" + Path.GetFileNameWithoutExtension(FilenameBuffer) + "_FixedChkSum.bin";

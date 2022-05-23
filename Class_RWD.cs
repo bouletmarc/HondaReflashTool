@@ -11,12 +11,12 @@ using System.Windows.Forms;
 static class Class_RWD
 {
     private static string part_number_prefix = "";
-    private static List<byte[]> firmware_candidates = new List<byte[]>();
+    public static List<byte[]> firmware_candidates = new List<byte[]>();
     public static byte[] _keys = new byte[] { };
     public static byte[] _firmware_encrypted = new byte[] { };
     public static UInt32 start = 0U;
     public static UInt32 size = 0U;
-    private static string[] SuppportedVersions = new string[] { };
+    public static string[] SuppportedVersions = new string[] { };
     private static string[] SuppportedFWKeys = new string[] { };
     private static string CanAddress = "";
     private static byte[] DecodersBytes = new byte[] { };   //Used to decode rwd to bin
@@ -107,15 +107,15 @@ static class Class_RWD
 
     //######################################################################################################
     //######################################################################################################
-    public static void LoadBIN(string f_name, string f_nameFW)
+    public static void ConvertBIN2RWD(string f_name, string f_nameFW)
     {
         byte[] data = File.ReadAllBytes(f_name);
         GForm_Main_0.method_1("Encrypting file: " + f_name);
 
         //Load .rwd file for obtaining 'encryption' method and then encrypt the .bin using the same method.
-        LoadRWD(f_nameFW, true, false);
+        LoadRWD(f_nameFW, true, false, true);
 
-        //Copy Start file bytes from the selected rwd file, then add the dat aand checksum bytes
+        //Copy Start file bytes from the selected rwd file, then add the data and checksum bytes
         byte[] dataEncrypted = new byte[RWD_encrypted_StartFile.Length + data.Length + 4];
         for (int i = 0; i < RWD_encrypted_StartFile.Length; i++) dataEncrypted[i] = RWD_encrypted_StartFile[i];
 
@@ -154,19 +154,26 @@ static class Class_RWD
 
     //######################################################################################################
     //######################################################################################################
-    public static void LoadRWD(string f_name, bool FullDecrypt, bool Saving)
+    public static void LoadRWD(string f_name, bool FullDecrypt, bool Saving, bool Logs)
     {
         byte[] data = new byte[] { };
+        SuppportedVersions = new string[] { };
+        SuppportedFWKeys = new string[] { };
+        start = 0;
+        size = 0;
+        _firmware_encrypted = new byte[] { };
+        _keys = new byte[] { };
+
         if (Path.GetExtension(f_name).ToLower().Contains("gz")) data = Decompress(f_name);
         else data = File.ReadAllBytes(f_name);
 
-        GForm_Main_0.method_1("Decrypting file: " + f_name);
+        if (Logs) GForm_Main_0.method_1("Decrypting file: " + f_name);
 
         string indicatorBytes = data[0].ToString("x2") + data[1].ToString("x2") + data[2].ToString("x2");
         if (indicatorBytes != "5a0d0a")
         //if (indicatorBytes != "5a0d0a" && indicatorBytes != "310d0a")
         {
-            GForm_Main_0.method_1("Not Compatible file!");
+            if (Logs) GForm_Main_0.method_1("Not Compatible file!");
             return;
         }
 
@@ -184,6 +191,7 @@ static class Class_RWD
         {
             byte[] header = { };
 
+            //################################################################################################
             if (Mode == 0x5a)
             {
                 byte count = data[idx];
@@ -201,7 +209,7 @@ static class Class_RWD
                     header = Push(header, v);
                 }
             }
-
+            //################################################################################################
             if (Mode == 0x31)
             {
                 byte[] h_prefix = new byte[2];
@@ -213,7 +221,7 @@ static class Class_RWD
 
                 if (h_prefix[0] != 0x0d && h_prefix[1] != 0x0a)
                 {
-                    GForm_Main_0.method_1("header delimiter not found!");
+                    if (Logs) GForm_Main_0.method_1("header delimiter not found!");
                     return;
                 }
 
@@ -231,7 +239,7 @@ static class Class_RWD
                     }
                     if (end_idx == -1) 
                     {
-                        GForm_Main_0.method_1("field delimiter not found!");
+                        if (Logs) GForm_Main_0.method_1("field delimiter not found!");
                         return;
                     }
 
@@ -253,10 +261,11 @@ static class Class_RWD
                 {
                     Console.WriteLine(h_prefix[0].ToString("X2") + h_prefix[1].ToString("X2"));
                     Console.WriteLine(h_suffix[0].ToString("X2") + h_suffix[1].ToString("X2"));
-                    GForm_Main_0.method_1("header prefix and suffix do not match");
+                    if (Logs) GForm_Main_0.method_1("header prefix and suffix do not match");
                     return;
                 }
             }
+            //################################################################################################
 
             if (i == 0) headers0 = header;
             if (i == 1) headers1 = header;
@@ -342,28 +351,31 @@ static class Class_RWD
         if (headers2[0] == 0xef) AdditionnalCanInfos = " (Gateway Module)";                     //->38897-XXX-XXXX files
 
         //Print/Log Informations
-        GForm_Main_0.method_1("Firmware Start: 0x" + start.ToString("X"));
-        GForm_Main_0.method_1("Firmware Size: 0x" + size.ToString("X"));
-        GForm_Main_0.method_1("CanAddress: 0x" + CanAddress + AdditionnalCanInfos);
-        GForm_Main_0.method_1("Software Keys: 0x" + SoftwareKey);
-        GForm_Main_0.method_1("Supported Versions (and keys): ");
-        for (int i = 0; i < SuppportedVersions.Length; i++) GForm_Main_0.method_1(SuppportedVersions[i] + " (0x" + SuppportedFWKeys[i] + ")");
+        if (Logs)
+        {
+            GForm_Main_0.method_1("Firmware Start: 0x" + start.ToString("X"));
+            GForm_Main_0.method_1("Firmware Size: 0x" + size.ToString("X"));
+            GForm_Main_0.method_1("CanAddress: 0x" + CanAddress + AdditionnalCanInfos);
+            GForm_Main_0.method_1("Software Keys: 0x" + SoftwareKey);
+            GForm_Main_0.method_1("Supported Versions (and keys): ");
+            for (int i = 0; i < SuppportedVersions.Length; i++) GForm_Main_0.method_1(SuppportedVersions[i] + " (0x" + SuppportedFWKeys[i] + ")");
+        }
 
         //Perform FULL decryption (convert .rwd to .bin)
-        if (FullDecrypt) DecryptRWD(f_name, Saving);
+        if (FullDecrypt) DecryptRWD(f_name, Saving, Logs);
     }
 
-    private static void DecryptRWD(string f_name, bool Saving)
+    private static void DecryptRWD(string f_name, bool Saving, bool Logs)
     {
         part_number_prefix = get_part_number_prefix(f_name);
-        firmware_candidates = decrypt(part_number_prefix);
+        firmware_candidates = decrypt(part_number_prefix, Logs);
 
         if (firmware_candidates.Count == 0)
         {
             //try with a shorter part number
             GForm_Main_0.method_1("failed on long part number, trying truncated part number ...");
             part_number_prefix = get_part_number_prefix(f_name, true);
-            firmware_candidates = decrypt(part_number_prefix);
+            firmware_candidates = decrypt(part_number_prefix, Logs);
         }
 
         if (firmware_candidates.Count == 0)
@@ -391,10 +403,11 @@ static class Class_RWD
             firmware_candidates.Add(LastCandidate);
         }
 
-        if (firmware_candidates.Count > 1) GForm_Main_0.method_1("multiple sets of keys resulted in data containing the part number");
+        if (Logs && firmware_candidates.Count > 1) GForm_Main_0.method_1("multiple sets of keys resulted in data containing the part number");
 
         //###################################################################
         //###################################################################
+        BootloaderSum = 0;
         foreach (byte[] fc in firmware_candidates)
         {
             //Checksum location for SH7058 1mb rom file are located at 0x8400, it's a 1byte sum calculated from negative sum of the full binary
@@ -403,30 +416,30 @@ static class Class_RWD
 
             if (fc.Length - 1 == 0xF7FFF || fc.Length - 1 == 0x1EFFFF || fc.Length - 1 == 0x26FFFF)
             {
-                int CheckLocation = 0;
-                if (fc.Length - 1 == 0xF7FFF) CheckLocation = 0x400;
-                if (fc.Length - 1 == 0x1EFFFF) CheckLocation = 0x12;        //CONFIRMED GOOD LOCATION FOR FIRMWARE, FULL BIN LOCATION: 0x10012
-                if (fc.Length - 1 == 0x26FFFF) CheckLocation = 0x1F03E6;    //0x2003E6      0x1EFFFA in firmware  or 0x001FFFFA in full bin
-                byte num = GetBootloaderSum(fc, CheckLocation);
-                byte num2 = GetNegativeChecksumFWBin(fc, CheckLocation);
-                int ThisSumInt = num;
-                ThisSumInt -= num2;
-                if (ThisSumInt < 0) ThisSumInt += 255;
-                byte ThisSum = (byte)ThisSumInt;
-                byte chk = fc[CheckLocation];
-                /*Console.WriteLine("chk: " + chk.ToString("X2"));
-                Console.WriteLine("num2: " + num2.ToString("X2"));
-                Console.WriteLine("num: " + num.ToString("X2"));
-                Console.WriteLine("ThisSum: " + ThisSum.ToString("X2"));*/
-                if (chk == ThisSum)
+                int CheckLocation = GForm_Main_0.Class_Checksums_0.GetChecksumLocation(fc);
+                if (CheckLocation != 0)
                 {
-                    GForm_Main_0.method_1("checksums good!");
-                    BootloaderSum = num;
-                    GForm_Main_0.method_1("Bootloader Sum are 0x" + BootloaderSum.ToString("X"));
-                }
-                else
-                {
-                    GForm_Main_0.method_1("checksums bad, could not get bootloader sum!");
+                    byte num = GetBootloaderSum(fc, CheckLocation);
+                    byte num2 = GetNegativeChecksumFWBin(fc, CheckLocation);
+                    int ThisSumInt = num;
+                    ThisSumInt -= num2;
+                    if (ThisSumInt < 0) ThisSumInt += 255;
+                    byte ThisSum = (byte)ThisSumInt;
+                    byte chk = fc[CheckLocation];
+                    /*Console.WriteLine("chk: " + chk.ToString("X2"));
+                    Console.WriteLine("num2: " + num2.ToString("X2"));
+                    Console.WriteLine("num: " + num.ToString("X2"));
+                    Console.WriteLine("ThisSum: " + ThisSum.ToString("X2"));*/
+                    if (chk == ThisSum)
+                    {
+                        GForm_Main_0.method_1("checksums good!");
+                        BootloaderSum = num;
+                        GForm_Main_0.method_1("Bootloader Sum are 0x" + BootloaderSum.ToString("X"));
+                    }
+                    else
+                    {
+                        GForm_Main_0.method_1("checksums bad, could not get bootloader sum!");
+                    }
                 }
             }
         }
@@ -768,7 +781,7 @@ static class Class_RWD
         }
     }
 
-    private static List<byte[]> decrypt(string search_value)
+    private static List<byte[]> decrypt(string search_value, bool Logs)
     {
         //# sometimes there is an extra character after each character
         //# 37805-RBB-J530 -> 3377880550--RRBCBA--JA503000
@@ -781,8 +794,11 @@ static class Class_RWD
 
         string search_exact = search_value.ToUpper();
         string search_padded = search_value_padded.ToUpper();
-        GForm_Main_0.method_1("Searching:");
-        GForm_Main_0.method_1("'" + search_exact + "' and '" + search_padded + "'");
+        if (Logs)
+        {
+            GForm_Main_0.method_1("Searching:");
+            GForm_Main_0.method_1("'" + search_exact + "' and '" + search_padded + "'");
+        }
 
         string[] operators = new string[8] {
             "fn:^", //XOR
@@ -913,7 +929,7 @@ static class Class_RWD
                     if ((decrypted.Contains(search_exact) || decrypted.Contains(search_padded)) && !firmware_candidates_0.Contains(candidate))
                     {
                         MakeEncoderArray();
-                        GForm_Main_0.method_Log("X");
+                        if (Logs) GForm_Main_0.method_Log("X");
                         firmware_candidates_0.Add(candidate);
                         display_ciphers.Add(string.Format("(((i {0} {1}) {2} {3}) {4} {5}) & 0xFF",
                                 o1, k1_CMD,
@@ -922,7 +938,7 @@ static class Class_RWD
                     }
                     else
                     {
-                        GForm_Main_0.method_Log(".");
+                        if (Logs) GForm_Main_0.method_Log(".");
                     }
                     Application.DoEvents();
                 }
@@ -931,9 +947,13 @@ static class Class_RWD
 
         GForm_Main_0.ResetProgressBar();
 
-        foreach (string cipher in display_ciphers) {
-            GForm_Main_0.method_1(String.Format("cipher: {0}", cipher));
-        } 
+        if (Logs)
+        {
+            foreach (string cipher in display_ciphers)
+            {
+                GForm_Main_0.method_1(String.Format("cipher: {0}", cipher));
+            }
+        }
         return firmware_candidates_0;
     }
 }

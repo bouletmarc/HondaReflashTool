@@ -17,6 +17,7 @@ using DarkUI.Forms;
 internal class ClassEditor
 {
     public List<string> Ecus_Definitions_Compatible = new List<string>();
+    public List<string> Ecus_Definitions_Compatible_filename = new List<string>();
 
     //Variables for loaded rom definition
     public List<string> DefinitionsLocationsX = new List<string>();
@@ -48,6 +49,8 @@ internal class ClassEditor
     public List<bool> DefinitionsIsReadOnly = new List<bool>();
     public List<bool> DefinitionsIsUntested = new List<bool>();
     public List<bool> DefinitionsIsNotDefined = new List<bool>();
+    public string DefinitionsChecksumLocation = "";
+    public string DefinitionsCurrentLoadedECU = "";
 
     public long SelectedROMLocation;
     public int SelectedTableSize;
@@ -377,8 +380,8 @@ internal class ClassEditor
 
     public void FixChecksums()
     {
-        if (!this.Editortable_0.IsFullBinary) this.ROM_Bytes = this.Editortable_0.GForm_Main_0.VerifyChecksumFWBin(this.ROM_Bytes);
-        if (this.Editortable_0.IsFullBinary) this.ROM_Bytes = this.Editortable_0.GForm_Main_0.VerifyChecksumFullBin(this.ROM_Bytes);
+        if (!this.Editortable_0.IsFullBinary) this.ROM_Bytes = this.Editortable_0.GForm_Main_0.Class_Checksums_0.VerifyChecksumFWBin(this.ROM_Bytes);
+        if (this.Editortable_0.IsFullBinary) this.ROM_Bytes = this.Editortable_0.GForm_Main_0.Class_Checksums_0.VerifyChecksumFullBin(this.ROM_Bytes);
 
     }
 
@@ -1000,7 +1003,11 @@ internal class ClassEditor
                         this.ROM_Bytes[i + 2] == 0x38 &&
                         this.ROM_Bytes[i + 3] == 0x30 &&
                         (this.ROM_Bytes[i + 4] == 0x35 || this.ROM_Bytes[i + 4] == 0x36) &&
-                        this.ROM_Bytes[i + 5] == 0x2D)
+                        this.ROM_Bytes[i + 5] == 0x2D &&
+                        this.ROM_Bytes[i + 10] != 0x5A &&
+                        this.ROM_Bytes[i + 11] != 0x5A &&
+                        this.ROM_Bytes[i + 12] != 0x5A &&
+                        this.ROM_Bytes[i + 13] != 0x5A)
                     {
                         for (int i2 = 0; i2 < 14; i2++)
                         {
@@ -1157,6 +1164,7 @@ internal class ClassEditor
         try
         {
             Ecus_Definitions_Compatible = new List<string>();
+            Ecus_Definitions_Compatible_filename = new List<string>();
 
             Editortable_0.CheckDefinitionFolderExist();
 
@@ -1166,8 +1174,13 @@ internal class ClassEditor
                 string[] AllDefinitionFiles = Directory.GetFiles(Folderpath, "*.txt", SearchOption.AllDirectories);
 
                 Editortable_0.GForm_Main_0.method_1("Loading definitions files...");
+                int CurrentIndex = 0;
                 foreach (string ThisFilePath in AllDefinitionFiles)
                 {
+                    CurrentIndex++;
+                    int Percent = (int)((CurrentIndex * 100) / AllDefinitionFiles.Length);
+                    Editortable_0.GForm_Main_0.method_4(Percent);
+
                     string[] AllLines = File.ReadAllLines(ThisFilePath);
                     bool GettingEcuList = true;
                     for (int i = 0; i < AllLines.Length; i++)
@@ -1180,6 +1193,7 @@ internal class ClassEditor
                             if (GettingEcuList)
                             {
                                 Ecus_Definitions_Compatible.Add(Thisline);
+                                Ecus_Definitions_Compatible_filename.Add(ThisFilePath);
                                 Editortable_0.GForm_Main_0.method_1("Definitions found for ecu: " + Thisline);
                             }
                         }
@@ -1197,18 +1211,25 @@ internal class ClassEditor
         {
             DarkMessageBox.Show("Failed to load definitions. " + ex.ToString());
         }
+
+        Editortable_0.GForm_Main_0.ResetProgressBar();
     }
 
-    public void LoadThisECUDefinitions(string ThisECU)
+    public void LoadThisECUDefinitions(string ThisECU, int ThisIndexfile)
     {
+        if (DefinitionsCurrentLoadedECU == ThisECU) return;
+
         try
         {
             Editortable_0.CheckDefinitionFolderExist();
 
-            string Folderpath = Application.StartupPath + @"\Definitions";
-            if (Directory.Exists(Folderpath))
+            string ThisFilename = Ecus_Definitions_Compatible_filename[ThisIndexfile];
+
+            //string Folderpath = Application.StartupPath + @"\Definitions";
+            //if (Directory.Exists(Folderpath))
+            if (File.Exists(ThisFilename))
             {
-                string[] AllDefinitionFiles = Directory.GetFiles(Folderpath, "*.txt", SearchOption.AllDirectories);
+                //string[] AllDefinitionFiles = Directory.GetFiles(Folderpath, "*.txt", SearchOption.AllDirectories);
 
                 DefinitionsLocationsX = new List<string>();
                 DefinitionsLocationsY = new List<string>();
@@ -1238,13 +1259,17 @@ internal class ClassEditor
                 DefinitionsIsReadOnly = new List<bool>();
                 DefinitionsIsUntested = new List<bool>();
                 DefinitionsIsNotDefined = new List<bool>();
+                DefinitionsChecksumLocation = "";
+                DefinitionsCurrentLoadedECU = ThisECU;
 
                 Editortable_0.GForm_Main_0.method_1("Loading ECU definitions for: " + ThisECU);
                 bool ECUFound = false;
+                bool ChecksumFound = false;
                 bool IsFileGenerated = false;
-                foreach (string ThisFilePath in AllDefinitionFiles)
-                {
-                    string[] AllLines = File.ReadAllLines(ThisFilePath);
+                //foreach (string ThisFilePath in AllDefinitionFiles)
+                //{
+                    //string[] AllLines = File.ReadAllLines(ThisFilePath);
+                    string[] AllLines = File.ReadAllLines(ThisFilename);
                     bool GettingEcuList = true;
 
                     string CurrentLocationX = "";
@@ -1289,6 +1314,13 @@ internal class ClassEditor
                         if (Thisline[0] != '#' && Thisline != "")
                         {
                             if (GettingEcuList && Thisline == ThisECU) ECUFound = true;
+                        }
+
+                        if (!ChecksumFound && Thisline.Contains("ChecksumAddress:"))
+                        {
+                            string[] Commands = Thisline.Split(':');
+                            DefinitionsChecksumLocation = Commands[1];
+                            ChecksumFound = true;
                         }
 
                         if (!GettingEcuList && !ECUFound) i = AllLines.Length;
@@ -1408,16 +1440,17 @@ internal class ClassEditor
                     {
                         Editortable_0.GForm_Main_0.method_1("Definitions loaded!");
 
+                        //HERE
                         if (IsFileGenerated) DarkMessageBox.Show("This Definitions file as been generated to get the ROM Locations.\nThe ROM Locations can possibly be wrong and\nthe tables can display corrupted values!");
                         return;
                     }
-                }
+                //}
 
-                if (!ECUFound) Editortable_0.GForm_Main_0.method_1("Definitions NOT loaded!");
-            }
-            else
-            {
-                DarkMessageBox.Show("Failed to find definitions folder.");
+                //if (!ECUFound) Editortable_0.GForm_Main_0.method_1("Definitions NOT loaded!");
+                /*}
+                else
+                {
+                    DarkMessageBox.Show("Failed to find definitions folder.");*/
             }
         }
         catch (Exception ex)

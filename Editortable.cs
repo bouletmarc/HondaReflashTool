@@ -617,17 +617,40 @@ public class Editortable : DarkForm
 
     public bool LoadDefinitionsFor(string string_9)
     {
-        ClassEditor_0.LoadSupportedECUDefinitions();
+        //ClassEditor_0.LoadSupportedECUDefinitions();
 
+        int DefinitionsFilesCount = 0;
+        List<int> IndexLisst = new List<int>();
         for (int i = 0; i < ClassEditor_0.Ecus_Definitions_Compatible.Count; i++)
         {
             if (ClassEditor_0.Ecus_Definitions_Compatible[i] == string_9)
             {
-                ClassEditor_0.LoadThisECUDefinitions(string_9);
+                DefinitionsFilesCount++;
+                IndexLisst.Add(i);
+                //ClassEditor_0.LoadThisECUDefinitions(string_9);
+                //return true;
+            }
+        }
 
-                //foreach (string str2 in ClassEditor_0.DefinitionsName) this.NodesNameList.Add(str2);
+        if (DefinitionsFilesCount > 1)
+        {
+            GForm_SeveralDef GForm_SeveralDef_0 = new GForm_SeveralDef();
+            GForm_SeveralDef_0.LoadSetValues(ref GForm_Main_0, string_9, IndexLisst);
+            DialogResult result = GForm_SeveralDef_0.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                ClassEditor_0.LoadThisECUDefinitions(string_9, IndexLisst[GForm_SeveralDef_0.comboBox1.SelectedIndex]);
                 return true;
             }
+
+            //HERE
+            //ClassEditor_0.LoadThisECUDefinitions(string_9, IndexLisst[0]);
+            //return true;
+        }
+        if (DefinitionsFilesCount == 1)
+        {
+            ClassEditor_0.LoadThisECUDefinitions(string_9, IndexLisst[0]);
+            return true;
         }
 
         return false;
@@ -1070,6 +1093,27 @@ public class Editortable : DarkForm
         return ECUName;
     }
 
+    public int ExtractECUNameLocationFromThisFile(byte[] ThisFileBytes)
+    {
+        int Locationn = -1;
+        for (int i = 0; i < ThisFileBytes.Length - 12; i++)
+        {
+            //37805-
+            if ((char)ThisFileBytes[i] == '3'
+                && (char)ThisFileBytes[i + 1] == '7'
+                && (char)ThisFileBytes[i + 2] == '8'
+                && (char)ThisFileBytes[i + 3] == '0'
+                && (char)ThisFileBytes[i + 4] == '5'
+                && (char)ThisFileBytes[i + 5] == '-'
+                && (char)ThisFileBytes[i + 10] != 'Z')
+            {
+                Locationn = i;
+            }
+        }
+
+        return Locationn;
+    }
+
 
     public void LoadThisFile(string ThisFilePath)
     {
@@ -1106,7 +1150,7 @@ public class Editortable : DarkForm
                 DialogResult result = openFileDialog1.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    Class_RWD.LoadRWD(openFileDialog1.FileName, true, false);
+                    Class_RWD.LoadRWD(openFileDialog1.FileName, true, false, true);
                 }
             }
             else
@@ -1218,13 +1262,14 @@ public class Editortable : DarkForm
 
     private void extractAllBootloadersumByteFromAllFirmwaresFilesToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        DarkMessageBox.Show(this, "Select the folder where all decrypted firmwares .bin are located.", "Select firmwares folder", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        //DarkMessageBox.Show(this, "Select the folder where all decrypted firmwares .bin are located.", "Select firmwares folder", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        DarkMessageBox.Show(this, "Select the folder where all RWD(.gz) files are located.", "Select firmwares folder", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
         DialogResult result = folderBrowserDialog1.ShowDialog();
         if (result == DialogResult.OK)
         {
             GForm_Main_0.Class_DefinitionMaker_0.FirmwareFolder = folderBrowserDialog1.SelectedPath;
-            GForm_Main_0.Class_DefinitionMaker_0.ExtractAllBootLoaderSum_1Mb();
+            GForm_Main_0.Class_DefinitionMaker_0.ExtractAllBootLoaderSum();
         }
     }
 
@@ -1401,7 +1446,7 @@ public class Editortable : DarkForm
 
     private void extractbinFileFromFPMToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        GForm_ExtractSize GForm_ExtractSize_0 = new GForm_ExtractSize();
+        /*GForm_ExtractSize GForm_ExtractSize_0 = new GForm_ExtractSize();
         DialogResult result = GForm_ExtractSize_0.ShowDialog();
         if (result == DialogResult.OK)
         {
@@ -1409,7 +1454,8 @@ public class Editortable : DarkForm
             if (GForm_ExtractSize_0.comboBox1.SelectedIndex == 1) GForm_Main_0.Class_DefinitionMaker_0.ExtractMemorySize = 0x1EFFFF;
             if (GForm_ExtractSize_0.comboBox1.SelectedIndex == 2) GForm_Main_0.Class_DefinitionMaker_0.ExtractMemorySize = 0x26FFFF;
             GForm_Main_0.Class_DefinitionMaker_0.Extract("Bin");
-        }
+        }*/
+        GForm_Main_0.Class_DefinitionMaker_0.Extract("Bin");
     }
 
     private void convertrwdTobinToolStripMenuItem_Click(object sender, EventArgs e)
