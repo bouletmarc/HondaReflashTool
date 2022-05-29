@@ -24,7 +24,7 @@ You can perform all the works to the ecu if using the Unlock button (0x27,0x41),
 
 You cannot perform all the works to the ecu if using the Unlock button (0x27,0x01). When using this button you cannot read the ECU rom and cannot write binary file (.bin) to the ECU however this unlock method can be used to write a firmware file update (.rwd|.gz) to the ECU.
 
-Firmware files update (.rwd|.gz) can be obtained when downloading HDS (Honda Diagnostic System) software from others websites and look inside the installation folder of 'J2534 Rewrite software' which is generally installed while installing HDS on the pc.
+Firmware files update (.rwd|.gz) can be obtained when downloading HDS (Honda Diagnostic System) software from others websites and look inside the installation folder of 'J2534 Rewrite software' which is generally installed while installing HDS on the pc. Or you can obtain somes [HERE](https://github.com/bouletmarc/HondaCalibFiles)
 
 Firmware files update (.rwd|.gz) are only partial and encrypted ROM file. This is not the complete ROM file and it is encrypted too, those file are missing the bootloader section of the original ROM (.bin). However you can convert the firmware file (.rwd|.gz) to a decrypted ROM file (.bin) with the missing bootloader section, then modifiy the .bin on your own, then remake a new encrypted firmware (.rwd|.gz) from the modified .bin, then flash the modified firmware file to the ECU using Unlock (0x27,0x01).
 
@@ -35,11 +35,12 @@ Firmware files update (.rwd|.gz) are only partial and encrypted ROM file. This i
 | :white_check_mark: | Read ECU rom |
 | :white_check_mark: | Write/Flash ECU binary (.bin) rom file |
 | :white_check_mark: | Write/Flash ECU firmware (.rwd) file |
-| :white_large_square: | Checksum Verification for 512Kb (.bin) file (SH7055) |
-| :white_check_mark: | Checksum Verification for 1Mb (.bin) file (SH7058) |
-| :white_large_square: | Checksum Verification for 1.5Mb (.bin) file (SH7059) |
-| :white_check_mark: | Checksum Verification for 2Mb (.bin) file (SH72531/MPC5554) **(->TO CONFIRM)** |
-| :white_check_mark: | Checksum Verification for 4Mb (.bin) file (MED17.9.3/TC179X) **(->TO CONFIRM)** |
+| :white_large_square: | Checksum Verification for 512Kb (.bin) file (KEIHIN SH7055) |
+| :white_check_mark: | Checksum Verification for 1Mb (.bin) file (MATSUSHITA & KEIHIN SH7058) |
+| :white_large_square: | Checksum Verification for 1.5Mb (.bin) file (KEIHIN SH7059) |
+| :white_check_mark: | Checksum Verification for 2Mb (.bin) file (PANASONIC & KEIHIN & HITACHI SH72531/TEMIC MPC5554) |
+| :white_large_square: | Checksum Verification for 3Mb (.bin) file (KEIHIN MPC5556) |
+| :white_check_mark: | Checksum Verification for 4Mb (.bin) file (BOSCH MED17.9.3/TC179X) |
 | :white_check_mark: | Seed/Key ECU Unlock Algorithms(0x27,0x01) -> All ECUS?? |
 | :white_large_square: | Seed/Key ECU Unlock Algorithms(0x27,0x03) **(->NOT YET IMPLEMENTED)** |
 | :white_large_square: | Seed/Key ECU Unlock Algorithms(0x27,0x05) **(->NOT YET IMPLEMENTED)** |
@@ -66,13 +67,13 @@ I beleive ALL J2534 adapters are compatible with the Reflash tool if you have th
 
 Common's J2534 adapters such as the GNA600, Mongoose, Tactrix Openport 2.0 (also the fakes ones!) should works with no issues.
 
-# Compatible Cars (using unlock 0x27,0x01 button)
+# Compatible Cars (using unlock 0x27,0x01)
 
 | Car Manufacturer | Year(s) | Models |
 |------|---------|---------|
 | Honda & Acura | 2007+ | All Models?? |
 
-# Compatible Cars (using unlock 0x27,0x41 button)
+# Compatible Cars (using unlock 0x27,0x41)
 
 | Car Model | Year(s) | Algorithm Byte | Key1 Bytes | Key2 Bytes |
 |------|---------|---------|---------|---------|
