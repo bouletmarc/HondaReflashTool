@@ -1,0 +1,61 @@
+# ECU_Honda_Civic_1.3_16v_100Hp_KEIHIN_37820-RMX-A0X_SH7058_1Mb_37805-RMX-A060_37805-RMX-A050
+#######################################################################
+# THIS FILE AS BEEN GENERATED AUTOMATICLY, ROM LOCATIONS CAN BE WRONG
+#######################################################################
+#######################################################################
+# Supported ECU:
+#######################################################################
+37805-RMX-A060
+37805-RMX-A050
+#######################################################################
+# Checksum Address Location:
+#######################################################################
+ChecksumAddress:0x8400
+#######################################################################
+#######################################################################
+#######################################################################
+# ROM Parameters Definitions:
+#######################################################################
+ROMLocationTable:0x14996
+Name:Injector Voltage Compensation
+Unit1:Volts
+Unit2:ms
+TableSize:5x1
+MathTable:X*0.002
+FormatTable:0.00
+ValueMin:-1000
+ValueMax:3000
+Headers:6.00,8.00,12.00,14.00,16.00
+#############################
+ROMLocationTable:0xC5F8
+Name:Minimum IPW
+Unit1:Min IPW
+TableSize:1x1
+ValueMin:-6
+ValueMax:5
+ChangeAmount:0.001
+MathTable:X*0.002
+FormatTable:0.000
+#############################
+ROMLocationTable:0x112B8
+ROMLocationY:0x10F80
+Name:Idle Speed
+Unit1:Coolant Temp
+Unit2:RPM
+TableSize:8x1
+ValueMin:-1000
+ValueMax:4000
+ChangeAmount:50
+MathY:X/10
+#############################
+ROMLocationTable:0x112C8
+ROMLocationY:0x10F80
+Name:Post Start Idle Speed
+Unit1:Coolant Temp
+Unit2:RPM
+TableSize:8x1
+ValueMin:-1000
+ValueMax:4000
+ChangeAmount:50
+MathY:X/10
+#############################

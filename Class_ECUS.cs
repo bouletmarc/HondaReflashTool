@@ -23,5 +23,6 @@ internal class Class_ECUS
     public int FirmwareSize { get; set; }
     public int RomSize { get; set; }
     public string TransmissionType { get; set; }
+    public int PlatformIndex { get; set; }
 }
 

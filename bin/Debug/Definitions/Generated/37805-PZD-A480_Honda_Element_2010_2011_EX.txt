@@ -1,0 +1,165 @@
+# Honda_Element_2010_2011_EX, LX_EX, LX, SC_2.4L, L4 - Gas | 
+#######################################################################
+# THIS FILE AS BEEN GENERATED AUTOMATICLY, ROM LOCATIONS CAN BE WRONG
+#######################################################################
+#######################################################################
+# Supported ECU:
+#######################################################################
+37805-PZD-A480
+37805-PZD-A470
+#######################################################################
+# Checksum Address Location:
+#######################################################################
+ChecksumAddress:0x8400
+#######################################################################
+#######################################################################
+#######################################################################
+# ROM Parameters Definitions:
+#######################################################################
+ROMLocationTable:0xA20A
+Name:VTEC Engagement
+Unit2:RPM
+TableSize:4x1
+ValueMin:-10000
+ValueMax:30000
+ChangeAmount:10
+Headers:Enable Low,Disable Low,Enable High,Disable High
+#############################
+ROMLocationTable:0x15B40
+Name:Revlimiter
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x15B48
+Name:--Revlimiter 1
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x15B50
+Name:--Revlimiter 2
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x15B58
+Name:--Revlimiter 3
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x15B60
+Name:--Revlimiter 4
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x15B64
+Name:--Revlimiter 5
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x15B74
+Name:--Revlimiter 6
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x15B7C
+Name:--Revlimiter 7
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0xA696
+Name:Speedlimiter
+Unit2:KPH
+TableSize:1x1
+ValueMax:255
+# MathTable:X/1.609
+#############################
+ROMLocationTable:0x16CC4
+Name:Injector Voltage Compensation
+Unit1:Volts
+Unit2:ms
+TableSize:5x1
+MathTable:X*0.002
+FormatTable:0.00
+ValueMin:-1000
+ValueMax:3000
+Headers:6.00,8.00,12.00,14.00,16.00
+#############################
+ROMLocationTable:0x9C4E
+Name:MAF Load Limit
+Unit1:Mg/Stroke
+TableSize:4x1
+ValueMin:-1000
+ValueMax:4000
+ChangeAmount:50
+#############################
+ROMLocationTable:0xAE4C
+Name:Minimum IPW
+Unit1:Min IPW
+TableSize:1x1
+ValueMin:-6
+ValueMax:5
+ChangeAmount:0.001
+MathTable:X*0.002
+FormatTable:0.000
+#############################
+ROMLocationTable:0x14678
+ROMLocationY:0x1447C
+Name:Idle Speed
+Unit1:Coolant Temp
+Unit2:RPM
+TableSize:8x1
+ValueMin:-1000
+ValueMax:4000
+ChangeAmount:50
+MathY:X/10
+#############################
+ROMLocationTable:0x14688
+ROMLocationY:0x1447C
+Name:Post Start Idle Speed
+Unit1:Coolant Temp
+Unit2:RPM
+TableSize:8x1
+ValueMin:-1000
+ValueMax:4000
+ChangeAmount:50
+MathY:X/10
+#############################
+ROMLocationTable:0x14858
+Name:WOT Determiniation 1(TPS)
+Unit1:RPM
+Unit2:TPS(%)
+TableSize:6x1
+ValueMin:-50
+ValueMax:200
+MathTable:X*0.005
+FormatTable:0.00
+ChangeAmount:1
+Headers:1000,2000,3000,4000,5000,6000
+#############################
+ROMLocationTable:0x14870
+Name:WOT Determiniation 2(TPS)
+Unit1:RPM
+Unit2:TPS(%)
+TableSize:6x1
+ValueMin:-50
+ValueMax:200
+MathTable:X*0.005
+FormatTable:0.00
+ChangeAmount:1
+Headers:1000,2000,3000,4000,5000,6000
+#############################

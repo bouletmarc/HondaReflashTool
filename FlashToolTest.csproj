@@ -79,6 +79,9 @@
     <Compile Include="GClass4.cs" />
     <Compile Include="GEnum0.cs" />
     <Compile Include="GEnum1.cs" />
+    <Compile Include="GForm_Warning.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GForm_SeveralDef.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -115,6 +118,9 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="frmOBD2Scan.resx" />
+    <EmbeddedResource Include="GForm_Warning.resx">
+      <DependentUpon>GForm_Warning.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GForm_SeveralDef.resx">
       <DependentUpon>GForm_SeveralDef.cs</DependentUpon>
     </EmbeddedResource>

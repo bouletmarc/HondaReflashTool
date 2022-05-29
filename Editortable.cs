@@ -59,6 +59,9 @@ public class Editortable : DarkForm
     private ToolStripMenuItem convertrwdTobinToolStripMenuItem;
     private ToolStripMenuItem convertbinTorwdToolStripMenuItem;
     private ToolStripMenuItem openOBD2ScanToolToolStripMenuItem;
+    private ContextMenuStrip contextMenuStrip1;
+    private IContainer components;
+    private ToolStripMenuItem clearLogsToolStripMenuItem;
     private ToolStripMenuItem decreaseSelectionToolStripMenuItem;
 
     internal Editortable(ref GForm_Main GForm_Main_1)
@@ -77,13 +80,15 @@ public class Editortable : DarkForm
 
     public void Loadingg() 
     {
-        string LastOpenFilePath = Application.StartupPath + @"\LastFileOpened.txt";
-        if (File.Exists(LastOpenFilePath))
+        //string LastOpenFilePath = Application.StartupPath + @"\LastFileOpened.txt";
+        //if (File.Exists(LastOpenFilePath))
+        if (GForm_Main_0.LastFileOpenedEditor != "")
         {
             DialogResult result = DarkMessageBox.Show(this, "Do you want to reopen the last file you have worked on?", "Reopen last file used", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
             if (result == DialogResult.Yes)
             {
-                LoadThisFile(File.ReadAllText(LastOpenFilePath));
+                //LoadThisFile(File.ReadAllText(LastOpenFilePath));
+                LoadThisFile(GForm_Main_0.LastFileOpenedEditor);
             }
         }
     }
@@ -110,6 +115,7 @@ public class Editortable : DarkForm
 
     private void InitializeComponent()
     {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -150,6 +156,8 @@ public class Editortable : DarkForm
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.darkTextBox_0 = new DarkUI.Controls.DarkTextBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.clearLogsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_0)).BeginInit();
             this.darkToolStrip1.SuspendLayout();
@@ -161,6 +169,7 @@ public class Editortable : DarkForm
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // treeView1
@@ -572,6 +581,7 @@ public class Editortable : DarkForm
             // 
             // darkTextBox_0
             // 
+            this.darkTextBox_0.ContextMenuStrip = this.contextMenuStrip1;
             this.darkTextBox_0.Dock = System.Windows.Forms.DockStyle.Fill;
             this.darkTextBox_0.Location = new System.Drawing.Point(0, 0);
             this.darkTextBox_0.Multiline = true;
@@ -580,6 +590,20 @@ public class Editortable : DarkForm
             this.darkTextBox_0.Size = new System.Drawing.Size(799, 152);
             this.darkTextBox_0.TabIndex = 56;
             this.darkTextBox_0.Text = "Honda CANBUS Tools";
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clearLogsToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 48);
+            // 
+            // clearLogsToolStripMenuItem
+            // 
+            this.clearLogsToolStripMenuItem.Name = "clearLogsToolStripMenuItem";
+            this.clearLogsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.clearLogsToolStripMenuItem.Text = "Clear Logs";
+            this.clearLogsToolStripMenuItem.Click += new System.EventHandler(this.clearLogsToolStripMenuItem_Click);
             // 
             // Editortable
             // 
@@ -591,7 +615,7 @@ public class Editortable : DarkForm
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Editortable";
-            this.Text = "Honda Rom Tables Editor";
+            this.Text = "Honda&Acura Rom Tables Editor";
             this.Load += new System.EventHandler(this.Editortable_Load);
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_0)).EndInit();
@@ -606,6 +630,7 @@ public class Editortable : DarkForm
             this.splitContainer2.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
     }
@@ -615,9 +640,14 @@ public class Editortable : DarkForm
         this.CreateRightClicMenu();
     }
 
+    public void ClearLogs()
+    {
+        darkTextBox_0.Text = "";
+    }
+
     public bool LoadDefinitionsFor(string string_9)
     {
-        //ClassEditor_0.LoadSupportedECUDefinitions();
+        if (string_9 == ClassEditor_0.DefinitionsCurrentLoadedECU) return true;
 
         int DefinitionsFilesCount = 0;
         List<int> IndexLisst = new List<int>();
@@ -627,11 +657,10 @@ public class Editortable : DarkForm
             {
                 DefinitionsFilesCount++;
                 IndexLisst.Add(i);
-                //ClassEditor_0.LoadThisECUDefinitions(string_9);
-                //return true;
             }
         }
 
+        //More than one 'definition.txt' file have been found for the same ECU
         if (DefinitionsFilesCount > 1)
         {
             GForm_SeveralDef GForm_SeveralDef_0 = new GForm_SeveralDef();
@@ -647,12 +676,15 @@ public class Editortable : DarkForm
             //ClassEditor_0.LoadThisECUDefinitions(string_9, IndexLisst[0]);
             //return true;
         }
+
+        //Only one definition file matching
         if (DefinitionsFilesCount == 1)
         {
             ClassEditor_0.LoadThisECUDefinitions(string_9, IndexLisst[0]);
             return true;
         }
 
+        //nothing found
         return false;
     }
 
@@ -1119,9 +1151,11 @@ public class Editortable : DarkForm
     {
         this.Text = "Honda Rom Tables Editor (" + this.GForm_Main_0.Version + ") | " + Path.GetFileName(ThisFilePath);
 
-        string LastOpenFilePath = Application.StartupPath + @"\LastFileOpened.txt";
-        File.Create(LastOpenFilePath).Dispose();
-        File.WriteAllText(LastOpenFilePath, ThisFilePath);
+        //string LastOpenFilePath = Application.StartupPath + @"\LastFileOpened.txt";
+        //File.Create(LastOpenFilePath).Dispose();
+        //File.WriteAllText(LastOpenFilePath, ThisFilePath);
+        GForm_Main_0.LastFileOpenedEditor = ThisFilePath;
+        GForm_Main_0.SaveSettings();
         this.IsFullBinary = false;
 
         byte[] FilesBytes = File.ReadAllBytes(ThisFilePath);
@@ -1150,7 +1184,7 @@ public class Editortable : DarkForm
                 DialogResult result = openFileDialog1.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    Class_RWD.LoadRWD(openFileDialog1.FileName, true, false, true);
+                    Class_RWD.LoadRWD(openFileDialog1.FileName, true, false, true, true);
                 }
             }
             else
@@ -1238,7 +1272,7 @@ public class Editortable : DarkForm
 
     private void generateDefinitionsFilesToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        DarkMessageBox.Show(this, "Select the folder where all decrypted firmwares .bin are located.", "Select firmwares folder", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        DarkMessageBox.Show(this, "Select the folder where all decrypted firmwares .rwd|.gz are located.", "Select firmwares folder", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
         DialogResult result = folderBrowserDialog1.ShowDialog();
         if (result == DialogResult.OK)
@@ -1471,6 +1505,12 @@ public class Editortable : DarkForm
     private void openOBD2ScanToolToolStripMenuItem_Click(object sender, EventArgs e)
     {
         GForm_Main_0.darkButton5_Click(sender, e);
+    }
+
+    private void clearLogsToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        ClearLogs();
+        GForm_Main_0.ClearLogs();
     }
 }
 

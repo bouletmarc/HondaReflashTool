@@ -1,0 +1,121 @@
+# Acura_RDX_2013_2014_2015_Base_3.5L, V6 - Gas | ECU_Acura_RDX_2.3_16v_240Hp_KEIHIN_37820-R8A-A6X_SH7058_1Mb_37805-R8A-A660_37805-R8A-A650_37805-R8A-A640_37805-R8A-A630_37805-R8A-A620_37805-R8A-A610
+#######################################################################
+# THIS FILE AS BEEN GENERATED AUTOMATICLY, ROM LOCATIONS CAN BE WRONG
+#######################################################################
+#######################################################################
+# Supported ECU:
+#######################################################################
+37805-R8A-A660
+37805-R8A-A650
+37805-R8A-A640
+37805-R8A-A630
+37805-R8A-A620
+37805-R8A-A610
+#######################################################################
+# Checksum Address Location:
+#######################################################################
+ChecksumAddress:0x83F8
+#######################################################################
+#######################################################################
+#######################################################################
+# ROM Parameters Definitions:
+#######################################################################
+ROMLocationTable:0x13320
+Name:Revlimiter
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x13328
+Name:--Revlimiter 1
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x13330
+Name:--Revlimiter 2
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x13338
+Name:--Revlimiter 3
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x13340
+Name:--Revlimiter 4
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x13344
+Name:--Revlimiter 5
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x13354
+Name:--Revlimiter 6
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x1335C
+Name:--Revlimiter 7
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x13BDA
+Name:Injector Voltage Compensation
+Unit1:Volts
+Unit2:ms
+TableSize:5x1
+MathTable:X*0.002
+FormatTable:0.00
+ValueMin:-1000
+ValueMax:3000
+Headers:6.00,8.00,12.00,14.00,16.00
+#############################
+ROMLocationTable:0x13BC4
+Name:Minimum IPW
+Unit1:Min IPW
+TableSize:1x1
+ValueMin:-6
+ValueMax:5
+ChangeAmount:0.001
+MathTable:X*0.002
+FormatTable:0.000
+#############################
+ROMLocationTable:0x132F6
+ROMLocationY:0xB7B8
+Name:Idle Speed
+Unit1:Coolant Temp
+Unit2:RPM
+TableSize:8x1
+ValueMin:-1000
+ValueMax:4000
+ChangeAmount:50
+MathY:X/10
+#############################
+ROMLocationTable:0x13306
+ROMLocationY:0xB7B8
+Name:Post Start Idle Speed
+Unit1:Coolant Temp
+Unit2:RPM
+TableSize:8x1
+ValueMin:-1000
+ValueMax:4000
+ChangeAmount:50
+MathY:X/10
+#############################

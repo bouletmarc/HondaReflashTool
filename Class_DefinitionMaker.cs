@@ -16,11 +16,16 @@ public class Class_DefinitionMaker
     List<int> AllFoundAddressX = new List<int>();
     List<int> AllFoundAddressY = new List<int>();
 
+    List<int> EcuIndexInList = new List<int>();
+    List<string> AllCompatiblesECUS = new List<string>();
+    List<int> AllChecksumsLocations = new List<int>();
+    private int ThisIndex = 0;
+    public string FirmwareFolder = "";
 
+
+    //############
     List<string> AllFileNames = new List<string>();
     List<byte> AllBootLoaderSumBytes = new List<byte>();
-
-    public string FirmwareFolder = "";
 
     GForm_Main GForm_Main_0;
 
@@ -37,168 +42,223 @@ public class Class_DefinitionMaker
 
     public void CreateDefinitionsFiles()
     {
-        string[] AllFiles = Directory.GetFiles(FirmwareFolder, "*.bin");
+        AllECUS = new List<string>();
+        AllFoundFunctions = new List<string>();
+        AllFoundAddress = new List<int>();
+        AllFoundAddressX = new List<int>();
+        AllFoundAddressY = new List<int>();
+        EcuIndexInList = new List<int>();
+        AllCompatiblesECUS = new List<string>();
+        AllChecksumsLocations = new List<int>();
+        ThisIndex = 0;
+
+        string[] AllFiles = Directory.GetFiles(FirmwareFolder, "*.gz");
         foreach (string ThisFile in AllFiles)
         {
-            byte[] AllBytes = File.ReadAllBytes(ThisFile);
+            if (ThisFile.Contains("37805"))
+            {
+                //########
+                Class_RWD.LoadRWD(ThisFile, true, false, false, false);
+                if (Class_RWD.firmware_candidates.Count == 0)
+                {
+                    Console.WriteLine(Path.GetFileNameWithoutExtension(ThisFile));
+                    continue;
+                }
 
-            //Create a fake bootloader section
-            byte[] BufferBytes = new byte[0x8000 + AllBytes.Length];
-            for (int i = 0; i < 0x8000; i++) BufferBytes[i] = 0xff;
-            for (int i = 0; i < AllBytes.Length; i++) BufferBytes[0x8000 + i] = AllBytes[i];
-            AllBytes = BufferBytes;
+                byte[] AllBytes = Class_RWD.firmware_candidates[0];
+                if ((AllBytes.Length - 1) != 0xF7FFF) continue; //################
 
-            bool DoneParameter = false;
+                string AllCompECU = "";
+                for (int m = 0; m < Class_RWD.SuppportedVersions.Length; m++)
+                {
+                    AllCompECU += Class_RWD.SuppportedVersions[m];
+                    if (m < Class_RWD.SuppportedVersions.Length - 1) AllCompECU += "|";
+                }
+                AllCompatiblesECUS.Add(AllCompECU);
+                //EcuIndexInList.Add(ThisIndex);
+                //########
+                //byte[] AllBytes = File.ReadAllBytes(ThisFile);
 
-            //#######################################################################################################################
-            //#######################################################################################################################
-            DoneParameter = false;
-            int ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("00 0A 00 0A 00 C8 00"), 16, false);
-            if (ThisAddr != -1) AddToList(Path.GetFileNameWithoutExtension(ThisFile), "VTEC Engagement", ThisAddr, -1, -1);
-            //#######################################################################################################################
-            //#######################################################################################################################
-            DoneParameter = false;
-            ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("FA 01 2C FF FF 40"), 71, false);
-            if (ThisAddr != -1 && !DoneParameter)
-            {
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Revlimiter", ThisAddr, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 1", ThisAddr + 8, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 2", ThisAddr + 16, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 3", ThisAddr + 24, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 4", ThisAddr + 32, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 5", ThisAddr + 36, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 6", ThisAddr + 52, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 7", ThisAddr + 60, -1, -1);
-                DoneParameter = true;
+                //Create a fake bootloader section
+                if ((AllBytes.Length - 1) == 0xF7FFF)
+                {
+                    byte[] BufferBytes = new byte[0x8000 + AllBytes.Length];
+                    for (int i = 0; i < 0x8000; i++) BufferBytes[i] = 0xff;
+                    for (int i = 0; i < AllBytes.Length; i++) BufferBytes[0x8000 + i] = AllBytes[i];
+                    AllBytes = BufferBytes;
+
+                    //Get checksum locations
+                    if (AllBytes[0x83F8] != 0xff) AllChecksumsLocations.Add(0x83F8);
+                    else AllChecksumsLocations.Add(0x8400);
+                }
+                else
+                {
+                    byte[] BufferBytes = new byte[0x10000 + AllBytes.Length];
+                    for (int i = 0; i < 0x10000; i++) BufferBytes[i] = 0xff;
+                    for (int i = 0; i < AllBytes.Length; i++) BufferBytes[0x10000 + i] = AllBytes[i];
+                    AllBytes = BufferBytes;
+
+                    //Get checksum locations
+
+                    //NOT DEFINIED ...
+                }
+
+                bool DoneParameter = false;
+
+                //#######################################################################################################################
+                //#######################################################################################################################
+                DoneParameter = false;
+                int ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("00 0A 00 0A 00 C8 00"), 16, false);
+                if (ThisAddr != -1) AddToList(Path.GetFileNameWithoutExtension(ThisFile), "VTEC Engagement", ThisAddr, -1, -1);
+                //#######################################################################################################################
+                //#######################################################################################################################
+                DoneParameter = false;
+                ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("FA 01 2C FF FF 40"), 71, false);
+                if (ThisAddr != -1 && !DoneParameter)
+                {
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Revlimiter", ThisAddr, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 1", ThisAddr + 8, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 2", ThisAddr + 16, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 3", ThisAddr + 24, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 4", ThisAddr + 32, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 5", ThisAddr + 36, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 6", ThisAddr + 52, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 7", ThisAddr + 60, -1, -1);
+                    DoneParameter = true;
+                }
+                if (ThisAddr == -1 && !DoneParameter) ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("FA 01 2C FF FF 3A"), 71, false);
+                if (ThisAddr != -1 && !DoneParameter)
+                {
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Revlimiter", ThisAddr, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 1", ThisAddr + 8, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 2", ThisAddr + 16, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 3", ThisAddr + 24, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 4", ThisAddr + 32, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 5", ThisAddr + 36, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 6", ThisAddr + 52, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 7", ThisAddr + 60, -1, -1);
+                    DoneParameter = true;
+                }
+                if (ThisAddr == -1 && !DoneParameter) ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("00 00 00 00 80 00 80 00 00 00 00 00 00"), 84, false);
+                if (ThisAddr != -1 && !DoneParameter)
+                {
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Revlimiter", ThisAddr, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 1", ThisAddr + 8, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 2", ThisAddr + 16, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 3", ThisAddr + 24, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 4", ThisAddr + 32, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 5", ThisAddr + 36, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 6", ThisAddr + 52, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 7", ThisAddr + 60, -1, -1);
+                    DoneParameter = true;
+                }
+                //#######################################################################################################################
+                //#######################################################################################################################
+                DoneParameter = false;
+                ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("00 32 00 1E 01 2C 00 00 08 66 66 00 00"), -2, false);
+                if (ThisAddr != -1 && !DoneParameter)
+                {
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Speedlimiter", ThisAddr, -1, -1);
+                    DoneParameter = true;
+                }
+                if (ThisAddr == -1 && !DoneParameter) ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("00 32 00 1E 02 BC 02 DC 01 2C"), -2, false);
+                if (ThisAddr != -1 && !DoneParameter)
+                {
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Speedlimiter", ThisAddr, -1, -1);
+                    DoneParameter = true;
+                }
+                if (ThisAddr == -1 && !DoneParameter) ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("01 90 00 14 01 2C 00 00 08 66 66 00 00"), -2, false);
+                if (ThisAddr != -1 && !DoneParameter)
+                {
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Speedlimiter", ThisAddr, -1, -1);
+                    DoneParameter = true;
+                }
+                if (ThisAddr == -1 && !DoneParameter) ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("01 2C 00 00 08 66 66 00 00"), -6, false);
+                if (ThisAddr != -1 && !DoneParameter)
+                {
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Speedlimiter", ThisAddr, -1, -1);
+                    DoneParameter = true;
+                }
+                //#######################################################################################################################
+                //#######################################################################################################################
+                DoneParameter = false;
+                ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("0C 80 0F A0 12 C0 19 00"), 8, false);
+                if (ThisAddr != -1 && !DoneParameter)
+                {
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Injector Voltage Compensation", ThisAddr, -1, -1);
+                    DoneParameter = true;
+                }
+                if (ThisAddr == -1 && !DoneParameter) ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("FC 18 FF 38 80 00 80 00"), -92, false);
+                if (ThisAddr != -1 && !DoneParameter)
+                {
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Injector Voltage Compensation", ThisAddr, -1, -1);
+                    DoneParameter = true;
+                }
+                //#######################################################################################################################
+                //#######################################################################################################################
+                //MISSING ON SOME ROMS, HAVE TO CHECK FOR OTHERS BYTES ARRAY
+                DoneParameter = false;
+                ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("00 1E 00 00 00 03 00 05 00"), -8, false);
+                if (ThisAddr != -1) AddToList(Path.GetFileNameWithoutExtension(ThisFile), "MAF Load Limit", ThisAddr, -1, -1);
+                //#######################################################################################################################
+                //#######################################################################################################################
+                DoneParameter = false;
+                ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("7F FF F0 60 EF 98"), 182, false);
+                if (ThisAddr != -1 && !DoneParameter)
+                {
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Minimum IPW", ThisAddr, -1, -1);
+                    DoneParameter = true;
+                }
+                if (ThisAddr == -1 && !DoneParameter) ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("05 66 05 66 02 00 00 00 00 01"), 36, true);
+                if (ThisAddr != -1 && !DoneParameter)
+                {
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Minimum IPW", ThisAddr, -1, -1);
+                    DoneParameter = true;
+                }
+                //#######################################################################################################################
+                //#######################################################################################################################
+                //GET COOLANT TEMP LOCATION
+                DoneParameter = false;
+                int ThisAddrY = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("01 C2 02 12 02 53 03 20 27 10"), 166, false);
+                if (ThisAddrY != -1 && !DoneParameter) DoneParameter = true;
+                if (ThisAddrY == -1 && !DoneParameter) ThisAddrY = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("80 00 7F FF 7F FF 7F FF 7F FF"), 286, false);
+                if (ThisAddrY != -1 && !DoneParameter) DoneParameter = true;
+                if (ThisAddrY == -1 && !DoneParameter) ThisAddrY = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("80 00 FE D4 FF"), 174, false); //MAY CAUSE CERTAIN ISSUE
+                if (ThisAddrY != -1 && !DoneParameter) DoneParameter = true;
+                //####################################################################
+                DoneParameter = false;
+                ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("00 00 00 00 00 00 00 01 00 1E"), 16, false);
+                if (ThisAddr != -1 && !DoneParameter)
+                {
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Idle Speed", ThisAddr, -1, ThisAddrY);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Post Start Idle Speed", ThisAddr + 16, -1, ThisAddrY);
+                    DoneParameter = true;
+                }
+                if (ThisAddr == -1 && !DoneParameter) ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("C8 01 90 03 20 61 A8 00"), -75, true);
+                if (ThisAddr != -1 && !DoneParameter)
+                {
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Idle Speed", ThisAddr, -1, ThisAddrY);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Post Start Idle Speed", ThisAddr + 16, -1, ThisAddrY);
+                    DoneParameter = true;
+                }
+                //#######################################################################################################################
+                //#######################################################################################################################
+                DoneParameter = false;
+                ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("01 90 01 90 01 90 FF 38"), 48, false);
+                if (ThisAddr != -1 && !DoneParameter)
+                {
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "WOT Determiniation 1(TPS)", ThisAddr, -1, -1);
+                    AddToList(Path.GetFileNameWithoutExtension(ThisFile), "WOT Determiniation 2(TPS)", ThisAddr + 24, -1, -1);
+                    DoneParameter = true;
+                }
+                //MISSING: WOT Determiniation (MAP)
+                //#######################################################################################################################
+                //#######################################################################################################################
+
+
+
+                ThisIndex++;
             }
-            if (ThisAddr == -1 && !DoneParameter) ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("FA 01 2C FF FF 3A"), 71, false);
-            if (ThisAddr != -1 && !DoneParameter)
-            {
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Revlimiter", ThisAddr, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 1", ThisAddr + 8, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 2", ThisAddr + 16, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 3", ThisAddr + 24, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 4", ThisAddr + 32, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 5", ThisAddr + 36, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 6", ThisAddr + 52, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 7", ThisAddr + 60, -1, -1);
-                DoneParameter = true;
-            }
-            if (ThisAddr == -1 && !DoneParameter) ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("00 00 00 00 80 00 80 00 00 00 00 00 00"), 84, false);
-            if (ThisAddr != -1 && !DoneParameter)
-            {
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Revlimiter", ThisAddr, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 1", ThisAddr + 8, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 2", ThisAddr + 16, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 3", ThisAddr + 24, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 4", ThisAddr + 32, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 5", ThisAddr + 36, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 6", ThisAddr + 52, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "--Revlimiter 7", ThisAddr + 60, -1, -1);
-                DoneParameter = true;
-            }
-            //#######################################################################################################################
-            //#######################################################################################################################
-            DoneParameter = false;
-            ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("00 32 00 1E 01 2C 00 00 08 66 66 00 00"), -2, false);
-            if (ThisAddr != -1 && !DoneParameter)
-            {
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Speedlimiter", ThisAddr, -1, -1);
-                DoneParameter = true;
-            }
-            if (ThisAddr == -1 && !DoneParameter) ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("00 32 00 1E 02 BC 02 DC 01 2C"), -2, false);
-            if (ThisAddr != -1 && !DoneParameter)
-            {
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Speedlimiter", ThisAddr, -1, -1);
-                DoneParameter = true;
-            }
-            if (ThisAddr == -1 && !DoneParameter) ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("01 90 00 14 01 2C 00 00 08 66 66 00 00"), -2, false);
-            if (ThisAddr != -1 && !DoneParameter)
-            {
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Speedlimiter", ThisAddr, -1, -1);
-                DoneParameter = true;
-            }
-            if (ThisAddr == -1 && !DoneParameter) ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("01 2C 00 00 08 66 66 00 00"), -6, false);
-            if (ThisAddr != -1 && !DoneParameter)
-            {
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Speedlimiter", ThisAddr, -1, -1);
-                DoneParameter = true;
-            }
-            //#######################################################################################################################
-            //#######################################################################################################################
-            DoneParameter = false;
-            ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("0C 80 0F A0 12 C0 19 00"), 8, false);
-            if (ThisAddr != -1 && !DoneParameter)
-            {
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Injector Voltage Compensation", ThisAddr, -1, -1);
-                DoneParameter = true;
-            }
-            if (ThisAddr == -1 && !DoneParameter) ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("FC 18 FF 38 80 00 80 00"), -92, false);
-            if (ThisAddr != -1 && !DoneParameter)
-            {
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Injector Voltage Compensation", ThisAddr, -1, -1);
-                DoneParameter = true;
-            }
-            //#######################################################################################################################
-            //#######################################################################################################################
-            //MISSING ON SOME ROMS, HAVE TO CHECK FOR OTHERS BYTES ARRAY
-            DoneParameter = false;
-            ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("00 1E 00 00 00 03 00 05 00"), -8, false);
-            if (ThisAddr != -1) AddToList(Path.GetFileNameWithoutExtension(ThisFile), "MAF Load Limit", ThisAddr, -1, -1);
-            //#######################################################################################################################
-            //#######################################################################################################################
-            DoneParameter = false;
-            ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("7F FF F0 60 EF 98"), 182, false);
-            if (ThisAddr != -1 && !DoneParameter)
-            {
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Minimum IPW", ThisAddr, -1, -1);
-                DoneParameter = true;
-            }
-            if (ThisAddr == -1 && !DoneParameter) ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("05 66 05 66 02 00 00 00 00 01"), 36, true);
-            if (ThisAddr != -1 && !DoneParameter)
-            {
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Minimum IPW", ThisAddr, -1, -1);
-                DoneParameter = true;
-            }
-            //#######################################################################################################################
-            //#######################################################################################################################
-            //GET COOLANT TEMP LOCATION
-            DoneParameter = false;
-            int ThisAddrY = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("01 C2 02 12 02 53 03 20 27 10"), 166, false);
-            if (ThisAddrY != -1 && !DoneParameter) DoneParameter = true;
-            if (ThisAddrY == -1 && !DoneParameter) ThisAddrY = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("80 00 7F FF 7F FF 7F FF 7F FF"), 286, false);
-            if (ThisAddrY != -1 && !DoneParameter) DoneParameter = true;
-            if (ThisAddrY == -1 && !DoneParameter) ThisAddrY = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("80 00 FE D4 FF"), 174, false); //MAY CAUSE CERTAIN ISSUE
-            if (ThisAddrY != -1 && !DoneParameter) DoneParameter = true;
-            //####################################################################
-            DoneParameter = false;
-            ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("00 00 00 00 00 00 00 01 00 1E"), 16, false);
-            if (ThisAddr != -1 && !DoneParameter)
-            {
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Idle Speed", ThisAddr, -1, ThisAddrY);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Post Start Idle Speed", ThisAddr + 16, -1, ThisAddrY);
-                DoneParameter = true;
-            }
-            if (ThisAddr == -1 && !DoneParameter) ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("C8 01 90 03 20 61 A8 00"), -75, true);
-            if (ThisAddr != -1 && !DoneParameter)
-            {
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Idle Speed", ThisAddr, -1, ThisAddrY);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "Post Start Idle Speed", ThisAddr + 16, -1, ThisAddrY);
-                DoneParameter = true;
-            }
-            //#######################################################################################################################
-            //#######################################################################################################################
-            DoneParameter = false;
-            ThisAddr = CheckForBytesAndGetAddress(AllBytes, StringToByteArray("01 90 01 90 01 90 FF 38"), 48, false);
-            if (ThisAddr != -1 && !DoneParameter)
-            {
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "WOT Determiniation 1(TPS)", ThisAddr, -1, -1);
-                AddToList(Path.GetFileNameWithoutExtension(ThisFile), "WOT Determiniation 2(TPS)", ThisAddr + 24, -1, -1);
-                DoneParameter = true;
-            }
-            //MISSING: WOT Determiniation (MAP)
-            //#######################################################################################################################
-            //#######################################################################################################################
         }
 
         GenerateDefinitions();
@@ -215,7 +275,21 @@ public class Class_DefinitionMaker
             {
                 if (BufECUName != "") CreateFile(AllStringFile, BufECUName);
                 BufECUName = AllECUS[i];
-                AllStringFile = GenerateNewHeader(BufECUName, new List<string>(), "0x8400");
+                //#############
+                List<string> AllEcuList = new List<string>();
+                string ThisEcussList = AllCompatiblesECUS[EcuIndexInList[i]];
+                if (ThisEcussList.Contains("|"))
+                {
+                    string[] Splitt = ThisEcussList.Split('|');
+                    for (int i2 = 0; i2 < Splitt.Length; i2++) AllEcuList.Add(Splitt[i2]);
+                }
+                else
+                {
+                    AllEcuList.Add(ThisEcussList);
+                }
+                AllStringFile = GenerateNewHeader("", AllEcuList, "0x" + AllChecksumsLocations[EcuIndexInList[i]].ToString("X"));
+                //#############
+                //AllStringFile = GenerateNewHeader(BufECUName, new List<string>(), "0x8400");
                 //Console.WriteLine(AllECUS[i] + " | 0x" + AllFoundAddress[i].ToString("X") + " | " + AllFoundFunctions[i]);
             }
 
@@ -389,6 +463,7 @@ public class Class_DefinitionMaker
         AllFoundAddress.Add(ThisAddr);
         AllFoundAddressX.Add(ThisAddrX);
         AllFoundAddressY.Add(ThisAddrY);
+        EcuIndexInList.Add(ThisIndex);
     }
 
     public byte[] StringToByteArray(string hex)
@@ -1354,6 +1429,210 @@ public class Class_DefinitionMaker
             File.WriteAllBytes(ThisEndPath + "DumpHex" + ExtractedBlockDone, AllReturnBytes);
         }*/
     }
+    //##########################################################################################################################
+    //##########################################################################################################################
+    //##########################################################################################################################
+    //##########################################################################################################################
+    //##########################################################################################################################
+
+    public void ExtracHondaAcuraECUCodesList()
+    {
+        string DoThisPath = Application.StartupPath + @"\HondaAcuraCodesList2.txt";
+        string AllRWDPath = @"C:\Program Files (x86)\Honda\J2534 Pass Thru\CalibFiles";
+        string[] AllFiles = Directory.GetFiles(AllRWDPath, "*.gz"); //Get all RWD files
+        string[] AllLines = File.ReadAllLines(DoThisPath);
+        for (int i = 0; i < AllLines.Length; i++)
+        {
+            if (AllLines[i].Contains("_"))
+            {
+                if (AllLines[i][0] != '#')
+                {
+                    string[] Splittedcmds = AllLines[i].Split('_');
+                    for (int i2 = 0; i2 < Splittedcmds.Length; i2++)
+                    {
+                        if (Splittedcmds[i2].Contains("37820"))
+                        {
+                            string SearchFor = Splittedcmds[i2];
+                            SearchFor = SearchFor.Replace("37820", "37805");
+                            SearchFor = SearchFor.Substring(0, SearchFor.Length - 1);
+                            SearchFor = SearchFor.Replace("XX", "");
+                            if (SearchFor[SearchFor.Length - 1] == 'X') SearchFor = SearchFor.Substring(0, SearchFor.Length - 1);
+
+                            Console.WriteLine(SearchFor);
+
+                            for (int k = 0; k < AllFiles.Length; k++)
+                            {
+                                if (AllFiles[k].Contains(SearchFor))
+                                {
+                                    Class_RWD.LoadRWD(AllFiles[k], true, false, false, false);
+
+                                    string TheseRWDFiles = "";
+                                    for (int m = 0; m < Class_RWD.SuppportedVersions.Length; m++)
+                                    {
+                                        TheseRWDFiles += Class_RWD.SuppportedVersions[m];
+                                        if (m < Class_RWD.SuppportedVersions.Length - 1) TheseRWDFiles += "_";
+                                    }
+
+                                    //Remake Current line
+                                    string CurrentLineText = "";
+                                    for (int m = 0; m < Splittedcmds.Length; m++) CurrentLineText += Splittedcmds[m] + "_";
+                                    CurrentLineText += TheseRWDFiles;
+
+                                    Console.WriteLine("Remadeline: " + CurrentLineText);
+                                    AllLines[i] = CurrentLineText;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        File.WriteAllLines(DoThisPath, AllLines);
+    }
+
+    //##########################################
+
+    public void SetHondaAcuraCodesToDefinitionsFiles()
+    {
+        string DoThisPath = Application.StartupPath + @"\HondaAcuraCodesList.txt";
+        string DoThisPath2 = Application.StartupPath + @"\HondaAcuraCodesList2.txt";
+        string Folderpath = Application.StartupPath + @"\Definitions\Generated";
+        string[] AllDefinitionFiles = Directory.GetFiles(Folderpath, "*.txt", SearchOption.AllDirectories);
+        string[] AllLines1 = File.ReadAllLines(DoThisPath);
+        string[] AllLines2 = File.ReadAllLines(DoThisPath2);
+        List<string> FileToDelete = new List<string>();
+
+        for (int i = 0; i < AllDefinitionFiles.Length; i++)
+        {
+            try
+            {
+                //37805-RWC-A620-M1.rwd.txt
+                string EcuNamee = Path.GetFileNameWithoutExtension(AllDefinitionFiles[i]).Substring(0, 13);
+
+
+                Console.WriteLine("Doing: " + EcuNamee);
+
+                bool FoundParam = false;
+                for (int k = 0; k < AllLines1.Length; k++)
+                {
+                    if (AllLines1[k].Contains(EcuNamee))
+                    {
+                        Console.WriteLine("Found#1");
+                        //Honda_Accord_2013_EX, EX-L_2.4L L4 - Gas, 3.5L V6 - Gas
+                        string ParamLine = AllLines1[k - 1];
+                        if (ParamLine.Contains(","))
+                        {
+                            string[] SplittedP = ParamLine.Split(',');
+                            string DescText = SplittedP[0];
+                            DescText += GetProccesorAndSize(AllLines2, EcuNamee);
+                            string NewFileName = Path.GetDirectoryName(AllDefinitionFiles[i]) + @"\" + Path.GetFileNameWithoutExtension(AllDefinitionFiles[i]).Substring(0, 14) + "_" + DescText + ".txt";
+                            File.Create(NewFileName).Dispose();
+                            File.WriteAllBytes(NewFileName, File.ReadAllBytes(AllDefinitionFiles[i]));
+
+                            if (NewFileName != AllDefinitionFiles[i]) FileToDelete.Add(AllDefinitionFiles[i]);
+                            Console.WriteLine("Created: " + Path.GetFileNameWithoutExtension(NewFileName));
+
+                            //#####################
+                            string[] AllThisLines = File.ReadAllLines(NewFileName);
+                            AllThisLines[0] = "# " + ParamLine + " | " + GetOtherDesc(AllLines2, EcuNamee);
+                            AllThisLines[1] = "#######################################################################";
+                            File.WriteAllLines(NewFileName, AllThisLines);
+                        }
+
+                        FoundParam = true;
+                        k = AllLines1.Length;
+                    }
+                }
+
+                if (!FoundParam)
+                {
+                    //ECU_Acura_RLX_3.5_16v_310Hp_KEIHIN_37820-R9S-A8X_SH72543_2Mb_37805-R9S-A840_37805-R9S-A830_37805-R9S-A820_37805-R9S-A810_37805-R9S-A590_37805-R9S-A580_37805-R9S-A570_37805-R9S-A560_37805-R9S-A550_37805-R9S-A540_37805-R9S-A530_37805-R9S-A520_37805-R9S-A510
+                    for (int k = 0; k < AllLines2.Length; k++)
+                    {
+                        if (AllLines2[k].Contains(EcuNamee))
+                        {
+                            Console.WriteLine("Found#2");
+                            string ParamLine = AllLines2[k];
+
+                            if (ParamLine.Contains("_"))
+                            {
+                                string[] SplittedP = ParamLine.Split('_');
+                                string DescText = SplittedP[1] + "_" + SplittedP[2] + "_" + SplittedP[3] + "_" + SplittedP[4];
+                                DescText += GetProccesorAndSize(AllLines2, EcuNamee);
+                                string NewFileName = Path.GetDirectoryName(AllDefinitionFiles[i]) + @"\" + Path.GetFileNameWithoutExtension(AllDefinitionFiles[i]).Substring(0, 14) + "_" + DescText + ".txt";
+                                File.Create(NewFileName).Dispose();
+                                File.WriteAllBytes(NewFileName, File.ReadAllBytes(AllDefinitionFiles[i]));
+
+                                if (NewFileName != AllDefinitionFiles[i]) FileToDelete.Add(AllDefinitionFiles[i]);
+                                Console.WriteLine("Created: " + Path.GetFileNameWithoutExtension(NewFileName));
+
+                                //#####################
+                                string[] AllThisLines = File.ReadAllLines(NewFileName);
+                                AllThisLines[0] = "# " + ParamLine;
+                                AllThisLines[1] = "#######################################################################";
+                                File.WriteAllLines(NewFileName, AllThisLines);
+                            }
+
+                            FoundParam = true;
+                            k = AllLines2.Length;
+                        }
+                    }
+                }
+            }
+            catch { }
+        }
+
+        for (int i = 0; i < FileToDelete.Count; i++)
+        {
+            File.Delete(FileToDelete[i]);
+            Console.WriteLine("Deleted: " + Path.GetFileNameWithoutExtension(FileToDelete[i]));
+        }
+    }
+
+    string GetOtherDesc(string[] AllLines2, string EcuNamee)
+    {
+        string ReturnText = "";
+        for (int k = 0; k < AllLines2.Length; k++)
+        {
+            if (AllLines2[k].Contains(EcuNamee))
+            {
+                ReturnText = AllLines2[k];
+
+                k = AllLines2.Length;
+            }
+        }
+        return ReturnText;
+    }
+
+    string GetProccesorAndSize(string[] AllLines2, string EcuNamee)
+    {
+        string ReturnText = "";
+        for (int k = 0; k < AllLines2.Length; k++)
+        {
+            if (AllLines2[k].Contains(EcuNamee))
+            {
+                string ParamLine = AllLines2[k];
+
+                if (ParamLine.Contains("_"))
+                {
+                    string[] SplittedP = ParamLine.Split('_');
+                    for (int m = 0; m < SplittedP.Length; m++)
+                    {
+                        if (SplittedP[m].Contains("SH72543") || SplittedP[m].Contains("SH7058") || SplittedP[m].Contains("MPC5554") ||
+                            SplittedP[m].Contains("MPC5566") || SplittedP[m].Contains("SH7055"))
+                        {
+                            ReturnText += "_" + SplittedP[m] + "_" + SplittedP[m + 1];
+                            m = SplittedP.Length;
+                        }
+                    }
+                }
+
+                k = AllLines2.Length;
+            }
+        }
+        return ReturnText;
+    }
 
     //##########################################################################################################################
     //##########################################################################################################################
@@ -1383,7 +1662,7 @@ public class Class_DefinitionMaker
                     GForm_Main_0.ClearLogs();
 
                     //Decrypt firmware file and get needed variable (Decryption byte)
-                    Class_RWD.LoadRWD(AllFiles[k], true, false, false);
+                    Class_RWD.LoadRWD(AllFiles[k], true, false, false, true);
 
                     for (int m = 0; m < Class_RWD.SuppportedVersions.Length; m++)
                     {

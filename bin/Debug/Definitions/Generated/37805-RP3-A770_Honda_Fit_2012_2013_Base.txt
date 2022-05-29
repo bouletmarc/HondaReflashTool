@@ -1,0 +1,92 @@
+# Honda_Fit_2012_2013_Base, Sport_1.5L, L4 - Gas | 
+#######################################################################
+# THIS FILE AS BEEN GENERATED AUTOMATICLY, ROM LOCATIONS CAN BE WRONG
+#######################################################################
+#######################################################################
+# Supported ECU:
+#######################################################################
+37805-RP3-A770
+37805-RP3-A760
+#######################################################################
+# Checksum Address Location:
+#######################################################################
+ChecksumAddress:0x8400
+#######################################################################
+#######################################################################
+#######################################################################
+# ROM Parameters Definitions:
+#######################################################################
+ROMLocationTable:0xB4F2
+Name:Speedlimiter
+Unit2:KPH
+TableSize:1x1
+ValueMax:255
+# MathTable:X/1.609
+#############################
+ROMLocationTable:0x16D1A
+Name:Injector Voltage Compensation
+Unit1:Volts
+Unit2:ms
+TableSize:5x1
+MathTable:X*0.002
+FormatTable:0.00
+ValueMin:-1000
+ValueMax:3000
+Headers:6.00,8.00,12.00,14.00,16.00
+#############################
+ROMLocationTable:0xBBF8
+Name:Minimum IPW
+Unit1:Min IPW
+TableSize:1x1
+ValueMin:-6
+ValueMax:5
+ChangeAmount:0.001
+MathTable:X*0.002
+FormatTable:0.000
+#############################
+ROMLocationTable:0x1290A
+ROMLocationY:0x15A74
+Name:Idle Speed
+Unit1:Coolant Temp
+Unit2:RPM
+TableSize:8x1
+ValueMin:-1000
+ValueMax:4000
+ChangeAmount:50
+MathY:X/10
+#############################
+ROMLocationTable:0x1291A
+ROMLocationY:0x15A74
+Name:Post Start Idle Speed
+Unit1:Coolant Temp
+Unit2:RPM
+TableSize:8x1
+ValueMin:-1000
+ValueMax:4000
+ChangeAmount:50
+MathY:X/10
+#############################
+ROMLocationTable:0x133A4
+Name:WOT Determiniation 1(TPS)
+Unit1:RPM
+Unit2:TPS(%)
+TableSize:6x1
+ValueMin:-50
+ValueMax:200
+MathTable:X*0.005
+FormatTable:0.00
+ChangeAmount:1
+Headers:1000,2000,3000,4000,5000,6000
+#############################
+ROMLocationTable:0x133BC
+Name:WOT Determiniation 2(TPS)
+Unit1:RPM
+Unit2:TPS(%)
+TableSize:6x1
+ValueMin:-50
+ValueMax:200
+MathTable:X*0.005
+FormatTable:0.00
+ChangeAmount:1
+Headers:1000,2000,3000,4000,5000,6000
+#############################

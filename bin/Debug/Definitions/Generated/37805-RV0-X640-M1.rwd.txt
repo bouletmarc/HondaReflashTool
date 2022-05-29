@@ -1,0 +1,115 @@
+#######################################################################
+#######################################################################
+# THIS FILE AS BEEN GENERATED AUTOMATICLY, ROM LOCATIONS CAN BE WRONG
+#######################################################################
+#######################################################################
+# Supported ECU:
+#######################################################################
+37805-RV0-X640
+37805-RV0-X630
+37805-RV0-X620
+37805-RV0-X610
+#######################################################################
+# Checksum Address Location:
+#######################################################################
+ChecksumAddress:0x83F8
+#######################################################################
+#######################################################################
+#######################################################################
+# ROM Parameters Definitions:
+#######################################################################
+ROMLocationTable:0x12CA6
+Name:Revlimiter
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x12CAE
+Name:--Revlimiter 1
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x12CB6
+Name:--Revlimiter 2
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x12CBE
+Name:--Revlimiter 3
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x12CC6
+Name:--Revlimiter 4
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x12CCA
+Name:--Revlimiter 5
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x12CDA
+Name:--Revlimiter 6
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x12CE2
+Name:--Revlimiter 7
+Unit2:RPM
+TableSize:2x1
+ValueMax:10000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x135B6
+Name:Injector Voltage Compensation
+Unit1:Volts
+Unit2:ms
+TableSize:5x1
+MathTable:X*0.002
+FormatTable:0.00
+ValueMin:-1000
+ValueMax:3000
+Headers:6.00,8.00,12.00,14.00,16.00
+#############################
+ROMLocationTable:0x135A0
+Name:Minimum IPW
+Unit1:Min IPW
+TableSize:1x1
+ValueMin:-6
+ValueMax:5
+ChangeAmount:0.001
+MathTable:X*0.002
+FormatTable:0.000
+#############################
+ROMLocationTable:0x12CA6
+Name:Idle Speed
+Unit1:Coolant Temp
+Unit2:RPM
+TableSize:8x1
+ValueMin:-1000
+ValueMax:4000
+ChangeAmount:50
+#############################
+ROMLocationTable:0x12CB6
+Name:Post Start Idle Speed
+Unit1:Coolant Temp
+Unit2:RPM
+TableSize:8x1
+ValueMin:-1000
+ValueMax:4000
+ChangeAmount:50
+#############################

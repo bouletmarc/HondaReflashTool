@@ -311,8 +311,8 @@ internal class ClassEditor
 
     public void SaveROMBytes(string string_4)
     {
-        try
-        {
+        //try
+        //{
             if (this.ValuesChanged && this.SelectedTableSize != 0 && this.SelectedROMLocation != 0)
             {
                 this.GetChanges();
@@ -328,13 +328,13 @@ internal class ClassEditor
                 if (FileFormat == "1mb-fw")
                 {
                     byte[] BufferBytes = new byte[SavingBytes.Length - 0x8000];
-                    for (int i = 0; i < SavingBytes.Length; i++) BufferBytes[i] = SavingBytes[i + 0x8000];
+                    for (int i = 0; i < BufferBytes.Length; i++) BufferBytes[i] = SavingBytes[i + 0x8000];
                     SavingBytes = BufferBytes;
                 }
                 if (FileFormat == "2mb-fw" || FileFormat == "4mb-fw")
                 {
                     byte[] BufferBytes = new byte[SavingBytes.Length - 0x10000];
-                    for (int i = 0; i < SavingBytes.Length; i++) BufferBytes[i] = SavingBytes[i + 0x10000];
+                    for (int i = 0; i < BufferBytes.Length; i++) BufferBytes[i] = SavingBytes[i + 0x10000];
                     SavingBytes = BufferBytes;
                 }
             }
@@ -371,11 +371,11 @@ internal class ClassEditor
             File.Delete(text);
             File.Delete(text2);*/
             DarkMessageBox.Show("Successfully Saved File!.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-        }
-        catch
+        /*}
+        catch (Exception ex)
         {
-            DarkMessageBox.Show("Failed to save file!.", "Fail", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-        }
+            DarkMessageBox.Show("Failed to save file! error: " + Environment.NewLine + ex, "Save file failed", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+        }*/
     }
 
     public void FixChecksums()
@@ -974,7 +974,7 @@ internal class ClassEditor
                 //Console.WriteLine(Editortable_0.IsFullBinary);
                 //Console.WriteLine(FileFormat);
 
-                //Create a fake bootloader section
+                //Create fake bootloader section
                 if (!Editortable_0.IsFullBinary)
                 {
                     if (FileFormat == "1mb-fw")
@@ -1168,6 +1168,8 @@ internal class ClassEditor
 
             Editortable_0.CheckDefinitionFolderExist();
 
+            int LoadedDefCount = 0;
+
             string Folderpath = Application.StartupPath + @"\Definitions";
             if (Directory.Exists(Folderpath))
             {
@@ -1188,19 +1190,26 @@ internal class ClassEditor
                         string Thisline = AllLines[i];
                         if (Thisline.Contains("ROM Parameters") || Thisline.Contains("Checksum ")) GettingEcuList = false; //make sure we are not reading false contents
 
-                        if (Thisline[0] != '#' && Thisline != "")
+                        if (Thisline != "")
                         {
-                            if (GettingEcuList)
+                            if (Thisline[0] != '#')
                             {
-                                Ecus_Definitions_Compatible.Add(Thisline);
-                                Ecus_Definitions_Compatible_filename.Add(ThisFilePath);
-                                Editortable_0.GForm_Main_0.method_1("Definitions found for ecu: " + Thisline);
+                                if (GettingEcuList)
+                                {
+                                    Ecus_Definitions_Compatible.Add(Thisline);
+                                    Ecus_Definitions_Compatible_filename.Add(ThisFilePath);
+                                    Editortable_0.GForm_Main_0.method_1("Definitions found for ecu: " + Thisline);
+                                    LoadedDefCount++;
+                                }
                             }
                         }
 
                         if (!GettingEcuList) i = AllLines.Length;
                     }
                 }
+
+                Editortable_0.GForm_Main_0.ClearLogs();
+                Editortable_0.GForm_Main_0.method_1(LoadedDefCount + " definitions loaded!");
             }
             else
             {

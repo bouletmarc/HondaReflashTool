@@ -22,6 +22,14 @@ public class GForm_PlatformSelect : DarkForm
         method_0();
     }
 
+    public void GetPlatformAt(int ThisIndex)
+    {
+        this.Class9_0 = this.list_0[ThisIndex];
+        this.DialogResult = System.Windows.Forms.DialogResult.OK;
+        base.Close();
+        return;
+    }
+
 
     private void method_0()
     {
@@ -86,6 +94,7 @@ public class GForm_PlatformSelect : DarkForm
         if (this.dataGridView_0.SelectedCells[0].RowIndex != -1)
         {
             this.Class9_0 = this.list_0[this.dataGridView_0.SelectedCells[0].RowIndex];
+            this.Class9_0.PlatformIndex = this.dataGridView_0.SelectedCells[0].RowIndex;
             this.DialogResult = System.Windows.Forms.DialogResult.OK;
             base.Close();
             return;

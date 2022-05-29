@@ -35,7 +35,8 @@ static class Class_RWD
     {
         FileStream originalFileStream = File.Open(ThisFile, FileMode.Open);
         FileStream compressedFileStream = File.Create(CompressedName);
-        GZipStream compressor = new GZipStream(compressedFileStream, CompressionMode.Compress);
+        GZipStream compressor = new GZipStream(compressedFileStream, CompressionLevel.Optimal);
+        //GZipStream compressor = new GZipStream(compressedFileStream, CompressionMode.Compress);
         originalFileStream.CopyTo(compressor);
     }
 
@@ -112,8 +113,22 @@ static class Class_RWD
         byte[] data = File.ReadAllBytes(f_name);
         GForm_Main_0.method_1("Encrypting file: " + f_name);
 
+        //Convert full bin to firmware (remove bootloader section)
+        if (data.Length - 1 == 0xFFFFF)
+        {
+            byte[] BufferBytes = new byte[data.Length - 0x8000];
+            for (int i = 0; i < BufferBytes.Length; i++) BufferBytes[i] = data[i + 0x8000];
+            data = BufferBytes;
+        }
+        if (data.Length - 1 == 0x1FFFFF || data.Length - 1 == 0x27FFFF)
+        {
+            byte[] BufferBytes = new byte[data.Length - 0x10000];
+            for (int i = 0; i < BufferBytes.Length; i++) BufferBytes[i] = data[i + 0x10000];
+            data = BufferBytes;
+        }
+
         //Load .rwd file for obtaining 'encryption' method and then encrypt the .bin using the same method.
-        LoadRWD(f_nameFW, true, false, true);
+        LoadRWD(f_nameFW, true, false, true, true);
 
         //Copy Start file bytes from the selected rwd file, then add the data and checksum bytes
         byte[] dataEncrypted = new byte[RWD_encrypted_StartFile.Length + data.Length + 4];
@@ -131,15 +146,19 @@ static class Class_RWD
         byte[] ChecksumBytes = BitConverter.GetBytes(ChecksumValue);
         if (ChecksumBytes.Length == 4)
         {
-            for (int i = 0; i < ChecksumBytes.Length; i++)
+            /*for (int i = 0; i < 4; i++)
             {
                 dataEncrypted[((dataEncrypted.Length - 1) - 4) + i] = ChecksumBytes[i];
-            }
-            GForm_Main_0.method_1("Checksum bytes fixed!");
+            }*/
+            dataEncrypted[((dataEncrypted.Length) - 4) + 0] = ChecksumBytes[3];
+            dataEncrypted[((dataEncrypted.Length) - 4) + 1] = ChecksumBytes[2];
+            dataEncrypted[((dataEncrypted.Length) - 4) + 2] = ChecksumBytes[1];
+            dataEncrypted[((dataEncrypted.Length) - 4) + 3] = ChecksumBytes[0];
+            GForm_Main_0.method_1("RWD Checksum bytes applied!");
         }
         else
         {
-            GForm_Main_0.method_1("Checksum is not 4bytes long!");
+            GForm_Main_0.method_1("RWD Checksum is not 4bytes long!");
         }
 
         //Save Encrypted rwd firmware
@@ -148,13 +167,16 @@ static class Class_RWD
         File.WriteAllBytes(ThisPath, dataEncrypted);
         GForm_Main_0.method_1("Saved encrypted firmware file: " + ThisPath);
 
+        //### COMPRESSING .gz format DOES NOT EXACTLY WORK ####
         //Save ZIPPED Encrypted firmware
-        CompressFile(ThisPath, ThisPath + ".gz");
+        GForm_Main_0.method_1("To compress the file back to .gz format, use GZip");
+        GForm_Main_0.method_1("You can use this online website to compress file to .gz: " + Environment.NewLine + "https://gzip.swimburger.net/");
+        //CompressFile(ThisPath, ThisPath + ".gz");
     }
 
     //######################################################################################################
     //######################################################################################################
-    public static void LoadRWD(string f_name, bool FullDecrypt, bool Saving, bool Logs)
+    public static void LoadRWD(string f_name, bool FullDecrypt, bool Saving, bool Logs, bool CheckForChecksum)
     {
         byte[] data = new byte[] { };
         SuppportedVersions = new string[] { };
@@ -362,22 +384,33 @@ static class Class_RWD
         }
 
         //Perform FULL decryption (convert .rwd to .bin)
-        if (FullDecrypt) DecryptRWD(f_name, Saving, Logs);
+        if (FullDecrypt) DecryptRWD(f_name, Saving, Logs, CheckForChecksum);
     }
 
-    private static void DecryptRWD(string f_name, bool Saving, bool Logs)
+    private static void DecryptRWD(string f_name, bool Saving, bool Logs, bool CheckForChecksum)
     {
         part_number_prefix = get_part_number_prefix(f_name);
-        firmware_candidates = decrypt(part_number_prefix, Logs);
+        firmware_candidates = decrypt(part_number_prefix, Logs, false);
 
+        //#################################
+        //#################################
+        //#################################
+        if (firmware_candidates.Count == 0)
+        {
+            GForm_Main_0.method_1("failed to find part number, trying all cipher(bruteforce) ...");
+            part_number_prefix = get_part_number_prefix(f_name);
+            firmware_candidates = decrypt(part_number_prefix, Logs, true);
+        }
         if (firmware_candidates.Count == 0)
         {
             //try with a shorter part number
             GForm_Main_0.method_1("failed on long part number, trying truncated part number ...");
             part_number_prefix = get_part_number_prefix(f_name, true);
-            firmware_candidates = decrypt(part_number_prefix, Logs);
+            firmware_candidates = decrypt(part_number_prefix, Logs, true);
         }
-
+        //#################################
+        //#################################
+        //#################################
         if (firmware_candidates.Count == 0)
         {
             GForm_Main_0.method_1("decryption failed!");
@@ -408,37 +441,42 @@ static class Class_RWD
         //###################################################################
         //###################################################################
         BootloaderSum = 0;
-        foreach (byte[] fc in firmware_candidates)
+        if (CheckForChecksum)
         {
-            //Checksum location for SH7058 1mb rom file are located at 0x8400, it's a 1byte sum calculated from negative sum of the full binary
-            //Since we are missing the bootloader section of the full binary we have to remove the section 0x0000 to 0x8000(Start_Address)
-            //we can calculate what was the 'sum' of the bootloader by subtracting the 'sum' of the decrypted firmware!
-
-            if (fc.Length - 1 == 0xF7FFF || fc.Length - 1 == 0x1EFFFF || fc.Length - 1 == 0x26FFFF)
+            foreach (byte[] fc in firmware_candidates)
             {
-                int CheckLocation = GForm_Main_0.Class_Checksums_0.GetChecksumLocation(fc);
-                if (CheckLocation != 0)
+                //Checksum location for SH7058 1mb rom file are located at 0x8400, it's a 1byte sum calculated from negative sum of the full binary
+                //Since we are missing the bootloader section of the full binary we have to remove the section 0x0000 to 0x8000(Start_Address)
+                //we can calculate what was the 'sum' of the bootloader by subtracting the 'sum' of the decrypted firmware!
+
+                if (fc.Length - 1 == 0xF7FFF || fc.Length - 1 == 0x1EFFFF || fc.Length - 1 == 0x26FFFF)
                 {
-                    byte num = GetBootloaderSum(fc, CheckLocation);
-                    byte num2 = GetNegativeChecksumFWBin(fc, CheckLocation);
-                    int ThisSumInt = num;
-                    ThisSumInt -= num2;
-                    if (ThisSumInt < 0) ThisSumInt += 255;
-                    byte ThisSum = (byte)ThisSumInt;
-                    byte chk = fc[CheckLocation];
-                    /*Console.WriteLine("chk: " + chk.ToString("X2"));
-                    Console.WriteLine("num2: " + num2.ToString("X2"));
-                    Console.WriteLine("num: " + num.ToString("X2"));
-                    Console.WriteLine("ThisSum: " + ThisSum.ToString("X2"));*/
-                    if (chk == ThisSum)
+                    int CheckLocation = GForm_Main_0.Class_Checksums_0.GetChecksumLocation(fc);
+                    if (CheckLocation != 0)
                     {
-                        GForm_Main_0.method_1("checksums good!");
-                        BootloaderSum = num;
-                        GForm_Main_0.method_1("Bootloader Sum are 0x" + BootloaderSum.ToString("X"));
-                    }
-                    else
-                    {
-                        GForm_Main_0.method_1("checksums bad, could not get bootloader sum!");
+                        if (fc.Length - 1 == 0xF7FFF) CheckLocation -= 0x8000;
+                        if (fc.Length - 1 == 0x1EFFFF || fc.Length - 1 == 0x26FFFF) CheckLocation -= 0x10000;
+                        byte num = GetBootloaderSum(fc, CheckLocation);
+                        byte num2 = GetNegativeChecksumFWBin(fc, CheckLocation);
+                        int ThisSumInt = num;
+                        ThisSumInt -= num2;
+                        if (ThisSumInt < 0) ThisSumInt += 255;
+                        byte ThisSum = (byte)ThisSumInt;
+                        byte chk = fc[CheckLocation];
+                        //Console.WriteLine("chk: " + chk.ToString("X2"));
+                        //Console.WriteLine("num2: " + num2.ToString("X2"));
+                        //Console.WriteLine("num: " + num.ToString("X2"));
+                        //Console.WriteLine("ThisSum: " + ThisSum.ToString("X2"));
+                        if (chk == ThisSum)
+                        {
+                            GForm_Main_0.method_1("checksums good!");
+                            BootloaderSum = num;
+                            GForm_Main_0.method_1("Bootloader Sum are 0x" + BootloaderSum.ToString("X"));
+                        }
+                        else
+                        {
+                            GForm_Main_0.method_1("checksums bad, could not get bootloader sum!");
+                        }
                     }
                 }
             }
@@ -781,7 +819,7 @@ static class Class_RWD
         }
     }
 
-    private static List<byte[]> decrypt(string search_value, bool Logs)
+    private static List<byte[]> decrypt(string search_value, bool Logs, bool DoAllCiphers)
     {
         //# sometimes there is an extra character after each character
         //# 37805-RBB-J530 -> 3377880550--RRBCBA--JA503000
@@ -800,15 +838,15 @@ static class Class_RWD
             GForm_Main_0.method_1("'" + search_exact + "' and '" + search_padded + "'");
         }
 
-        string[] operators = new string[8] {
+        string[] operators = new string[] {
             "fn:^", //XOR
             "fn:&", //AND
             "fn:|", //OR
             "fn:+", //ADD
             "fn:-", //SUB
             "fn:*", //MUL
-            "fn:/", //DIV
-            "fn:%", //MOD
+            "fn:/"  //DIV
+            //"fn:%"  //MOD
         };
 
         if (_keys.Length != 3)
@@ -817,26 +855,64 @@ static class Class_RWD
             return new List<byte[]> { };
         }
 
+        string[] op_perms = new string[] { };
+        string[] key_perms = new string[] { };
         //#####################################################################################################
         //This code is for trying all Keys and cypher methods to find the correct decrypting cypher
-        /*List<string> keys = new List<string> { };
-        for (int i = 0; i < _keys.Length; i++) {
-            string k = _keys[i].ToString("x2");
-            keys.Add(String.Format("val:" + k + ",sym:" + "k{0}", i));
-        }
-        string[] key_perms = prnPermut(keys.ToArray());
-        string[] op_perms = prnPermutALL(operators);*/
-        //#####################################################################################################
-        //BUT the cypher seem to always be: (((i ^ k2) + k1) - k0) & 0xFF so use this code instead for 1000x faster decryption
-        string KeyPermStr = "";
-        for (int i = _keys.Length - 1; i >= 0; i--)
+
+        if (DoAllCiphers)
         {
-            string k = _keys[i].ToString("x2");
-            KeyPermStr += String.Format("val:" + k + ",sym:" + "k{0}", i) + "|";
+            op_perms = prnPermutALL(operators);
+            //######################
+            string KeyPermStr = "";
+            string KeyPermStr2 = "";
+            for (int i = _keys.Length - 1; i >= 0; i--)
+            {
+                string k = _keys[i].ToString("x2");
+                KeyPermStr += String.Format("val:" + k + ",sym:" + "k{0}", i) + "|";
+            }
+            for (int i = 0; i < _keys.Length; i++)
+            {
+                string k = _keys[i].ToString("x2");
+                KeyPermStr2 += String.Format("val:" + k + ",sym:" + "k{0}", i) + "|";
+            }
+            key_perms = new string[] { KeyPermStr, KeyPermStr2 };
+            //######################
+            //List<string> keys = new List<string> { };
+            //for (int i = 0; i < _keys.Length; i++) {
+            //    string k = _keys[i].ToString("x2");
+            //    keys.Add(String.Format("val:" + k + ",sym:" + "k{0}", i));
+            //}
+            //string[] key_perms = prnPermut(keys.ToArray());
         }
-        string OPPermStr = "fn:^,o1|fn:+,o2|fn:-,o3|";
-        string[] key_perms = new string[] { KeyPermStr };
-        string[] op_perms = new string[] { OPPermStr };
+        //#####################################################################################################
+        //cipher for KEIHIN_SH7058_1Mb:     (((i ^ k2) + k1) - k0) & 0xFF (also KEIHIN_MPC5566_3Mb, KEIHIN_SH72543_2Mb, KEIHIN_SH7055_512Kb)
+        //cipher for HITACHI_SH72543_2Mb:   (((i + k0) ^ k1) + k2) & 0xFF
+        //cipher for PANASONIC_SH72543_2Mb: (((i + k2) + k1) ^ k0) & 0xFF
+        //cipher for TEMIC_MPC5554_2Mb:     (((i ^ k2) ^ k1) - k0) & 0xFF
+        //instead use this code instead for 1000x faster decryption
+
+        if (!DoAllCiphers)
+        {
+            string KeyPermStr = "";
+            string KeyPermStr2 = "";
+            for (int i = _keys.Length - 1; i >= 0; i--)
+            {
+                string k = _keys[i].ToString("x2");
+                KeyPermStr += String.Format("val:" + k + ",sym:" + "k{0}", i) + "|";
+            }
+            for (int i = 0; i < _keys.Length; i++)
+            {
+                string k = _keys[i].ToString("x2");
+                KeyPermStr2 += String.Format("val:" + k + ",sym:" + "k{0}", i) + "|";
+            }
+            string OPPermStr = "fn:^,o1|fn:+,o2|fn:-,o3|";
+            string OPPermStr2 = "fn:+,o1|fn:^,o2|fn:+,o3|";
+            string OPPermStr3 = "fn:+,o1|fn:+,o2|fn:^,o3|";
+            string OPPermStr4 = "fn:^,o1|fn:^,o2|fn:-,o3|";
+            key_perms = new string[] { KeyPermStr, KeyPermStr2 };
+            op_perms = new string[] { OPPermStr, OPPermStr2, OPPermStr3, OPPermStr4 };
+        }
         //#####################################################################################################
 
         List<string> display_ciphers = new List<string> { };
