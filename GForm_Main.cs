@@ -129,6 +129,9 @@ public class GForm_Main : DarkForm
         darkComboBoxUnlockMode.SelectedIndex = 0;
         LoadSettings();
 
+        //Editortable_0.generateDefinitionsFilesToolStripMenuItem.Visible = true;   //ONLY FOR DEVELOPPER
+        //Editortable_0.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.Visible = true;   //ONLY FOR DEVELOPPER
+
         //Class_DefinitionMaker_0.ExtracHondaAcuraECUCodesList();
         //Class_DefinitionMaker_0.SetHondaAcuraCodesToDefinitionsFiles();
 
@@ -2030,9 +2033,9 @@ public class GForm_Main : DarkForm
             this.darkLabel_0.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.darkLabel_0.Location = new System.Drawing.Point(218, 13);
             this.darkLabel_0.Name = "darkLabel_0";
-            this.darkLabel_0.Size = new System.Drawing.Size(62, 13);
+            this.darkLabel_0.Size = new System.Drawing.Size(68, 13);
             this.darkLabel_0.TabIndex = 57;
-            this.darkLabel_0.Text = "Vin Number";
+            this.darkLabel_0.Text = "Vin Number: ";
             // 
             // darkLabel_1
             // 
@@ -2040,9 +2043,9 @@ public class GForm_Main : DarkForm
             this.darkLabel_1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.darkLabel_1.Location = new System.Drawing.Point(218, 39);
             this.darkLabel_1.Name = "darkLabel_1";
-            this.darkLabel_1.Size = new System.Drawing.Size(70, 13);
+            this.darkLabel_1.Size = new System.Drawing.Size(76, 13);
             this.darkLabel_1.TabIndex = 58;
-            this.darkLabel_1.Text = "Calibration ID";
+            this.darkLabel_1.Text = "Calibration ID: ";
             // 
             // darkLabel_4
             // 
@@ -2163,9 +2166,9 @@ public class GForm_Main : DarkForm
             this.darkLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.darkLabel1.Location = new System.Drawing.Point(218, 446);
             this.darkLabel1.Name = "darkLabel1";
-            this.darkLabel1.Size = new System.Drawing.Size(89, 13);
+            this.darkLabel1.Size = new System.Drawing.Size(92, 13);
             this.darkLabel1.TabIndex = 71;
-            this.darkLabel1.Text = "J2534 Command:";
+            this.darkLabel1.Text = "J2534 Command: ";
             // 
             // darkButtonJ2534Command
             // 
@@ -2196,12 +2199,12 @@ public class GForm_Main : DarkForm
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clearLogsToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(130, 26);
             // 
             // clearLogsToolStripMenuItem
             // 
             this.clearLogsToolStripMenuItem.Name = "clearLogsToolStripMenuItem";
-            this.clearLogsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.clearLogsToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.clearLogsToolStripMenuItem.Text = "Clear Logs";
             this.clearLogsToolStripMenuItem.Click += new System.EventHandler(this.clearLogsToolStripMenuItem_Click);
             // 
@@ -2413,7 +2416,7 @@ public class GForm_Main : DarkForm
         {
             try
             {
-                this.gform0_0.darkLabel_7.Text = this.string_0;
+                this.gform0_0.darkLabel_7.Text = this.string_0 + "  ";
             }
             catch
             {
@@ -2493,7 +2496,7 @@ public class GForm_Main : DarkForm
         internal void method_0()
         {
             double RatePerSecond = (this.double_0 / TotalSeconds_0) / 100;
-            this.gform0_0.darkLabel_5.Text = "Download Rate: " + RatePerSecond.ToString("0") + " bytes/s";
+            this.gform0_0.darkLabel_5.Text = "Download Rate: " + RatePerSecond.ToString("0") + " bytes/s  ";
         }
         public GForm_Main gform0_0;
         public double double_0;
@@ -2509,7 +2512,7 @@ public class GForm_Main : DarkForm
         internal void method_0()
         {
             double RatePerSecond = (this.double_0 / TotalSeconds_0) / 100;
-            this.gform0_0.darkLabel_5.Text = "Upload Rate: " + RatePerSecond.ToString("0") + " bytes/s";
+            this.gform0_0.darkLabel_5.Text = "Upload Rate: " + RatePerSecond.ToString("0") + " bytes/s  ";
         }
         public GForm_Main gform0_0;
         public double double_0;
@@ -2524,7 +2527,7 @@ public class GForm_Main : DarkForm
         }
         internal void method_0()
         {
-            this.gform0_0.darkLabel_5.Text = ThisText;
+            this.gform0_0.darkLabel_5.Text = ThisText + "  ";
         }
         public GForm_Main gform0_0;
         public string ThisText;
@@ -2538,7 +2541,7 @@ public class GForm_Main : DarkForm
         }
         internal void method_0()
         {
-            this.gform0_0.darkLabel_8.Text = ThisText;
+            this.gform0_0.darkLabel_8.Text = ThisText + "  ";
         }
         public GForm_Main gform0_0;
         public string ThisText;

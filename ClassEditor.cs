@@ -1450,7 +1450,7 @@ internal class ClassEditor
                         Editortable_0.GForm_Main_0.method_1("Definitions loaded!");
 
                         //HERE
-                        if (IsFileGenerated) DarkMessageBox.Show("This Definitions file as been generated to get the ROM Locations.\nThe ROM Locations can possibly be wrong and\nthe tables can display corrupted values!");
+                        //if (IsFileGenerated) DarkMessageBox.Show("This Definitions file as been generated to get the ROM Locations.\nThe ROM Locations can possibly be wrong and\nthe tables can display corrupted values!");
                         return;
                     }
                 //}

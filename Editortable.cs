@@ -46,14 +46,14 @@ public class Editortable : DarkForm
     private DarkTextBox darkTextBox_0;
     private ToolStripDropDownButton toolStripDropDownButton3;
     private ToolStripMenuItem developpersToolsToolStripMenuItem;
-    private ToolStripMenuItem generateDefinitionsFilesToolStripMenuItem;
+    public ToolStripMenuItem generateDefinitionsFilesToolStripMenuItem;
     private ToolStripMenuItem getDifferencesInAllFirmwaresFilesToolStripMenuItem;
     private ToolStripMenuItem extractAllBootloadersumByteFromAllFirmwaresFilesToolStripMenuItem;
     private ToolStripMenuItem extractDefinitionToolStripMenuItem;
     private FolderBrowserDialog folderBrowserDialog1;
     private ToolStripMenuItem removeBootloaderInbinToolStripMenuItem;
     private ToolStripSeparator toolStripSeparator3;
-    private ToolStripMenuItem generateDefinitionFileFromExtractedDefinitionToolStripMenuItem;
+    public ToolStripMenuItem generateDefinitionFileFromExtractedDefinitionToolStripMenuItem;
     private ToolStripSeparator toolStripSeparator4;
     private ToolStripMenuItem extractbinFileFromFPMToolStripMenuItem;
     private ToolStripMenuItem convertrwdTobinToolStripMenuItem;
@@ -116,9 +116,9 @@ public class Editortable : DarkForm
     private void InitializeComponent()
     {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editortable));
             this.treeView1 = new DarkUI.Controls.DarkTreeView();
             this.groupBox1 = new DarkUI.Controls.DarkGroupBox();
@@ -155,9 +155,9 @@ public class Editortable : DarkForm
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.darkTextBox_0 = new DarkUI.Controls.DarkTextBox();
-            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.clearLogsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_0)).BeginInit();
             this.darkToolStrip1.SuspendLayout();
@@ -212,37 +212,37 @@ public class Editortable : DarkForm
             this.dataGridView_0.AllowUserToDeleteRows = false;
             this.dataGridView_0.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView_0.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView_0.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView_0.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
             this.dataGridView_0.ColumnHeadersHeight = 20;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView_0.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView_0.DefaultCellStyle = dataGridViewCellStyle8;
             this.dataGridView_0.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView_0.EnableHeadersVisualStyles = false;
             this.dataGridView_0.GridColor = System.Drawing.SystemColors.ControlDarkDark;
             this.dataGridView_0.Location = new System.Drawing.Point(2, 15);
             this.dataGridView_0.Margin = new System.Windows.Forms.Padding(2);
             this.dataGridView_0.Name = "dataGridView_0";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView_0.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView_0.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.dataGridView_0.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             this.dataGridView_0.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             this.dataGridView_0.RowTemplate.Height = 31;
@@ -488,6 +488,7 @@ public class Editortable : DarkForm
             this.generateDefinitionsFilesToolStripMenuItem.Name = "generateDefinitionsFilesToolStripMenuItem";
             this.generateDefinitionsFilesToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
             this.generateDefinitionsFilesToolStripMenuItem.Text = "Generate Definitions files from all firmwares files";
+            this.generateDefinitionsFilesToolStripMenuItem.Visible = false;
             this.generateDefinitionsFilesToolStripMenuItem.Click += new System.EventHandler(this.generateDefinitionsFilesToolStripMenuItem_Click);
             // 
             // getDifferencesInAllFirmwaresFilesToolStripMenuItem
@@ -541,6 +542,7 @@ public class Editortable : DarkForm
             this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.Name = "generateDefinitionFileFromExtractedDefinitionToolStripMenuItem";
             this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.Size = new System.Drawing.Size(367, 22);
             this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.Text = "Generate Definition file from Extracted Definition";
+            this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.Visible = false;
             this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.Click += new System.EventHandler(this.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem_Click);
             // 
             // splitContainer1
@@ -589,19 +591,19 @@ public class Editortable : DarkForm
             this.darkTextBox_0.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.darkTextBox_0.Size = new System.Drawing.Size(799, 152);
             this.darkTextBox_0.TabIndex = 56;
-            this.darkTextBox_0.Text = "Honda CANBUS Tools";
+            this.darkTextBox_0.Text = "Honda ROM Editor Tools";
             // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clearLogsToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(130, 26);
             // 
             // clearLogsToolStripMenuItem
             // 
             this.clearLogsToolStripMenuItem.Name = "clearLogsToolStripMenuItem";
-            this.clearLogsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.clearLogsToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.clearLogsToolStripMenuItem.Text = "Clear Logs";
             this.clearLogsToolStripMenuItem.Click += new System.EventHandler(this.clearLogsToolStripMenuItem_Click);
             // 
@@ -1279,6 +1281,7 @@ public class Editortable : DarkForm
         {
             GForm_Main_0.Class_DefinitionMaker_0.FirmwareFolder = folderBrowserDialog1.SelectedPath;
             GForm_Main_0.Class_DefinitionMaker_0.CreateDefinitionsFiles();
+            GForm_Main_0.Class_DefinitionMaker_0.SetHondaAcuraCodesToDefinitionsFiles();
         }
     }
 

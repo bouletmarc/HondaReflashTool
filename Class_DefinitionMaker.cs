@@ -1649,44 +1649,58 @@ public class Class_DefinitionMaker
         for (int i = 0; i < GForm_Main_0.Editortable_0.ClassEditor_0.Ecus_Definitions_Compatible.Count; i++)    //Check within all ecus that has a definitions file
         {
             string ThisEcu = GForm_Main_0.Editortable_0.ClassEditor_0.Ecus_Definitions_Compatible[i];
+            string ThisEcuReducedName2 = "?????";
+            if (ThisEcu.Length >= 12) ThisEcuReducedName2 = ThisEcu.Substring(0, 12);
 
-            //Console.WriteLine("DEEEEE: " + ThisEcu);
+            //if (ThisEcu != "37805-RWC-A620") continue;
 
             bool RWDFileFound = false;
             for (int k = 0; k < AllFiles.Length; k++)   //check within all RWD files
             {
+                /*bool MatchingInside = false;
+                if (AllFiles[k].Contains(ThisEcuReducedName2))
+                {
+                    Class_RWD.LoadRWD(AllFiles[k], false, false, false, false);
+                    for (int m = 0; m < Class_RWD.SuppportedVersions.Length; m++)
+                    {
+                        if (Class_RWD.SuppportedVersions[m] == ThisEcu) MatchingInside = true;
+                    }
+                }*/
+                Application.DoEvents();
+
                 if (AllFiles[k].Contains(ThisEcu))
+                //if (AllFiles[k].Contains(ThisEcu) || MatchingInside)
                 {
                     RWDFileFound = true;
-                    //Console.WriteLine("DOING: " + ThisEcu);
+                    Console.WriteLine("DOING: " + ThisEcu);
                     GForm_Main_0.ClearLogs();
 
                     //Decrypt firmware file and get needed variable (Decryption byte)
                     Class_RWD.LoadRWD(AllFiles[k], true, false, false, true);
 
+                    byte BootSumByte = 0;
                     for (int m = 0; m < Class_RWD.SuppportedVersions.Length; m++)
                     {
                         if (Class_RWD.SuppportedVersions[m] == ThisEcu) //Matching ecu definition and RWD file
                         {
-                            //Console.WriteLine("MATCHING!");
-                            byte[] AllBytes = Class_RWD.firmware_candidates[m];
-                            byte BootLoaderSumByte = Class_RWD.BootloaderSum;
-
-                            if (BootLoaderSumByte == 0)
-                            {
-                                Console.WriteLine("ERROR BOOTSUM FOR: " + ThisEcu);
-
-                            }
-                            else
-                            {
-                                AllFileNames.Add(ThisEcu);
-                                AllBootLoaderSumBytes.Add(BootLoaderSumByte);
-                            }
+                            BootSumByte = Class_RWD.BootloaderSum;
+                            if (BootSumByte == 0) Console.WriteLine("ERROR BOOTSUM FOR: " + ThisEcu);
 
                             m = Class_RWD.SuppportedVersions.Length;
-                            k = AllFiles.Length;
+                            //k = AllFiles.Length;
                         }
                     }
+
+                    if (BootSumByte != 0)
+                    {
+                        for (int m = 0; m < Class_RWD.SuppportedVersions.Length; m++)
+                        {
+                            AllFileNames.Add(Class_RWD.SuppportedVersions[m]);
+                            AllBootLoaderSumBytes.Add(BootSumByte);
+                        }
+                    }
+
+                    k = AllFiles.Length;
                 }
             }
             if (!RWDFileFound) Console.WriteLine("RWD NOT FOUND FOR: " + ThisEcu);

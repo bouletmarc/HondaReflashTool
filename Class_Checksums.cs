@@ -20,17 +20,18 @@ public class Class_Checksums
         GForm_Main_0 = GForm_Main_1;
     }
 
-    public byte GetNegativeChecksumArea(byte[] byte_1, int Start, int ChecksumLocation)
+    public byte GetChecksumArea(byte[] byte_1, int Start, int ChecksumLocation)
     {
-        byte b = 0;
+        int BB = 0;
         for (int i = Start; i < byte_1.Length; i++)
         {
             if (i != ChecksumLocation)
             {
-                b -= byte_1[i];
+                BB -= byte_1[i];
+                if (BB < 0) BB += 255;
             }
         }
-        return b;
+        return (byte) BB;
     }
 
     public int GetChecksumLocationThisECU(string ThisECU)
@@ -104,7 +105,7 @@ public class Class_Checksums
         }
 
         byte num = BufferBytes[CheckLocation];
-        byte num2 = GetNegativeChecksumArea(BufferBytes, 0, CheckLocation);
+        byte num2 = GetChecksumArea(BufferBytes, 0, CheckLocation);
         if (num != num2)
         {
             GForm_Main_0.method_1("Checksum miss match.");
@@ -156,22 +157,26 @@ public class Class_Checksums
         }
 
         byte num = Class_RWD.BootloaderSum;
-        byte num2 = Class_RWD.GetNegativeChecksumFWBin(BufferBytesForChecking, CheckLocation);
-        byte ThisSum = num;
-        ThisSum -= num2;
+        byte num2 = Class_RWD.GetChecksumFWBin(BufferBytesForChecking, CheckLocation);
+
+        int ThisSum = num;
+        ThisSum += num2;
+        if (ThisSum >= 256) ThisSum -= 255;
+
         byte chk = BufferBytes[CheckLocationInBIN];
-        //Console.WriteLine("Bootsum: " + num.ToString("X"));
-        //Console.WriteLine("ThisSum: " + ThisSum.ToString("X"));
-        //Console.WriteLine("ThisCheck: " + chk.ToString("X"));
-        if (chk != ThisSum)
+        /*Console.WriteLine("Bootsum: " + num.ToString("X"));
+        Console.WriteLine("FileSum: " + num2.ToString("X"));
+        Console.WriteLine("ThisSum: " + ThisSum.ToString("X"));
+        Console.WriteLine("ThisCheck: " + chk.ToString("X"));*/
+        if (chk != (byte) ThisSum)
         {
             GForm_Main_0.method_1("Checksum miss match.");
-            BufferBytes[CheckLocationInBIN] = ThisSum;
-            GForm_Main_0.method_1("Checksum fixed at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
+            BufferBytes[CheckLocationInBIN] = (byte) ThisSum;
+            GForm_Main_0.method_1("Checksum fixed at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + ThisSum.ToString("X2"));
         }
         else
         {
-            GForm_Main_0.method_1("Checksum good at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + num2.ToString("X2"));
+            GForm_Main_0.method_1("Checksum good at 0x" + CheckLocation.ToString("X") + " | Checksum: 0x" + ThisSum.ToString("X2"));
         }
         return BufferBytes;
     }

@@ -457,16 +457,16 @@ static class Class_RWD
                         if (fc.Length - 1 == 0xF7FFF) CheckLocation -= 0x8000;
                         if (fc.Length - 1 == 0x1EFFFF || fc.Length - 1 == 0x26FFFF) CheckLocation -= 0x10000;
                         byte num = GetBootloaderSum(fc, CheckLocation);
-                        byte num2 = GetNegativeChecksumFWBin(fc, CheckLocation);
+                        byte num2 = GetChecksumFWBin(fc, CheckLocation);
                         int ThisSumInt = num;
-                        ThisSumInt -= num2;
-                        if (ThisSumInt < 0) ThisSumInt += 255;
+                        ThisSumInt += num2;
+                        if (ThisSumInt >= 256) ThisSumInt -= 255;
                         byte ThisSum = (byte)ThisSumInt;
                         byte chk = fc[CheckLocation];
-                        //Console.WriteLine("chk: " + chk.ToString("X2"));
-                        //Console.WriteLine("num2: " + num2.ToString("X2"));
-                        //Console.WriteLine("num: " + num.ToString("X2"));
-                        //Console.WriteLine("ThisSum: " + ThisSum.ToString("X2"));
+                        Console.WriteLine("chk: " + chk.ToString("X2"));
+                        Console.WriteLine("num: " + num.ToString("X2"));
+                        Console.WriteLine("num2: " + num2.ToString("X2"));
+                        Console.WriteLine("ThisSum: " + ThisSum.ToString("X2"));
                         if (chk == ThisSum)
                         {
                             GForm_Main_0.method_1("checksums good!");
@@ -562,14 +562,32 @@ static class Class_RWD
         //Get Checksum (sum)
         byte[] BufferBytes = FWFileBytes;
         byte num = BufferBytes[CheckLocation];
-        byte num2 = GetNegativeChecksumFWBin(BufferBytes, CheckLocation);
+        byte num2 = GetChecksumFWBin(BufferBytes, CheckLocation);
+        //Console.WriteLine("Val1: " + num.ToString("X"));
+        //Console.WriteLine("Val2: " + num2.ToString("X"));
         int BTSum = num;
-        BTSum += num2;
-        if (BTSum > 255) BTSum -= 255;
+        BTSum -= num2;
+        if (BTSum < 0) BTSum += 255;
         return (byte) BTSum;
     }
 
-    public static byte GetNegativeChecksumFWBin(byte[] byte_1, int CheckLocation)
+    //#############################################################################################
+    //#############################################################################################
+    /*public static byte GetChecksumFWBin(byte[] byte_1, int CheckLocation)
+    {
+        int b = 0;
+        for (int i = 0; i < byte_1.Length; i++)
+        {
+            if (i != CheckLocation)
+            {
+                b += byte_1[i];
+                if (b >= 256) b -= 255;
+            }
+        }
+        return (byte) b;
+    }*/
+
+    public static byte GetChecksumFWBin(byte[] byte_1, int CheckLocation)
     {
         int b = 0;
         for (int i = 0; i < byte_1.Length; i++)
@@ -580,8 +598,10 @@ static class Class_RWD
                 if (b < 0) b += 255;
             }
         }
-        return (byte) b;
+        return (byte)b;
     }
+    //#############################################################################################
+    //#############################################################################################
 
     public static byte[] Push(byte[] bArray, byte[] newBytes)
     {
