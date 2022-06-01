@@ -1320,9 +1320,12 @@ internal class ClassEditor
                         if (Thisline.Contains("THIS FILE AS BEEN GENERATED")) IsFileGenerated = true;
 
                         //Get supported ecu list from file and check if it's match
-                        if (Thisline[0] != '#' && Thisline != "")
+                        if (Thisline != "")
                         {
-                            if (GettingEcuList && Thisline == ThisECU) ECUFound = true;
+                            if (Thisline[0] != '#')
+                            {
+                                if (GettingEcuList && Thisline == ThisECU) ECUFound = true;
+                            }
                         }
 
                         if (!ChecksumFound && Thisline.Contains("ChecksumAddress:"))
@@ -1450,7 +1453,7 @@ internal class ClassEditor
                         Editortable_0.GForm_Main_0.method_1("Definitions loaded!");
 
                         //HERE
-                        //if (IsFileGenerated) DarkMessageBox.Show("This Definitions file as been generated to get the ROM Locations.\nThe ROM Locations can possibly be wrong and\nthe tables can display corrupted values!");
+                        if (IsFileGenerated) DarkMessageBox.Show("This Definitions file as been generated to get the ROM Locations.\nThe ROM Locations can possibly be wrong and\nthe tables can display corrupted values!");
                         return;
                     }
                 //}

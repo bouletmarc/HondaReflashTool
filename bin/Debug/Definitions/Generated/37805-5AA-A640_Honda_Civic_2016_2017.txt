@@ -26,580 +26,585 @@ ChecksumAddress:0x2003E2
 ROMLocationTable:0x8020D8A8
 Name:Default PA value
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsSingleByteTable:True
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020D8B0
 Name:Maximum MAP voltage
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+IsSingleByteTable:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020D8B2
 Name:Minimum MAP voltage
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+IsSingleByteTable:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020E5D4
 Name:VTC enabled
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+Unit2:Enabled
+IsSingleByteTable:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020E5D5
 Name:Primary oxygen sensor enabled
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+Unit2:Enabled
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020E5D6
 Name:Secondary oxygen sensor enabled
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+Unit2:Enabled
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020E5DF
 Name:Immobilizer enabled
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+Unit2:Enabled
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020E61A
 Name:MAP too low / too high enabled (P1127 P1128)
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+Unit2:Enabled
+IsSingleByteTable:True
 #############################
 ROMLocationTable:0x8020E61C
 Name:PA vs MAP error enabled (P2227)
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+Unit2:Enabled
+IsSingleByteTable:True
 #############################
 ROMLocationTable:0x8020E620
 Name:Mass or volume circuit range performance problem enabled (P0101)
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+Unit2:Enabled
+IsSingleByteTable:True
 #############################
 ROMLocationTable:0x8020E627
 Name:Misfire detection
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
 #############################
 ROMLocationTable:0x8020E629
 Name:EGR flow malfunction (P0400)
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+IsSingleByteTable:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020E62D
 Name:EVAP leak detection enabled (P0455 P0456 P0457)
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+Unit2:Enabled
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020E62E
 Name:EVAP FTP enabled (P0451 P0452 P0453 P1454)
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+Unit2:Enabled
+IsSingleByteTable:True
 #############################
 ROMLocationTable:0x8020E894
 Name:AFM maximum voltage
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020E896
 Name:AFM minimum voltage
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsSingleByteTable:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020EFFA
 Name:AFM enabled
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+Unit2:Enabled
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020EFFC
 Name:EGR enabled
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+Unit2:Enabled
+IsSingleByteTable:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020EFFD
 Name:ELD enabled
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+Unit2:Enabled
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020EFFE
 Name:EPS enabled
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+Unit2:Enabled
+IsSingleByteTable:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020F002
 Name:Knock sensor enabled
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+Unit2:Enabled
+IsSingleByteTable:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020F003
 Name:PA sensor enabled
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+Unit2:Enabled
+IsSingleByteTable:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020F006
 Name:Purge/EVAP enabled
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+Unit2:Enabled
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020F00B
 Name:Forced induction enabled
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+Unit2:Enabled
+IsSingleByteTable:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020F00C
 Name:Second ECT sensor enabled
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+Unit2:Enabled
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020F00D
 Name:VSA enabled
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+Unit2:Enabled
+IsSingleByteTable:True
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020F00E
 Name:VTEC oil pressure switch enabled
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+Unit2:Enabled
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020F6FA
 Name:Use AFM to determine WOT
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022C6F8
 Name:Speed limiter rpm
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+Unit2:rpm
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022C6FA
 Name:Speed limiter speed
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+Unit2:kph
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022CCC8
 Name:Short term fuel trim maximum
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022CCD8
 Name:Short term fuel trim minimum
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022D124
 Name:AF learned value minimum ECT
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+IsSingleByteTable:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022D13E
 Name:AF learned value minimum
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022D140
 Name:AF learned value maximum
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022D16E
 Name:Closed loop target lambda
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022D2E8
 Name:VLFFCR calculation factor
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsSingleByteTable:True
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022D944
 Name:Launch rpm disengage speed
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+Unit2:kph
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022D946
 Name:Launch rpm
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+Unit2:rpm
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022D94E
 Name:Launch recover rpm
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+Unit2:rpm
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8023E4EC
 Name:Long term fuel trim minimum
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8023E4EE
 Name:Long term fuel trim maximum
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8025426D
 Name:Calibration ID
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsSingleByteTable:True
+IsReadOnly:True
+IsUntested:True
 #############################
 ROMLocationTable:0x80254294
 Name:Write security word #1
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+Unit2:HEX
+FormatTable:X4
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
+Headers:Key
 #############################
 ROMLocationTable:0x80254296
 Name:Write security word #2
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+Unit2:HEX
+FormatTable:X4
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
+Headers:Key
 #############################
 ROMLocationTable:0x80254298
 Name:Write security word #3
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+Unit2:HEX
+FormatTable:X4
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
+Headers:Key
 #############################
 ROMLocationTable:0x8020E605
 Name:EVAP VSV error check enabled (P0498 P0499)
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+Unit2:Enabled
+IsSingleByteTable:True
 #############################
 ROMLocationTable:0x8020E62C
 Name:Coolant thermostat temperature check enabled (P0128)
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+Unit2:Enabled
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020E630
 Name:Intake air system leak (P2279)
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020E634
 Name:Cold start idle air control system (P050A, P050B)
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80251C4E
 Name:High speed throttle reduction speed
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+IsSingleByteTable:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022CA48
 Name:WOT rich limit
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+IsSingleByteTable:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F828D
 Name:Econ button boost (Hondata mode) enabled
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+Unit2:Enabled
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8023D5A2
 Name:Initial knock control multiplier
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+IsSingleByteTable:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x00000
 Name:Torque Limit Warning
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F8292
 Name:Ethanol input enabled
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+Unit2:Enabled
+IsSingleByteTable:True
 #############################
 ROMLocationTable:0x8020E63A
 Name:Under boost error (P0299)
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F8650
 Name:Rolling anti-lag enabled
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+Unit2:Enabled
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F8652
 Name:Anti-lag target load
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x802101C8
 Name:Radiator fan speed 1 on threshold
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x802101C6
 Name:Radiator fan speed 1 off threshold
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x802101C4
 Name:Radiator fan speed 2 on threshold
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x802101C2
 Name:Radiator fan speed 2 off threshold
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x802101C0
 Name:Radiator fan speed 3 on threshold
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x802101BE
 Name:Radiator fan speed 3 off threshold
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F866C
 Name:Traction Control enabled
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+Unit2:Enabled
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F8670
 Name:Traction Control target slip
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F8672
 Name:Traction Control minimum speed
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+Unit2:kph
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F86C0
 Name:Traction Control change rate (increasing)
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F86C2
 Name:Traction Control change rate (decreasing)
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F86B8
 Name:Traction Control P gain
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F866D
 Name:Traction Control use cornering correction
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F866E
 Name:Traction Control use PID
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F86BA
 Name:Traction Control I gain
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F86BC
 Name:Traction Control D gain
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F86BE
 Name:Traction Control D smoothing
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8023E8FA
 Name:Fuel pressure abnormality determination lower threshold
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+IsSingleByteTable:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8025C060
 Name:EWG lower limit voltage
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+IsSingleByteTable:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8025C058
 Name:EWG upper limit voltage
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+IsSingleByteTable:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8025C05C
 Name:EWG out of range upper limit voltage
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+IsSingleByteTable:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8025C1C0
 Name:EWG low voltage error threshold hiss lo
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+IsSingleByteTable:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8025C1C4
 Name:EWG low voltage error threshold hiss high
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+IsSingleByteTable:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x00000
 Name:Quick modification throttle response
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsReadOnly:true
+IsSingleByteTable:True
+IsReadOnly:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x00000
 Name:Quick modification throttle sensitivity
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsReadOnly:true
+IsSingleByteTable:True
+IsReadOnly:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x00000
 Name:Quick modification intake
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsReadOnly:true
+IsSingleByteTable:True
+IsReadOnly:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F8280
 Name:Injector size
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F8338
 Name:Overall fuel trim
 TableSize:1x1
-IsSingleByteTable:true
-IsNotDefined:true
-IsUntested:true
+IsSingleByteTable:True
+IsNotDefined:True
 #############################################################
 #############################################################
 #############################################################
@@ -608,213 +613,189 @@ Name:Cranking (seq mode) fuel direct ratio
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x8022D356
-Unit1:ECT
-IsNotDefined:true
-IsUntested:true
 #############################
 ROMLocationTable:0x8022D45E
 Name:Fuel (B) direct ratio hi
 TableSize:6x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022D4A6
 Name:Fuel (B) direct ratio lo
 TableSize:6x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022D4EE
 Name:Cranking (seq mode) wall deposit ratio
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x8022D44E
-Unit1:ECT
-IsNotDefined:true
-IsUntested:true
 #############################
 ROMLocationTable:0x8022D75E
 Name:Overrun cutoff MAP high cam (recover)
 TableSize:4x1
+Unit1:Rpm
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x8022D756
-Unit1:Rpm
-IsNotDefined:true
-IsUntested:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022D76E
 Name:Overrun cutoff MAP high cam (cut)
 TableSize:4x1
+Unit1:Rpm
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x8022D766
-Unit1:Rpm
-IsNotDefined:true
-IsUntested:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022D77E
 Name:Overrun cutoff MAP (recover)
 TableSize:4x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsUntested:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022D78E
 Name:Overrun cutoff MAP (cut)
 TableSize:4x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsUntested:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022D7A8
 Name:Overrun fuel cut delay
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsUntested:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022FC5A
 Name:LAF voltage to lambda
 TableSize:15x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsUntested:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x802310FA
 Name:Closed loop target lambda limit
 TableSize:8x1
+Unit1:ECT
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x802310BC
-Unit1:ECT
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8023110A
 Name:Closed loop target lambda high load
 TableSize:8x1
+Unit1:ECT
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x802310CC
-Unit1:ECT
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8023111A
 Name:Closed loop target lambda low load
 TableSize:8x1
+Unit1:ECT
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x802310DC
-Unit1:ECT
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8023290E
 Name:Air temperature fuel compensation cranking
 TableSize:9x1
+Unit1:IAT
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x802328FC
-Unit1:IAT
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8023C8DC
 Name:Water temperature ignition compensation hot high load
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8023C8F0
 Name:Water temperature ignition compensation hot low load
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8023C904
 Name:Water temperature ignition compensation cold high load
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8023C918
 Name:Water temperature ignition compensation cold low load
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020EE26
 Name:Ignition dwell angle voltage compensation
 TableSize:7x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8020EE2E
 Name:Ignition dwell angle
 TableSize:6x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x802105F8
 Name:Idle speed (normal)
 TableSize:8x1
+Unit1:ECT
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x80210648
-Unit1:ECT
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80210608
 Name:Idle speed (after start)
 TableSize:8x1
+Unit1:ECT
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x80210658
-Unit1:ECT
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x802115C2
 Name:AFM flow
 TableSize:64x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022D7B6
 Name:Overrun injector restart rpm (cut)
 TableSize:5x1
+Unit2:rpm
+Unit1:ECT
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x8022D7CE
-Unit1:ECT
-IsNotDefined:true
-IsUntested:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022D7C0
 Name:Overrun injector restart rpm (recover)
 TableSize:5x1
+Unit2:rpm
+Unit1:ECT
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x8022D7D8
-Unit1:ECT
-IsNotDefined:true
-IsUntested:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x802292CA
 ROMLocationX:0x8022954A
@@ -822,16 +803,15 @@ Name:TC maximum pressure ratio
 TableSize:16x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80236D6C
 Name:Knock retard
 TableSize:20x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x802333BC
 ROMLocationX:0x80232EE4
@@ -840,7 +820,7 @@ Name:WOT lambda adjustment
 TableSize:10x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80237AD2
 ROMLocationX:0x80238112
@@ -848,49 +828,45 @@ Name:Knock ignition limit
 TableSize:20x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8024433A
 Name:Torque limit
 TableSize:20x1
+Unit1:RPM
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x80244362
-Unit1:RPM
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x802113AC
 Name:WOT determination (mg/cyl)
 TableSize:7x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80239014
 Name:Air charge efficiency
 TableSize:6x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022C40C
 Name:Throttle flow vs opening
 TableSize:10x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
 #############################
 ROMLocationTable:0x8022DA98
 ROMLocationX:0x8022DA34
 Name:TC max boost(IAT)
 TableSize:5x20
+Unit1:RPM
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x8022DAFC
-Unit1:RPM
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8023B0C6
 ROMLocationX:0x8023B706
@@ -898,182 +874,172 @@ Name:Ignition correction
 TableSize:20x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80235C50
 Name:Individual cylinder ignition trim
 TableSize:4x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022CAE6
 Name:Individual cylinder fuel trim
 TableSize:4x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8024BF58
 Name:VTC intake WOT low
 TableSize:20x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80250D92
 Name:VTC exhaust WOT low
 TableSize:20x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8024C9EE
 Name:Exhaust cam angle
 TableSize:20x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8024A0D0
 Name:Intake cam angle
 TableSize:20x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8023C036
 Name:EGR Ignition
 TableSize:10x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8023C356
 Name:Ignition (split)
 TableSize:10x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80243638
 Name:TC boost command
 TableSize:20x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022D9D0
 Name:TC max boost(PA)
 TableSize:5x20
+Unit1:PA
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x8022DB10
-Unit1:PA
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80227C4A
 Name:TC max boost(EGT)
 TableSize:16x20
+Unit1:RPM
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x802297EA
-Unit1:RPM
-IsNotDefined:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8023C8A0
 Name:Air temperature ignition compensation (MAP low)
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8023C896
 Name:Air temperature ignition compensation (MAP high)
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8023CF62
 Name:IGRLMTETACH
 TableSize:20x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80238A74
 Name:ETACVTCH1
 TableSize:6x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022BB24
 Name:Throttle position at the time of the optimum boost
 TableSize:20x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022BB4C
 Name:Max throttle limit
 TableSize:20x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022BB74
 Name:Max throttle limit request
 TableSize:10x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80253736
 Name:Basic drving force
 TableSize:15x20
+Unit1:RPM
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x80253C68
-Unit1:RPM
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80243FC0
 Name:Cat protect upper air limit
 TableSize:10x20
+Unit1:RPM
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x8024422C
-Unit1:RPM
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80244150
 ROMLocationX:0x80243FC0
@@ -1081,345 +1047,324 @@ Name:Knock air limit
 TableSize:10x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80239B90
 Name:EGT prediction MAP by air intake
 TableSize:10x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x802277C0
 Name:After CAT back pressure
 TableSize:5x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsReadOnly:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8023F7D2
 Name:Boost pressure reverse lookup
 TableSize:20x1
+Unit1:MAP
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x8023F7D2
-Unit1:MAP
-IsNotDefined:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x802336DC
 Name:Lean best torque
 TableSize:10x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F82EE
 Name:Boost by gear limit
 TableSize:6x1
+Unit1:Gear
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x801F82DC
-Unit1:Gear
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F82A0
 Name:Economy Torque limit
 TableSize:20x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F834C
 Name:Ethanol percentage
 TableSize:2x1
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x801F835C
-Unit1:Ethanol %
-IsNotDefined:true
 #############################
 ROMLocationTable:0x801F8368
 Name:Ethanol fuel compensation
 TableSize:6x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
 #############################
 ROMLocationTable:0x801F8380
 Name:Ethanol ignition multiplier
 TableSize:6x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
 #############################
 ROMLocationTable:0x801F83C2
 Name:Ethanol ignition compensation
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
 #############################
 ROMLocationTable:0x801F8628
 Name:Ethanol ECT cranking compensation
 TableSize:8x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
 #############################
 ROMLocationTable:0x801F8644
 Name:Ethanol WOT fuel compensation
 TableSize:6x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8025221E
 Name:Driving force 10
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x80253B00
-Unit1:Speed
-IsNotDefined:true
-IsUntested:true
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80251FC6
 Name:Driving force 1
 TableSize:15x20
+Unit1:Speed
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x80253AD8
-Unit1:Speed
-IsNotDefined:true
-IsUntested:true
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80252476
 Name:Driving force 2
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x80253B28
-Unit1:Speed
-IsNotDefined:true
-IsUntested:true
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x802526CE
 Name:Driving force 3
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x80253B50
-Unit1:Speed
-IsNotDefined:true
-IsUntested:true
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80252926
 Name:Driving force 4
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x80253B78
-Unit1:Speed
-IsNotDefined:true
-IsUntested:true
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80252B7E
 Name:Driving force 5
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x80253BA0
-Unit1:Speed
-IsNotDefined:true
-IsUntested:true
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80252DD6
 Name:Driving force 6
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x80253BC8
-Unit1:Speed
-IsNotDefined:true
-IsUntested:true
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8025302E
 Name:Driving force 7
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x80253BF0
-Unit1:Speed
-IsNotDefined:true
-IsUntested:true
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80253286
 Name:Driving force 8
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x80253C18
-Unit1:Speed
-IsNotDefined:true
-IsUntested:true
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x802534DE
 Name:Driving force 9
 TableSize:15x20
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x80253C40
-Unit1:Speed
-IsNotDefined:true
-IsUntested:true
+IsReadOnly:True
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8024BFA8
 Name:Cam angle intake WOT
 TableSize:20x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80250DE2
 Name:Cam angle exhaust WOT
 TableSize:20x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80250D92
 Name:Soot generation limit CAEX angle table
 TableSize:20x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8024BF58
 Name:Soot generation limit CAIN angle table
 TableSize:20x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8024AD50
 Name:CAIN angle map
 TableSize:20x20
+Unit1:RPM
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x8024C0B8
-Unit1:RPM
-IsNotDefined:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8024F5AE
 Name:CAEX angle map
 TableSize:20x20
+Unit1:RPM
 ValueMin:-32768
 ValueMax:32768
-ROMLocationY:0x80250F10
-Unit1:RPM
-IsNotDefined:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F868C
 Name:Traction Control cornering comp value
 TableSize:6x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F86AE
 Name:Traction Control launch slip value
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F86DA
 Name:Traction Control ignition retard value
 TableSize:5x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8023DFBC
 Name:Knock sensitivity cylinder 1-4
 TableSize:10x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8023E2DC
 Name:Knock sensitivity cylinder 2-3
 TableSize:10x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x801F8660
 Name:Boost by ethanol limit
 TableSize:6x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80234DC2
 Name:Direct injector Flow
 TableSize:7x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8023510A
 Name:Direct injector Flow (Large)
 TableSize:7x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022B1CC
 Name:Target fuel pressure map (low water temp)
 TableSize:10x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8022B35C
 Name:Target fuel pressure map (high water temp)
 TableSize:10x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsNotDefined:True
 #############################
 ROMLocationTable:0x80234116
 Name:Injector phase (WOT)
 TableSize:3x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x8024DFCE
 Name:Cam angle exhaust limit
 TableSize:20x20
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################
 ROMLocationTable:0x802435E4
 Name:Target RPM (no load) for throttle
 TableSize:11x1
 ValueMin:-32768
 ValueMax:32768
-IsNotDefined:true
-IsUntested:true
+IsUntested:True
+IsNotDefined:True
 #############################

@@ -31,7 +31,7 @@ public class GForm_Main : DarkForm
     private DarkButton darkButton6;
     private DarkButton darkButton3;
     public Editortable Editortable_0;
-    public string Version = "v1.1.6";
+    public string Version = "v1.1.7";
     private DarkTextBox darkTextBoxJ2534Command;
     private DarkLabel darkLabel1;
     private DarkButton darkButtonJ2534Command;
@@ -129,11 +129,19 @@ public class GForm_Main : DarkForm
         darkComboBoxUnlockMode.SelectedIndex = 0;
         LoadSettings();
 
+        //######################################################################################################
+        //######################################################################################################
+        //###### DEVELOPPER ONLY FUNCTION, NO NEED TO MAKE THIS AVAILABLE FOR PUBLIC USE #######################
         //Editortable_0.generateDefinitionsFilesToolStripMenuItem.Visible = true;   //ONLY FOR DEVELOPPER
         //Editortable_0.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.Visible = true;   //ONLY FOR DEVELOPPER
 
         //Class_DefinitionMaker_0.ExtracHondaAcuraECUCodesList();
         //Class_DefinitionMaker_0.SetHondaAcuraCodesToDefinitionsFiles();
+        //Class_DefinitionMaker_0.ExtractAllRWDStartFileBytes();
+        //Class_DefinitionMaker_0.ExtractAllDefinitionsParametersFound();
+        //Class_DefinitionMaker_0.ExtractMathFunctionsFromDefinitionsNames();
+        //######################################################################################################
+        //######################################################################################################
 
         this.method_1("--------------------------------------");
         this.Enabled = true;
@@ -1221,8 +1229,86 @@ public class GForm_Main : DarkForm
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 string string_Filename = dialog.FileName;
-                if (Path.GetExtension(string_Filename).ToLower().Contains("gz")) byte_ToWrite = Class_RWD.Decompress(string_Filename);
-                else byte_ToWrite = File.ReadAllBytes(string_Filename);
+                if (Path.GetExtension(string_Filename).ToLower().Contains("gz"))
+                {
+                    byte_ToWrite = Class_RWD.Decompress(string_Filename);
+                }
+                else if (Path.GetExtension(string_Filename).ToLower().Contains("bin"))
+                {
+                    byte_ToWrite = File.ReadAllBytes(string_Filename);
+
+                    //remake bin to rwd
+                    string ThisECU = this.Editortable_0.ExtractECUNameFromThisFile(byte_ToWrite);
+                    string ThissPathh = Application.StartupPath + @"\RWDFileMaker.txt";
+                    if (File.Exists(ThissPathh))
+                    {
+                        string[] AllLines = File.ReadAllLines(ThissPathh);
+                        bool FoundData = false;
+                        for (int i = 0; i < AllLines.Length; i++)
+                        {
+                            if (AllLines[i].Contains("|"))
+                            {
+                                string[] SplittedParm = AllLines[i].Split('|');
+                                for (int k = 0; k < SplittedParm.Length; k++)
+                                {
+                                    if (SplittedParm[k] == ThisECU)
+                                    {
+                                        string StartFileBytesString = SplittedParm[SplittedParm.Length - 2];
+                                        string EncoderBytesString = SplittedParm[SplittedParm.Length - 1];
+                                        if (StartFileBytesString.Contains(",") && EncoderBytesString.Contains(","))
+                                        {
+                                            string[] AllBytesString = StartFileBytesString.Split(',');
+                                            string[] AllEncoderBytesString = EncoderBytesString.Split(',');
+
+                                            byte[] AllStartBytes = new byte[AllBytesString.Length];
+                                            byte[] AllEncoderBytes = new byte[AllEncoderBytesString.Length];
+
+                                            for (int m = 0; m < AllBytesString.Length; m++)
+                                            {
+                                                AllStartBytes[m] = (byte) int.Parse(AllBytesString[m], System.Globalization.NumberStyles.HexNumber);
+                                            }
+                                            for (int m = 0; m < AllEncoderBytesString.Length; m++)
+                                            {
+                                                AllEncoderBytes[m] = (byte)int.Parse(AllEncoderBytesString[m], System.Globalization.NumberStyles.HexNumber);
+                                            }
+
+                                            Class_RWD.RWD_encrypted_StartFile = AllStartBytes;
+                                            Class_RWD.EncodersBytes = AllEncoderBytes;
+                                            Class_RWD._firmware_encrypted = Class_RWD.ConvertBIN2RWD_EncryptedFirmware(byte_ToWrite);
+                                            Class_RWD.LoadRWDHeadersFromStartBytesArray(AllStartBytes);
+
+                                            FoundData = true;
+                                        }
+                                        else
+                                        {
+                                            this.method_1("Problem while getting RWD start file byte array");
+                                            return;
+                                        }
+
+                                        k = SplittedParm.Length;
+                                        i = AllLines.Length;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (!FoundData)
+                        {
+                            this.method_1("Problem while trying to convert .bin into .rwd!");
+                            this.method_1("Try to convert manually the .bin to .rwd and then flash the .rwd file!");
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        this.method_1("Can't find the file: " + ThissPathh);
+                        return;
+                    }
+                }
+                else
+                {
+                    byte_ToWrite = File.ReadAllBytes(string_Filename);
+                }
                 WritingBinaryMode = false;
 
                 //Decrypt firmware file and get needed variable (Decryption byte)
@@ -1922,7 +2008,7 @@ public class GForm_Main : DarkForm
             this.darkButton_FlashFW.Name = "darkButton_FlashFW";
             this.darkButton_FlashFW.Size = new System.Drawing.Size(192, 23);
             this.darkButton_FlashFW.TabIndex = 60;
-            this.darkButton_FlashFW.Text = "Flash Firmware (.rwd)";
+            this.darkButton_FlashFW.Text = "Flash Firmware (.bin|.rwd|.gz)";
             this.darkButton_FlashFW.Click += new System.EventHandler(this.darkButton3_Click);
             // 
             // darkButton1
@@ -1944,7 +2030,7 @@ public class GForm_Main : DarkForm
             this.darkButton_FlashRom.Name = "darkButton_FlashRom";
             this.darkButton_FlashRom.Size = new System.Drawing.Size(192, 23);
             this.darkButton_FlashRom.TabIndex = 54;
-            this.darkButton_FlashRom.Text = "Flash Rom (.bin)";
+            this.darkButton_FlashRom.Text = "Flash Full Rom (.bin)";
             this.darkButton_FlashRom.Click += new System.EventHandler(this.method_17);
             // 
             // darkButton_6
@@ -2123,12 +2209,11 @@ public class GForm_Main : DarkForm
             // 
             this.DarkgroupBox1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.DarkgroupBox1.Controls.Add(this.darkButton6);
-            this.DarkgroupBox1.Controls.Add(this.darkButton4);
             this.DarkgroupBox1.Controls.Add(this.darkButton3);
             this.DarkgroupBox1.Controls.Add(this.darkButton2);
             this.DarkgroupBox1.Location = new System.Drawing.Point(7, 337);
             this.DarkgroupBox1.Name = "DarkgroupBox1";
-            this.DarkgroupBox1.Size = new System.Drawing.Size(204, 136);
+            this.DarkgroupBox1.Size = new System.Drawing.Size(204, 109);
             this.DarkgroupBox1.TabIndex = 70;
             this.DarkgroupBox1.TabStop = false;
             this.DarkgroupBox1.Text = "File Controls";
@@ -2136,7 +2221,7 @@ public class GForm_Main : DarkForm
             // darkButton6
             // 
             this.darkButton6.Checked = false;
-            this.darkButton6.Location = new System.Drawing.Point(6, 106);
+            this.darkButton6.Location = new System.Drawing.Point(6, 77);
             this.darkButton6.Name = "darkButton6";
             this.darkButton6.Size = new System.Drawing.Size(192, 23);
             this.darkButton6.TabIndex = 69;
@@ -2146,11 +2231,12 @@ public class GForm_Main : DarkForm
             // darkButton4
             // 
             this.darkButton4.Checked = false;
-            this.darkButton4.Location = new System.Drawing.Point(6, 77);
+            this.darkButton4.Location = new System.Drawing.Point(695, 135);
             this.darkButton4.Name = "darkButton4";
             this.darkButton4.Size = new System.Drawing.Size(192, 23);
             this.darkButton4.TabIndex = 68;
-            this.darkButton4.Text = "Fix Checksums";
+            this.darkButton4.Text = "Fix Checksums(broken)";
+            this.darkButton4.Visible = false;
             this.darkButton4.Click += new System.EventHandler(this.darkButton4_Click);
             // 
             // darkTextBoxJ2534Command
@@ -2213,6 +2299,7 @@ public class GForm_Main : DarkForm
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(629, 536);
+            this.Controls.Add(this.darkButton4);
             this.Controls.Add(this.darkGroupBox2);
             this.Controls.Add(this.darkButtonJ2534Command);
             this.Controls.Add(this.darkTextBoxJ2534Command);

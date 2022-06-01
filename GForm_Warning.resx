@@ -129,20 +129,10 @@ Make sure the laptop and vehicle have enought battery to last long enought.
 Dont forget to put them on charge in case the processus take too long.
 
 When something goes wrong you can try the following:
-
-*If you try to connect to the ecu and it fail (for exemple):*
--Try power cycling the ECU (turning it Off/On).
--Reload this software.
-
-*If you encounter a bug during flashing or lost laptop power (for exemple):*
--DO NOT AND NEVER power cycle the ECU (turning it Off/On).²
+-You can Reload this software.
+-You can power cycle the ECU (turning it Off/On).
 -You can reload this software safely.
--You can perform Flashing again to correct the possible problem.
--You can disconnect the USB cable.
-
-²: Turning the ECU Off after a bug happened during flashing or the laptop have
-    lost power will cause the ECU to become bricked as you left the ECU unpowered
-    with corrupted datas and/or possibly being fully erased. You wont be able to
-    communicate with the ECU to perform any Flashing operations if that happens!</value>
+-You can perform new Flashing operation again to correct the possible problem.
+-You can disconnect/reconnect the USB cable.</value>
   </data>
 </root>

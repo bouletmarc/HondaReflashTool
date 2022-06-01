@@ -20,8 +20,8 @@ static class Class_RWD
     private static string[] SuppportedFWKeys = new string[] { };
     private static string CanAddress = "";
     private static byte[] DecodersBytes = new byte[] { };   //Used to decode rwd to bin
-    private static byte[] EncodersBytes = new byte[] { };   //Used to encode bin to rwd
-    private static byte[] RWD_encrypted_StartFile = new byte[] { };   //Used to encode bin to rwd
+    public static byte[] EncodersBytes = new byte[] { };   //Used to encode bin to rwd
+    public static byte[] RWD_encrypted_StartFile = new byte[] { };   //Used to encode bin to rwd
     public static byte BootloaderSum = 0;
 
     private static GForm_Main GForm_Main_0;
@@ -108,11 +108,8 @@ static class Class_RWD
 
     //######################################################################################################
     //######################################################################################################
-    public static void ConvertBIN2RWD(string f_name, string f_nameFW)
+    public static byte[] ConvertBIN2RWD_EncryptedFirmware(byte[] data)
     {
-        byte[] data = File.ReadAllBytes(f_name);
-        GForm_Main_0.method_1("Encrypting file: " + f_name);
-
         //Convert full bin to firmware (remove bootloader section)
         if (data.Length - 1 == 0xFFFFF)
         {
@@ -127,29 +124,39 @@ static class Class_RWD
             data = BufferBytes;
         }
 
-        //Load .rwd file for obtaining 'encryption' method and then encrypt the .bin using the same method.
-        LoadRWD(f_nameFW, true, false, true, true);
-
         //Copy Start file bytes from the selected rwd file, then add the data and checksum bytes
-        byte[] dataEncrypted = new byte[RWD_encrypted_StartFile.Length + data.Length + 4];
-        for (int i = 0; i < RWD_encrypted_StartFile.Length; i++) dataEncrypted[i] = RWD_encrypted_StartFile[i];
+        byte[] dataEncrypted = new byte[data.Length];
 
         //Encrypt .bin data bytes to .rwd format
         for (int i = 0; i < data.Length; i++)
         {
             byte ThisByte = data[i];
-            dataEncrypted[RWD_encrypted_StartFile.Length + i] = EncodersBytes[ThisByte];
+            dataEncrypted[i] = EncodersBytes[ThisByte];
         }
 
-        //Fix Checksums
+        return dataEncrypted;
+    }
+
+    public static void ConvertBIN2RWD(string f_name, string f_nameFW)
+    {
+        byte[] data = File.ReadAllBytes(f_name);
+        GForm_Main_0.method_1("Encrypting file: " + f_name);
+
+        //Load .rwd file for obtaining 'encryption' method and then encrypt the .bin using the same method.
+        LoadRWD(f_nameFW, true, false, true, true);
+
+        byte[] EncryptedFW = ConvertBIN2RWD_EncryptedFirmware(data);
+
+        //Copy Start file bytes from the selected rwd file, then add the data and checksum bytes
+        byte[] dataEncrypted = new byte[RWD_encrypted_StartFile.Length + EncryptedFW.Length + 4];
+        for (int i = 0; i < RWD_encrypted_StartFile.Length; i++) dataEncrypted[i] = RWD_encrypted_StartFile[i];
+        for (int i = 0; i < EncryptedFW.Length; i++) dataEncrypted[RWD_encrypted_StartFile.Length + i] = EncryptedFW[i];
+
+        //Fix Checksums (for rwd file, this is not the .bin file checksum)
         UInt32 ChecksumValue = Get_rwd_checksum(dataEncrypted, 0, (uint)dataEncrypted.Length);
         byte[] ChecksumBytes = BitConverter.GetBytes(ChecksumValue);
         if (ChecksumBytes.Length == 4)
         {
-            /*for (int i = 0; i < 4; i++)
-            {
-                dataEncrypted[((dataEncrypted.Length - 1) - 4) + i] = ChecksumBytes[i];
-            }*/
             dataEncrypted[((dataEncrypted.Length) - 4) + 0] = ChecksumBytes[3];
             dataEncrypted[((dataEncrypted.Length) - 4) + 1] = ChecksumBytes[2];
             dataEncrypted[((dataEncrypted.Length) - 4) + 2] = ChecksumBytes[1];
@@ -176,6 +183,102 @@ static class Class_RWD
 
     //######################################################################################################
     //######################################################################################################
+    public static void LoadRWDHeadersFromStartBytesArray(byte[] ThisStartArray)
+    {
+        SuppportedVersions = new string[] { };
+        SuppportedFWKeys = new string[] { };
+        start = 0;
+        size = 0;
+        _firmware_encrypted = new byte[] { };
+        _keys = new byte[] { };
+
+        string indicatorBytes = ThisStartArray[0].ToString("x2") + ThisStartArray[1].ToString("x2") + ThisStartArray[2].ToString("x2");
+        if (indicatorBytes != "5a0d0a")
+        {
+            GForm_Main_0.method_1("Not Compatible file!");
+            return;
+        }
+
+        byte[] headers0 = { };
+        byte[] headers1 = { };
+        byte[] headers2 = { };
+        byte[] headers3 = { };
+        byte[] headers4 = { };
+        byte[] headers5 = { };
+        int idx = 3;
+        for (int i = 0; i < 6; i++)
+        {
+            byte[] header = { };
+
+            byte count = ThisStartArray[idx];
+            idx += 1;
+
+            for (int j = 0; j < count; j++)
+            {
+                // first byte is length of value
+                int length = ThisStartArray[idx];
+                idx += 1;
+
+                byte[] v = Slice(ThisStartArray, idx, idx + length);
+                idx += length;
+
+                header = Push(header, v);
+            }
+
+            if (i == 0) headers0 = header;
+            if (i == 1) headers1 = header;
+            if (i == 2) headers2 = header;  //ECU Type (Auto/Manual)
+            if (i == 3) headers3 = header;  //Versions
+            if (i == 4) headers4 = header;  //Security Keys
+            if (i == 5) headers5 = header;  //Firmware Keys
+        }
+
+        start = ReadUInt32BE(ThisStartArray, idx);
+        idx += 4;
+
+        size = ReadUInt32BE(ThisStartArray, idx);
+        idx += 4;
+
+        if (idx != ThisStartArray.Length) GForm_Main_0.method_1("not at end of file after unpacking");
+        if ((headers3.Length / 16) != (headers4.Length / 6)) GForm_Main_0.method_1("different number of versions and security access tokens");
+
+        _keys = headers5;
+
+        //Get supported versions and supported firmwares keys
+        int VersionsCount = (headers3.Length / 16);
+        SuppportedVersions = new string[VersionsCount];
+        SuppportedFWKeys = new string[VersionsCount];
+        string SoftwareKey = _keys[0].ToString("X2") + _keys[1].ToString("X2") + _keys[2].ToString("X2");
+        for (int i = 0; i < VersionsCount; i++)
+        {
+            //Get Supported versions
+            byte[] buf = new byte[16];
+            int EmptyCount = 0;
+            for (int i2 = 0; i2 < 16; i2++)
+            {
+                buf[i2] = headers3[(i * 16) + i2];
+                if (buf[i2] == 0)
+                {
+                    buf[i2] = 0x2E;
+                    EmptyCount++;
+                }
+            }
+
+            //Remove Empty chars
+            byte[] bufRedo = new byte[16 - EmptyCount];
+            for (int i2 = 0; i2 < bufRedo.Length; i2++) bufRedo[i2] = buf[i2];
+            SuppportedVersions[i] = System.Text.Encoding.ASCII.GetString(bufRedo);
+
+            //Get supported Firmwares keys according to the supported versions
+            byte[] bufkey = new byte[6];
+            for (int i2 = 0; i2 < 6; i2++)
+            {
+                bufkey[i2] = headers4[(i * 6) + i2];
+            }
+            SuppportedFWKeys[i] = bufkey[0].ToString("X2") + bufkey[1].ToString("X2") + bufkey[2].ToString("X2") + bufkey[3].ToString("X2") + bufkey[4].ToString("X2") + bufkey[5].ToString("X2");
+        }
+    }
+
     public static void LoadRWD(string f_name, bool FullDecrypt, bool Saving, bool Logs, bool CheckForChecksum)
     {
         byte[] data = new byte[] { };
@@ -195,7 +298,8 @@ static class Class_RWD
         if (indicatorBytes != "5a0d0a")
         //if (indicatorBytes != "5a0d0a" && indicatorBytes != "310d0a")
         {
-            if (Logs) GForm_Main_0.method_1("Not Compatible file!");
+            GForm_Main_0.method_1("Not Compatible file!");
+            //if (Logs) GForm_Main_0.method_1("Not Compatible file!");
             return;
         }
 
@@ -243,7 +347,7 @@ static class Class_RWD
 
                 if (h_prefix[0] != 0x0d && h_prefix[1] != 0x0a)
                 {
-                    if (Logs) GForm_Main_0.method_1("header delimiter not found!");
+                    GForm_Main_0.method_1("header delimiter not found!");
                     return;
                 }
 
@@ -261,7 +365,7 @@ static class Class_RWD
                     }
                     if (end_idx == -1) 
                     {
-                        if (Logs) GForm_Main_0.method_1("field delimiter not found!");
+                        GForm_Main_0.method_1("field delimiter not found!");
                         return;
                     }
 
@@ -283,7 +387,7 @@ static class Class_RWD
                 {
                     Console.WriteLine(h_prefix[0].ToString("X2") + h_prefix[1].ToString("X2"));
                     Console.WriteLine(h_suffix[0].ToString("X2") + h_suffix[1].ToString("X2"));
-                    if (Logs) GForm_Main_0.method_1("header prefix and suffix do not match");
+                    GForm_Main_0.method_1("header prefix and suffix do not match");
                     return;
                 }
             }

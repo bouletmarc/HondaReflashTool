@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -1429,6 +1431,520 @@ public class Class_DefinitionMaker
             File.WriteAllBytes(ThisEndPath + "DumpHex" + ExtractedBlockDone, AllReturnBytes);
         }*/
     }
+
+    //##########################################################################################################################
+    //##########################################################################################################################
+    //##########################################################################################################################
+    //##########################################################################################################################
+    //##########################################################################################################################
+
+    public void RemakeDefinitionsFromEditedFunctions()
+    {
+        string DoThisPathFunctions = Application.StartupPath + @"\DefinitionsAllFunctionsEDITTHISFILE.txt";
+        string Folderpath = Application.StartupPath + @"\Definitions\Generated";
+        string[] AllDefinitionFiles = Directory.GetFiles(Folderpath, "*.txt", SearchOption.AllDirectories);
+        string[] AllFunctionsLines = File.ReadAllLines(DoThisPathFunctions);
+
+        foreach (string ThisFilePath in AllDefinitionFiles)
+        {
+            string[] AllLines = File.ReadAllLines(ThisFilePath);
+            bool GettingEcuList = true;
+            //string CurrentName = "";
+            GForm_Main_0.method_1("Doing: " + Path.GetFileName(ThisFilePath));
+
+            List<string> SavingTextLines = new List<string>();
+
+            for (int i = 0; i < AllLines.Length; i++)
+            {
+                string Thisline = AllLines[i];
+                SavingTextLines.Add(Thisline);
+
+                if (Thisline.Contains("ROM Parameters") || Thisline.Contains("Checksum ")) GettingEcuList = false; //make sure we are not reading false contents
+
+                if (Thisline != "")
+                {
+                    if (!GettingEcuList)
+                    {
+                        //Get Definitions parameters
+                        if (Thisline != "")
+                        {
+                            if (Thisline[0] != '#')
+                            {
+                                if (Thisline.Contains(":"))
+                                {
+                                    string[] Commands = Thisline.Split(':');
+                                    if (Commands[0] == "Name")
+                                    {
+                                        string CurrentName = Commands[1];
+
+                                        //make sure to add tablesize
+                                        int ThissIndex = i + 1;
+                                        while(true)
+                                        {
+                                            string[] CMDS = AllLines[ThissIndex].Split(':');
+                                            if (CMDS[0] == "TableSize")
+                                            {
+                                                SavingTextLines.Add(AllLines[ThissIndex]);
+                                                break;
+                                            }
+                                            ThissIndex++;
+                                            if (AllLines[ThissIndex][0] == '#') break;
+                                        }
+
+                                        for (int m = 0; m < AllFunctionsLines.Length; m++)
+                                        {
+                                            if (AllFunctionsLines[m].ToLower() == "name:" + CurrentName.ToLower())
+                                            {
+                                                m++;
+                                                while (true)
+                                                {
+                                                    if (AllFunctionsLines[m][0] == '#') break;
+                                                    if (AllFunctionsLines[m][0] != '#') SavingTextLines.Add(AllFunctionsLines[m]);
+                                                    m++;
+                                                }
+
+                                                m = AllFunctionsLines.Length;
+                                            }
+                                        }
+
+                                        //roll to next '#'
+                                        while (true)
+                                        {
+                                            i++;
+                                            if (AllLines[i][0] == '#')
+                                            {
+                                                i--;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        //Insert Definitions
+                        /*if (Thisline.Contains("######"))
+                        {
+                            if (CurrentName != "")
+                            {
+
+                                //Reset values to default
+                                CurrentName = "";
+                            }
+                        }*/
+                    }
+                }
+            }
+
+            string[] SavingText = new string[SavingTextLines.Count];
+            for (int i = 0; i < SavingTextLines.Count; i++) SavingText[i] = SavingTextLines[i];
+            File.Create(ThisFilePath).Dispose();
+            File.WriteAllLines(ThisFilePath, SavingText);
+        }
+
+        GForm_Main_0.method_1("DONE!");
+    }
+
+    //##########################################################################################################################
+    //##########################################################################################################################
+    //##########################################################################################################################
+    //##########################################################################################################################
+    //##########################################################################################################################
+
+    public void ExtractAllDefinitionsParametersFound()
+    {
+        string DoThisPath = Application.StartupPath + @"\DefinitionsAllParametersNames.txt";
+        string Folderpath = Application.StartupPath + @"\Definitions\Generated";
+        string[] AllDefinitionFiles = Directory.GetFiles(Folderpath, "*.txt", SearchOption.AllDirectories);
+        string EcuListText = "";
+        List<string> AllParamNames = new List<string>();
+        List<string> AllSavingLines = new List<string>();
+        List<string> AllSavingLinesReadOnly = new List<string>();
+
+        foreach (string ThisFilePath in AllDefinitionFiles)
+        {
+            string[] AllLines = File.ReadAllLines(ThisFilePath);
+            bool GettingEcuList = true;
+            string CurrentName = "";
+            //bool CurrentIsReadOnly = false;
+            EcuListText = "";
+
+            for (int i = 0; i < AllLines.Length; i++)
+            {
+                string Thisline = AllLines[i];
+                if (Thisline.Contains("ROM Parameters") || Thisline.Contains("Checksum ")) GettingEcuList = false; //make sure we are not reading false contents
+
+                if (Thisline != "")
+                {
+                    if (GettingEcuList)
+                    {
+                        if (Thisline[0] != '#')
+                        {
+                            if (EcuListText != "") EcuListText += "|";
+                            EcuListText += Thisline;
+                        }
+                    }
+
+                    if (!GettingEcuList)
+                    {
+                        //Get Definitions parameters
+                        if (Thisline != "")
+                        {
+                            if (Thisline[0] != '#')
+                            {
+                                if (Thisline.Contains(":"))
+                                {
+                                    string[] Commands = Thisline.Split(':');
+                                    if (Commands[0] == "Name") CurrentName = Commands[1];
+                                    //if (Commands[0] == "IsReadOnly") CurrentIsReadOnly = bool.Parse(Commands[1].ToLower());
+                                }
+                            }
+                        }
+
+                        //Insert Definitions
+                        if (Thisline.Contains("######"))
+                        {
+                            if (CurrentName != "")
+                            {
+                                CurrentName = CurrentName.Replace("\\x00b0", "°");
+                                if (!IsParamExistInList(AllParamNames, CurrentName))
+                                {
+                                    //if (!CurrentIsReadOnly)
+                                    //{
+                                        AllParamNames.Add(CurrentName);
+                                        AllSavingLines.Add(CurrentName + " | FOUND IN: " + EcuListText);
+                                    //}
+                                }
+                                else
+                                {
+                                    for (int i2 = 0; i2 < AllParamNames.Count; i2++)
+                                    {
+                                        if (AllParamNames[i2].ToLower() == CurrentName.ToLower())
+                                        {
+                                            AllSavingLines[i2] += "|" + EcuListText;
+                                        }
+                                    }
+                                }
+
+                                //Reset values to default
+                                CurrentName = "";
+                            }
+                        }
+                    }
+                }
+
+                //if (!GettingEcuList) i = AllLines.Length;
+            }
+        }
+
+        AllSavingLines.Sort();
+
+        string SavingText = "";
+        for (int i = 0; i < AllSavingLines.Count; i++)
+        {
+            SavingText += AllSavingLines[i] + Environment.NewLine;
+        }
+        File.Create(DoThisPath).Dispose();
+        File.WriteAllText(DoThisPath, SavingText);
+    }
+
+    private bool IsParamExistInList(List<string> AllParamN, string CurrentNameP)
+    {
+        bool Existing = false;
+        for (int i = 0; i < AllParamN.Count; i++)
+        {
+            if (AllParamN[i].ToLower() == CurrentNameP.ToLower()) Existing = true;
+        }
+        return Existing;
+    }
+
+    public void ExtractMathFunctionsFromDefinitionsNames()
+    {
+        string DoThisPath = Application.StartupPath + @"\DefinitionsAllParametersNames.txt";
+        string DoThisPathFunctions = Application.StartupPath + @"\DefinitionsAllFunctions.txt";
+        string Folderpath = Application.StartupPath + @"\Definitions";
+        string[] AllDefinitionFiles = Directory.GetFiles(Folderpath, "*.txt", SearchOption.AllDirectories);
+        string[] AllLinesNames = File.ReadAllLines(DoThisPath);
+        List<string> AllSavingLines = new List<string>();
+        AllSavingLines.Add("#############################");
+
+        for (int i = 0; i < AllLinesNames.Length; i++)
+        {
+            if (AllLinesNames[i].Contains(" | FOUND IN: "))
+            {
+                string[] Splitted = AllLinesNames[i].Split('|');
+                string ThisParamName = Splitted[0].Substring(0, Splitted[0].Length - 1);
+                string SearchInThisDef = Splitted[1].Substring(11, 14);
+
+                if (Splitted.Length > 2)
+                {
+                    for (int i2 = 2; i2 < Splitted.Length; i2++)
+                    {
+                        if (Splitted[i2] == "37805-RRB-A140") SearchInThisDef = "37805-RRB-A140";
+                        if (Splitted[i2] == "37805-RWC-A620") SearchInThisDef = "37805-RWC-A620";
+                    }
+                }
+                Application.DoEvents();
+                //Console.WriteLine(SearchInThisDef);
+
+                bool FunctionsInserted = false;
+
+                for (int i2 = 0; i2 < AllDefinitionFiles.Length; i2++)
+                {
+                    bool GettingEcuList = true;
+
+                    string CurrentLocationX = "";
+                    string CurrentLocationY = "";
+                    string CurrentLocationTable = "";
+                    string CurrentName = "";
+                    string CurrentUnit1 = "";
+                    string CurrentUnit2 = "";
+                    string CurrentTableSize = "";
+                    string CurrentMathX = "";
+                    string CurrentMathY = "";
+                    string CurrentMathTable = "";
+                    string CurrentMathXInverted = "";
+                    string CurrentMathYInverted = "";
+                    string CurrentMathTableInverted = "";
+                    float CurrentValueMin = 0f;
+                    float CurrentValueMax = 255f;
+                    double CurrentChangeAmount = 1;
+                    bool CurrentIsSingleByteX = false;
+                    bool CurrentIsSingleByteY = false;
+                    bool CurrentIsSingleByteTable = false;
+                    string CurrentFormatX = "";
+                    string CurrentFormatY = "";
+                    string CurrentFormatTable = "";
+                    string CurrentHeaders = "";
+                    bool CurrentIsXYInverted = false;
+                    bool CurrentIsTableInverted = false;
+                    bool CurrentIsReadOnly = false;
+                    bool CurrentIsUntested = false;
+                    bool CurrentIsNotDefined = false;
+
+                    bool SameDefFile = false;
+
+                    string[] AllLinesDef = File.ReadAllLines(AllDefinitionFiles[i2]);
+
+                    for (int k = 0; k < AllLinesDef.Length; k++)
+                    {
+                        string Thisline = AllLinesDef[k];
+                        if (Thisline.Contains("ROM Parameters") || Thisline.Contains("Checksum ")) GettingEcuList = false; //make sure we are not reading false contents
+
+                        if (Thisline != "")
+                        {
+                            if (GettingEcuList)
+                            {
+                                if (Thisline[0] != '#')
+                                {
+                                    if (Thisline == SearchInThisDef) SameDefFile = true;
+                                    //if (EcuListText != "") EcuListText += "|";
+                                    //EcuListText += Thisline;
+                                }
+                            }
+
+                            if (!GettingEcuList)
+                            {
+                                if (!SameDefFile) continue;
+
+                                //Get Definitions parameters
+                                if (Thisline != "")
+                                {
+                                    if (Thisline[0] != '#')
+                                    {
+                                        if (Thisline.Contains(":"))
+                                        {
+                                            string[] Commands = Thisline.Split(':');
+                                            if (Commands[0] == "ROMLocationX") CurrentLocationX = Commands[1];
+                                            if (Commands[0] == "ROMLocationY") CurrentLocationY = Commands[1];
+                                            if (Commands[0] == "ROMLocationTable") CurrentLocationTable = Commands[1];
+                                            if (Commands[0] == "Name") CurrentName = Commands[1];
+                                            if (Commands[0] == "Unit1") CurrentUnit1 = Commands[1];
+                                            if (Commands[0] == "Unit2") CurrentUnit2 = Commands[1];
+                                            if (Commands[0] == "TableSize") CurrentTableSize = Commands[1];
+                                            if (Commands[0] == "MathX") CurrentMathX = Commands[1];
+                                            if (Commands[0] == "MathY") CurrentMathY = Commands[1];
+                                            if (Commands[0] == "MathTable") CurrentMathTable = Commands[1];
+                                            if (Commands[0] == "MathXInverted") CurrentMathXInverted = Commands[1];
+                                            if (Commands[0] == "MathYInverted") CurrentMathYInverted = Commands[1];
+                                            if (Commands[0] == "MathTableInverted") CurrentMathTableInverted = Commands[1];
+                                            if (Commands[0] == "ValueMin") CurrentValueMin = (float)double.Parse(Commands[1].Replace(',', '.'), CultureInfo.InvariantCulture);
+                                            if (Commands[0] == "ValueMax") CurrentValueMax = (float)double.Parse(Commands[1].Replace(',', '.'), CultureInfo.InvariantCulture);
+                                            if (Commands[0] == "ChangeAmount") CurrentChangeAmount = double.Parse(Commands[1].Replace(',', '.'), CultureInfo.InvariantCulture);
+                                            if (Commands[0] == "IsSingleByteX") CurrentIsSingleByteX = bool.Parse(Commands[1].ToLower());
+                                            if (Commands[0] == "IsSingleByteY") CurrentIsSingleByteY = bool.Parse(Commands[1].ToLower());
+                                            if (Commands[0] == "IsSingleByteTable") CurrentIsSingleByteTable = bool.Parse(Commands[1].ToLower());
+                                            if (Commands[0] == "FormatX") CurrentFormatX = Commands[1];
+                                            if (Commands[0] == "FormatY") CurrentFormatY = Commands[1];
+                                            if (Commands[0] == "FormatTable") CurrentFormatTable = Commands[1];
+                                            if (Commands[0] == "Headers") CurrentHeaders = Commands[1];
+                                            if (Commands[0] == "IsXYInverted") CurrentIsXYInverted = bool.Parse(Commands[1].ToLower());
+                                            if (Commands[0] == "IsTableInverted") CurrentIsTableInverted = bool.Parse(Commands[1].ToLower());
+                                            if (Commands[0] == "IsReadOnly") CurrentIsReadOnly = bool.Parse(Commands[1].ToLower());
+                                            if (Commands[0] == "IsUntested") CurrentIsUntested = bool.Parse(Commands[1].ToLower());
+                                            if (Commands[0] == "IsNotDefined") CurrentIsNotDefined = bool.Parse(Commands[1].ToLower());
+                                        }
+                                    }
+                                }
+
+                                //Insert Definitions
+                                if (Thisline.Contains("######"))
+                                {
+                                    if (CurrentName != "")
+                                    {
+                                        if (CurrentName == ThisParamName)
+                                        {
+                                            //AllSavingLines.Add("#############################");
+                                            AllSavingLines.Add("# " + AllLinesNames[i] + " ######");
+                                            //if (CurrentLocationTable != "") AllSavingLines.Add("ROMLocationTable:" + CurrentLocationTable);
+                                            //if (CurrentLocationX != "") AllSavingLines.Add("ROMLocationX:" + CurrentLocationX);
+                                            //if (CurrentLocationY != "") AllSavingLines.Add("ROMLocationY:" + CurrentLocationY);
+                                            AllSavingLines.Add("Name:" + CurrentName);
+                                            if (CurrentUnit1 != "") AllSavingLines.Add("Unit1:" + CurrentUnit1);
+                                            if (CurrentUnit2 != "") AllSavingLines.Add("Unit2:" + CurrentUnit2);
+
+                                            if (CurrentUnit2 == "" && (CurrentName.Contains(" enabled") || CurrentName.Contains("Enable "))) AllSavingLines.Add("Unit2:Enabled");
+
+                                            //if (CurrentTableSize != "") AllSavingLines.Add("TableSize:" + CurrentTableSize);
+                                            if (CurrentMathX != "") AllSavingLines.Add("MathX:" + CurrentMathX);
+                                            if (CurrentMathY != "") AllSavingLines.Add("MathY:" + CurrentMathY);
+                                            if (CurrentMathTable != "") AllSavingLines.Add("MathTable:" + CurrentMathTable);
+                                            if (CurrentMathXInverted != "") AllSavingLines.Add("MathXInverted:" + CurrentMathXInverted);
+                                            if (CurrentMathYInverted != "") AllSavingLines.Add("MathYInverted:" + CurrentMathYInverted);
+                                            if (CurrentMathTableInverted != "") AllSavingLines.Add("MathTableInverted:" + CurrentMathTableInverted);
+
+                                            if (CurrentValueMin != 0f) AllSavingLines.Add("ValueMin:" + CurrentValueMin);
+                                            if (CurrentValueMax != 255f) AllSavingLines.Add("ValueMax:" + CurrentValueMax);
+                                            if (CurrentChangeAmount != 1) AllSavingLines.Add("ChangeAmount:" + CurrentChangeAmount);
+
+                                            if (CurrentIsSingleByteX != false) AllSavingLines.Add("IsSingleByteX:" + true);
+                                            if (CurrentIsSingleByteY != false) AllSavingLines.Add("IsSingleByteY:" + true);
+                                            if (CurrentIsSingleByteTable != false) AllSavingLines.Add("IsSingleByteTable:" + true);
+                                            if (CurrentFormatX != "") AllSavingLines.Add("FormatX:" + CurrentFormatX);
+                                            if (CurrentFormatY != "") AllSavingLines.Add("FormatY:" + CurrentFormatY);
+                                            if (CurrentFormatTable != "") AllSavingLines.Add("FormatTable:" + CurrentFormatTable);
+                                            if (CurrentHeaders != "") AllSavingLines.Add("Headers:" + CurrentHeaders);
+                                            if (CurrentIsXYInverted != false) AllSavingLines.Add("IsXYInverted:" + true);
+                                            if (CurrentIsTableInverted != false) AllSavingLines.Add("IsTableInverted:" + true);
+                                            if (CurrentIsReadOnly != false) AllSavingLines.Add("IsReadOnly:" + true);
+                                            if (CurrentIsUntested != false) AllSavingLines.Add("IsUntested:" + true);
+                                            if (CurrentIsNotDefined != false) AllSavingLines.Add("IsNotDefined:" + true);
+                                            AllSavingLines.Add("#############################");
+
+                                            FunctionsInserted = true;
+                                        }
+
+                                        //Reset values to default
+                                        CurrentLocationX = "";
+                                        CurrentLocationY = "";
+                                        CurrentLocationTable = "";
+                                        CurrentName = "";
+                                        CurrentUnit1 = "";
+                                        CurrentUnit2 = "";
+                                        CurrentTableSize = "";
+                                        CurrentMathX = "";
+                                        CurrentMathY = "";
+                                        CurrentMathTable = "";
+                                        CurrentMathXInverted = "";
+                                        CurrentMathYInverted = "";
+                                        CurrentMathTableInverted = "";
+                                        CurrentValueMin = 0f;
+                                        CurrentValueMax = 255f;
+                                        CurrentChangeAmount = 1f;
+                                        CurrentIsSingleByteX = false;
+                                        CurrentIsSingleByteY = false;
+                                        CurrentIsSingleByteTable = false;
+                                        CurrentFormatX = "";
+                                        CurrentHeaders = "";
+                                        CurrentFormatY = "";
+                                        CurrentFormatTable = "";
+                                        CurrentIsXYInverted = false;
+                                        CurrentIsTableInverted = false;
+                                        CurrentIsReadOnly = false;
+                                        CurrentIsUntested = false;
+                                        CurrentIsNotDefined = false;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (FunctionsInserted) k = AllLinesDef.Length;
+                    }
+
+                    if (FunctionsInserted) i2 = AllDefinitionFiles.Length;
+                }
+            }
+        }
+
+        string[] SavingText = new string[AllSavingLines.Count];
+        for (int i = 0; i < AllSavingLines.Count; i++)
+        {
+            SavingText[i] = AllSavingLines[i];
+        }
+        File.Create(DoThisPathFunctions).Dispose();
+        File.WriteAllLines(DoThisPathFunctions, SavingText);
+    }
+
+    //##########################################################################################################################
+    //##########################################################################################################################
+    //##########################################################################################################################
+    //##########################################################################################################################
+    //##########################################################################################################################
+
+    public void ExtractAllRWDStartFileBytes()
+    {
+        string DoThisPath = Application.StartupPath + @"\RWDFileMaker.txt";
+        string AllRWDPath = @"C:\Program Files (x86)\Honda\J2534 Pass Thru\CalibFiles";
+        string[] AllFiles = Directory.GetFiles(AllRWDPath, "*.gz"); //Get all RWD files
+        //List<byte[]> ListBytesArray = new List<byte[]>();
+        string SavingText = "";
+        for (int i = 0; i < AllFiles.Length; i++)
+        {
+            if (AllFiles[i].Contains("37805"))
+            {
+                //Console.WriteLine("Doing: " + Path.GetFileNameWithoutExtension(AllFiles[i]));
+                Class_RWD.LoadRWD(AllFiles[i], true, false, false, false);
+
+                if (Class_RWD.SuppportedVersions.Length == 0)
+                {
+                    Console.WriteLine("Problem with: " + Path.GetFileNameWithoutExtension(AllFiles[i]));
+                    continue;
+                }
+                //if (Class_RWD.SuppportedVersions.Length == 0) SavingText += Path.GetFileNameWithoutExtension(AllFiles[i]);
+
+                for (int i2 = 0; i2 < Class_RWD.SuppportedVersions.Length; i2++) SavingText += Class_RWD.SuppportedVersions[i2] + "|";
+                for (int i2 = 0; i2 < Class_RWD.RWD_encrypted_StartFile.Length; i2++) SavingText += Class_RWD.RWD_encrypted_StartFile[i2].ToString("X2") + ",";
+                SavingText = SavingText.Substring(0, SavingText.Length - 1);
+                SavingText += "|";
+                for (int i2 = 0; i2 < Class_RWD.EncodersBytes.Length; i2++) SavingText += Class_RWD.EncodersBytes[i2].ToString("X2") + ",";
+                SavingText = SavingText.Substring(0, SavingText.Length - 1);
+
+                SavingText += Environment.NewLine;
+            }
+        }
+
+        File.Create(DoThisPath).Dispose();
+        File.WriteAllText(DoThisPath, SavingText);
+    }
+
+    /*private byte[] GetNamesToBytesArray()
+    {
+        List<byte> ListBytess = new List<byte>();
+        for (int i = 0; i < Class_RWD.SuppportedVersions.Length; i++)
+        {
+            for (int k = 0; k < Class_RWD.SuppportedVersions[i].Length; k++)
+            {
+                ListBytess.Add((byte) Class_RWD.SuppportedVersions[i][k]);
+            }
+            ListBytess.Add((byte) '|');
+        }
+
+        byte[] ThisArray = new byte[ListBytess.Count];
+        for (int i = 0; i < ListBytess.Count; i++) ThisArray[i] = ListBytess[i];
+
+        return ThisArray;
+    }*/
+
     //##########################################################################################################################
     //##########################################################################################################################
     //##########################################################################################################################

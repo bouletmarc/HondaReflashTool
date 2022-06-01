@@ -173,6 +173,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="RWDFileMaker.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="bin\Debug\Definitions\37805-RRB-A140.txt" />
     <None Include="bin\Debug\Definitions\37805-RWC-A620.txt" />
     <None Include="bin\Debug\Definitions\37805-S2K.txt" />

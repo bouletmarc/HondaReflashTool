@@ -44,7 +44,7 @@ public class GForm_Warning : DarkForm
             // 
             this.darkButton_0.Checked = false;
             this.darkButton_0.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.darkButton_0.Location = new System.Drawing.Point(253, 428);
+            this.darkButton_0.Location = new System.Drawing.Point(253, 289);
             this.darkButton_0.Name = "darkButton_0";
             this.darkButton_0.Size = new System.Drawing.Size(163, 23);
             this.darkButton_0.TabIndex = 4;
@@ -57,7 +57,7 @@ public class GForm_Warning : DarkForm
             this.label1.ForeColor = System.Drawing.SystemColors.ControlLight;
             this.label1.Location = new System.Drawing.Point(14, 55);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(411, 338);
+            this.label1.Size = new System.Drawing.Size(411, 208);
             this.label1.TabIndex = 6;
             this.label1.Text = resources.GetString("label1.Text");
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -78,7 +78,7 @@ public class GForm_Warning : DarkForm
             // 
             this.darkButton1.Checked = false;
             this.darkButton1.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.darkButton1.Location = new System.Drawing.Point(22, 428);
+            this.darkButton1.Location = new System.Drawing.Point(22, 289);
             this.darkButton1.Name = "darkButton1";
             this.darkButton1.Size = new System.Drawing.Size(130, 23);
             this.darkButton1.TabIndex = 11;
@@ -89,7 +89,7 @@ public class GForm_Warning : DarkForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(441, 469);
+            this.ClientSize = new System.Drawing.Size(441, 334);
             this.Controls.Add(this.darkButton1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label1);

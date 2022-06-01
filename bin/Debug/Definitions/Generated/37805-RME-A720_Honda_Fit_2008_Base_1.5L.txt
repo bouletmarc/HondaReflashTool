@@ -24,53 +24,50 @@ ChecksumAddress:0x8400
 #######################################################################
 ROMLocationTable:0xAB9A
 Name:Speedlimiter
-Unit2:KPH
 TableSize:1x1
-ValueMax:255
+Unit2:KPH
 # MathTable:X/1.609
 #############################
 ROMLocationTable:0x17792
 Name:Injector Voltage Compensation
+TableSize:5x1
 Unit1:Volts
 Unit2:ms
-TableSize:5x1
 MathTable:X*0.002
-FormatTable:0.00
 ValueMin:-1000
 ValueMax:3000
+FormatTable:0.00
 Headers:6.00,8.00,12.00,14.00,16.00
 #############################
 ROMLocationTable:0xB3AC
 Name:Minimum IPW
-Unit1:Min IPW
 TableSize:1x1
+Unit1:Min IPW
+MathTable:X*0.002
 ValueMin:-6
 ValueMax:5
-ChangeAmount:0.001
-MathTable:X*0.002
+ChangeAmount:0,001
 FormatTable:0.000
 #############################
 ROMLocationTable:0x14CFC
 Name:WOT Determiniation 1(TPS)
+TableSize:6x1
 Unit1:RPM
 Unit2:TPS(%)
-TableSize:6x1
+MathTable:X*0.005
 ValueMin:-50
 ValueMax:200
-MathTable:X*0.005
 FormatTable:0.00
-ChangeAmount:1
 Headers:1000,2000,3000,4000,5000,6000
 #############################
 ROMLocationTable:0x14D14
 Name:WOT Determiniation 2(TPS)
+TableSize:6x1
 Unit1:RPM
 Unit2:TPS(%)
-TableSize:6x1
+MathTable:X*0.005
 ValueMin:-50
 ValueMax:200
-MathTable:X*0.005
 FormatTable:0.00
-ChangeAmount:1
 Headers:1000,2000,3000,4000,5000,6000
 #############################
