@@ -35,7 +35,6 @@ public class GForm_Main : DarkForm
     private DarkTextBox darkTextBoxJ2534Command;
     private DarkLabel darkLabel1;
     private DarkButton darkButtonJ2534Command;
-    public Class_DefinitionMaker Class_DefinitionMaker_0;
     private DarkComboBox darkComboBoxUnlockMode;
     private bool BadResponceReceived = false;
     public Class_Checksums Class_Checksums_0;
@@ -119,29 +118,16 @@ public class GForm_Main : DarkForm
     {
         Timer1.Stop();
 
+        DarkMessageBox.Show(this, "To access the most lastest updates and features, purchase the software at:" + Environment.NewLine + "https://www.bmdevs-shop.com/", "Outdated!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
         Editortable_0 = new Editortable(ref GForm_Main_0);
         Class_Checksums_0 = new Class_Checksums();
         Class_Checksums_0.Load(ref GForm_Main_0);
         Class_RWD.Load(ref GForm_Main_0);
         this.Text = this.Text + " (" + Version + ")";
-        Class_DefinitionMaker_0 = new Class_DefinitionMaker(ref GForm_Main_0);
         Editortable_0.ClassEditor_0.LoadSupportedECUDefinitions();
         darkComboBoxUnlockMode.SelectedIndex = 0;
         LoadSettings();
-
-        //######################################################################################################
-        //######################################################################################################
-        //###### DEVELOPPER ONLY FUNCTION, NO NEED TO MAKE THIS AVAILABLE FOR PUBLIC USE #######################
-        //Editortable_0.generateDefinitionsFilesToolStripMenuItem.Visible = true;   //ONLY FOR DEVELOPPER
-        //Editortable_0.generateDefinitionFileFromExtractedDefinitionToolStripMenuItem.Visible = true;   //ONLY FOR DEVELOPPER
-
-        //Class_DefinitionMaker_0.ExtracHondaAcuraECUCodesList();
-        //Class_DefinitionMaker_0.SetHondaAcuraCodesToDefinitionsFiles();
-        //Class_DefinitionMaker_0.ExtractAllRWDStartFileBytes();
-        //Class_DefinitionMaker_0.ExtractAllDefinitionsParametersFound();
-        //Class_DefinitionMaker_0.ExtractMathFunctionsFromDefinitionsNames();
-        //######################################################################################################
-        //######################################################################################################
 
         this.method_1("--------------------------------------");
         this.Enabled = true;

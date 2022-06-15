@@ -67,7 +67,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Class_Checksums.cs" />
-    <Compile Include="Class_DefinitionMaker.cs" />
     <Compile Include="Class_ODB.cs" />
     <Compile Include="Class_ECUS.cs" />
     <Compile Include="Class_Cypher.cs" />

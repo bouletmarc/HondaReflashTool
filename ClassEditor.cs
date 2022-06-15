@@ -1198,7 +1198,7 @@ internal class ClassEditor
                                 {
                                     Ecus_Definitions_Compatible.Add(Thisline);
                                     Ecus_Definitions_Compatible_filename.Add(ThisFilePath);
-                                    Editortable_0.GForm_Main_0.method_1("Definitions found for ecu: " + Thisline);
+                                    //Editortable_0.GForm_Main_0.method_1("Definitions found for ecu: " + Thisline);
                                     LoadedDefCount++;
                                 }
                             }
