@@ -4,6 +4,8 @@ Open Source CanBUS J2534 Honda/Acura Reflash Tool (Work in Progress)
 
 You can download the Tool and **use at Your Own Risk!**
 
+YOU CAN PURCHASE THE SOFTWARE FOR THE MOST LASTEST UPDATES AND FEATURES [HERE](https://www.bmdevs-shop.com/)
+
 ### **The Tool is accessible in the 'bin/debug' folder**
 
 ### Or download the lastest release [HERE](https://github.com/bouletmarc/HondaReflashTool/releases)
